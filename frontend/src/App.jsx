@@ -5,8 +5,40 @@ import viteLogo from '/vite.svg';
 function App() {
   const [count, setCount] = useState(0);
   
+
+  const board = [
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+  ];
+
+  const handleKeypress = (event) => {
+    console.log(event.key)
+  }
+
+
   return (
     <>
+    <table>
+      <tbody className='board' onKeyUp={ () => {handleKeypress}} tabIndex={0}>
+        {
+          board.map( (row) => (
+            <tr className='row'>
+              {
+                row.map((cell) => (
+                  <td className={cell === ' ' ? 'cell' : 'cell.numbered' }>
+                    {cell}
+                  </td>
+                ))
+              }
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+      
+
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer noopener">
           <img src={viteLogo} className="logo" alt="Vite logo" />
