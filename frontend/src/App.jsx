@@ -2,63 +2,33 @@ import { useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 
+import axios from 'axios';
+
 function App() {
-  const [count, setCount] = useState(0);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   
+  const register = async () => {
+    const response = await axios.post('http://localhost:5005/admin/auth/register', {
+        email: email,
+        password: password
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
-  const board = [
-    [' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' '],
-  ];
-
-  const handleKeypress = (event) => {
-    console.log(event.key)
+    console.log(response)
   }
-
 
   return (
     <>
-    <table>
-      <tbody className='board' onKeyUp={ () => {handleKeypress}} tabIndex={0}>
-        {
-          board.map( (row) => (
-            <tr className='row'>
-              {
-                row.map((cell) => (
-                  <td className={cell === ' ' ? 'cell' : 'cell.numbered' }>
-                    {cell}
-                  </td>
-                ))
-              }
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
-      
-
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer noopener">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer noopener">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button id="counter" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <section className="register-page">
+        <h1>Register</h1>
+        Email: <input value={email} onChange={e => setEmail(e.target.value)} type="text"/> <br/> 
+        password: <input value={password} onChange={e => setPassword(e.target.value)} type="text"/> <br/> 
+        <button onClick={register}>Register</button>
+      </section>
     </>
   )
 }
