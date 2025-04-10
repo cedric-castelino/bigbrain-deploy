@@ -5,6 +5,8 @@ import Register from './Register';
 import Login from './Login';
 import Dashboard from './Dashboard';
 
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 import {
   BrowserRouter as Router,
   Routes,

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import Button from 'react-bootstrap/Button'
+
 function Register({ successJob, token}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +35,7 @@ function Register({ successJob, token}) {
         <h1>Register</h1>
         Email: <input value={email} onChange={e => setEmail(e.target.value)} type="text"/> <br/> 
         password: <input value={password} onChange={e => setPassword(e.target.value)} type="text"/> <br/> 
-        <button onClick={register}>Register</button>
+        <Button onClick={register} variant='primary'>Register</Button>
       </section>
     </>
   )
