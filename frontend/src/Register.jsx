@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-import { useNavigate } from 'react-router-dom';
-
-function Register() {
-
+function Register({ successJob }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
-
 
     const register = async () => {
       try {
@@ -18,9 +13,7 @@ function Register() {
         })
   
         const token = response.data.token;
-        localStorage.setItem('token', token)
-        console.log(token);
-        navigate('/dashboard')
+        successJob(token)
         
       } catch (err) {
         alert(err.response.data.error);
