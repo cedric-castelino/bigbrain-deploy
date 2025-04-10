@@ -25,7 +25,7 @@ function App() {
   const successJob = (token) => {
     localStorage.setItem('token', token)
     setToken(token);
-    navigate('/dashboard')
+    navigate('/dashboard');
   }
   
   const logout = async () => {
@@ -36,10 +36,10 @@ function App() {
         }
       })
 
-      localStorage.removeItem('token')
-      navigate('/login')
+      localStorage.removeItem('token');
+      setToken(null);
+      navigate('/login');
     } catch (err) {
-      console.log(err)
       alert(err.response.data.error);
     }
 
