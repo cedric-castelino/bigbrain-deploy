@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import Register from './Register';
-import Login from './Login';
+//import Register from './Register';
+//import Login from './Login';
+import RegisterLogin from './RegisterLogin'
 import Dashboard from './Dashboard';
 
 import {
@@ -61,9 +62,9 @@ function App() {
     }
       <hr />
       <Routes>
-        <Route path="/register" element={<Register successJob={successJob}/>} />
-        <Route path="/login" element={<Login successJob={successJob}/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/register" element={<RegisterLogin successJob={successJob} token={token} name="register"/>} />
+        <Route path="/login" element={<RegisterLogin successJob={successJob} token={token} name="login"/>} />
+        <Route path="/dashboard" element={<Dashboard token={token}/>} />
       </Routes>
     </>
   )

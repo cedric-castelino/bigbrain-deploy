@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function Login ({ successJob, token,}) {
+function RegisterLogin ({ successJob, token, name}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ function Login ({ successJob, token,}) {
   };
 
 
-  const Login = async () => {
+  const fn = async () => {
     try {
-      const response = await axios.post('http://localhost:5005/admin/auth/login', {
+      const response = await axios.post(`http://localhost:5005/admin/auth/${name}`, {
         email: email,
         password: password
       })
@@ -27,16 +27,16 @@ function Login ({ successJob, token,}) {
     }
   };
 
+  console.log(name)
+
   return (
     <>
-      <section className="register-page">
-        <h1>Login</h1>
+        <h1>{name}</h1>
         Email: <input value={email} onChange={e => setEmail(e.target.value)} type="text"/> <br/> 
         password: <input value={password} onChange={e => setPassword(e.target.value)} type="text"/> <br/> 
-        <button onClick={Login}>Login</button>
-      </section>
+        <button onClick={fn}>{name}</button>
     </>
   )
 }
 
-export default Login;
+export default RegisterLogin;
