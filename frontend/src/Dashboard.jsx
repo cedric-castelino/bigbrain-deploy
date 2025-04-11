@@ -117,7 +117,7 @@ function Dashboard({ token }) {
         {games.length === 0 ? (
           <p>No games found</p>
         ) : (
-          <div className="games-list">
+          <div className="grid grid-cols-3 gap-6 mt-6">
             {games.map(game => (
               <Gamecard key={game.id} game={game}/>
             ))}

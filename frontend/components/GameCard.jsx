@@ -8,7 +8,7 @@ const GameCard = ({ game } ) => {
     };
 
     return (
-        <div>
+        <div className='bg-gray-100 rounded-lg shadow p-4'>
             <h1>
                 Title: {game.name}
             </h1>
@@ -19,7 +19,7 @@ const GameCard = ({ game } ) => {
             width="80vh"
             height="80vh"/>
             <h1>Number of questions: {game.questions.length}</h1>
-            <h1>sum of each individual questions duration</h1>
+            <h1>sum of each</h1>
         </div>
     )
     
