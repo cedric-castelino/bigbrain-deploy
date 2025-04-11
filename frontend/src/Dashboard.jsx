@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Button from 'react-bootstrap/Button'
 import { useState, useEffect } from 'react';
 
 import Gamecard from './GameCard';
 
 function Dashboard({ token }) {
     const [games, setGames] = useState([]);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [newGameName, setNewGameName] = useState('');
     const navigate = useNavigate();
     
     const getDashboardGames = async (token) => {
@@ -34,6 +35,22 @@ function Dashboard({ token }) {
     return (
         <div>
           <h1>Dashboard</h1>
+
+          <button onClick={() => setShowCreateForm(!showCreateForm)}>
+            {showCreateForm ? 'Cancel' : 'Create New Game'}
+          </button>
+
+          {showCreateForm && (
+            <div style={{ marginTop: '1rem' }}>
+              <input
+                type="text"
+                placeholder="Enter game name"
+                value={newGameName}
+                onChange={(e) => setNewGameName(e.target.value)}
+              />
+            </div>
+          )}
+
           {games.length === 0 ? (
             <p>No games found</p>
           ) : (
