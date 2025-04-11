@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Dashboard({ token }) {
     const [games, setGames] = useState([]);
@@ -20,11 +20,14 @@ function Dashboard({ token }) {
         }
     }
 
-    if (!token) {
-        navigate('/login');
-    } else {
-        getDashboardGames(token)
-    };
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+        
+        getDashboardGames(token);
+    }, [token, navigate]);
 
     return (
         <div>

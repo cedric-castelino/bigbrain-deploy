@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,9 +9,12 @@ function Login ({ successJob, token,}) {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  if (token) {
-    navigate('/dashboard');
-  };
+  useEffect(() => {
+      if (token) {
+          navigate('/dashboard');
+      }
+    }, [token, navigate]);
+  
 
 
   const login = async () => {

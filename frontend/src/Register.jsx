@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,9 +10,12 @@ function Register({ successJob, token }) {
   const [confirmPassword, setconfirmPassword] = useState('');
   const navigate = useNavigate();
 
-  if (token) {
-    navigate('/dashboard');
-  };
+  useEffect(() => {
+    // Move your navigation logic here
+    if (token) {
+        navigate('/dashboard');
+    }
+  }, [token, navigate]); // Include dependencies
 
   function checkEmailValidity (event) {
     const emailRegex = /^.+\@.+\..+$/;
