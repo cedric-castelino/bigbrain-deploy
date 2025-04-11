@@ -25,7 +25,7 @@ function Login ({ successJob, token,}) {
       })
 
       const token = response.data.token;
-      successJob(token)
+      successJob(token, email, password)
       
     } catch (err) {
       alert(err.response.data.error);

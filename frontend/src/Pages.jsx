@@ -24,8 +24,10 @@ function App() {
     setToken(localStorage.getItem('token'))
   }, []);
 
-  const successJob = (token) => {
+  const successJob = (token, email, password) => {
     localStorage.setItem('token', token)
+    localStorage.setItem('email', email)
+    localStorage.setItem('password', password)
     setToken(token);
     navigate('/dashboard');
   }
@@ -39,6 +41,8 @@ function App() {
       })
 
       localStorage.removeItem('token');
+      localStorage.removeItem('email');
+      localStorage.removeItem('password');
       setToken(null);
       navigate('/login');
     } catch (err) {

@@ -7,8 +7,6 @@ const GameCard = ({ game } ) => {
         navigate(`/game/${game.id}`);
     };
 
-    console.log(game)
-
     return (
         <div>
             <h1>

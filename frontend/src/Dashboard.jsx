@@ -1,11 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import Button from 'react-bootstrap/esm/Button';
 
 import Gamecard from './GameCard';
 
 function Dashboard({ token }) {
     const [games, setGames] = useState([]);
+    const [id, setId] = useState('');
+    const [name, setName] = useState('');
+    const [owner, setOwner] = useState('');
+    const [questions, setQuestions] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [newGameName, setNewGameName] = useState('');
     const navigate = useNavigate();
@@ -32,6 +37,10 @@ function Dashboard({ token }) {
         getDashboardGames(token);
     }, [token, navigate]);
 
+    const createNewGame = () => {
+
+    }
+
     return (
         <div>
           <h1>Dashboard</h1>
@@ -44,10 +53,17 @@ function Dashboard({ token }) {
             <div style={{ marginTop: '1rem' }}>
               <input
                 type="text"
+                placeholder="Enter game ID"
+                value={newGameName}
+                onChange={(e) => setId(e.target.value)}
+              />
+              <input
+                type="text"
                 placeholder="Enter game name"
                 value={newGameName}
-                onChange={(e) => setNewGameName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
               />
+              <Button onClick={createNewGame} variant='primary'>Create Game</Button>
             </div>
           )}
 
