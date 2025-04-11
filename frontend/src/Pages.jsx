@@ -16,7 +16,6 @@ import {
 } from "react-router-dom"
 
 function App() {
-  const [games, setGames] = useState([]);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
  
@@ -27,22 +26,8 @@ function App() {
   const successJob = (token) => {
     localStorage.setItem('token', token)
     setToken(token);
-    getDashboardGames(token);
     navigate('/dashboard');
   }
-
-  const getDashboardGames = async (token) => {
-    try {
-        const response = await axios.get('http://localhost:5005/admin/games', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        }
-        })
-        setGames(response.data.games)
-    } catch (err) {
-        alert(err.response.data.error);
-    }
-}
   
   const logout = async () => {
     try {
@@ -79,7 +64,7 @@ function App() {
       <Routes>
         <Route path="/register" element={<Register successJob={successJob} token={token}/>} />
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
-        <Route path="/dashboard" element={<Dashboard token={token} games={games} getGames={getDashboardGames}/>} />
+        <Route path="/dashboard" element={<Dashboard token={token}/>} />
       </Routes>
     </>
   )

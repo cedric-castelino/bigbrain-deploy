@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Button from 'react-bootstrap/Button'
 
-function Register({ successJob, token}) {
+function Register({ successJob, token }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
