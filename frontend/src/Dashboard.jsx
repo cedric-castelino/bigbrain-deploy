@@ -9,7 +9,7 @@ function Dashboard({ token }) {
   const [games, setGames] = useState([]);
   const [id, setId] = useState('');
   const [name, setName] = useState('');
-  const [file, setFile] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const navigate = useNavigate();
   
@@ -25,6 +25,18 @@ function Dashboard({ token }) {
         alert(err.response.data.error);
     }
   }
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setThumbnail(event.target.result); 
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
 
   useEffect(() => {
     if (!token) {
@@ -47,7 +59,8 @@ function Dashboard({ token }) {
       id: id,
       name: name,
       owner: localStorage.getItem('email'),
-      questions: [{}]
+      questions: [{}],
+      thumbnail: thumbnail
     };
 
     games.push(newGame)
@@ -94,8 +107,8 @@ function Dashboard({ token }) {
             />
             <input
               type="file"
-              value={file}
-              onChange={(e) => setFile(e.target.value)}
+              accept="image/*"
+              onChange={handleFileChange}
             />
             <Button onClick={createNewGame} variant='primary'>Create Game</Button>
           </div>
