@@ -3,42 +3,70 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 
-import Gamecard from './GameCard';
+import Gamecard from '../components/GameCard';
 
 function Dashboard({ token }) {
     const [games, setGames] = useState([]);
     const [id, setId] = useState('');
     const [name, setName] = useState('');
-    const [owner, setOwner] = useState('');
-    const [questions, setQuestions] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
-    const [newGameName, setNewGameName] = useState('');
     const navigate = useNavigate();
     
     const getDashboardGames = async (token) => {
-        try {
-            const response = await axios.get('http://localhost:5005/admin/games', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-            })
-            setGames(response.data.games)
-        } catch (err) {
-            alert(err.response.data.error);
-        }
-    }
+      try {
+          const response = await axios.get('http://localhost:5005/admin/games', {
+          headers: {
+              'Authorization': `Bearer ${token}`,
+          }
+          })
+          setGames(response.data.games)
+      } catch (err) {
+          alert(err.response.data.error);
+      }
+  }
 
     useEffect(() => {
-        if (!token) {
-            navigate('/login');
-            return;
-        }
-        
-        getDashboardGames(token);
+      if (!token) {
+          navigate('/login');
+          return;
+      }
+      
+      getDashboardGames(token);
     }, [token, navigate]);
 
-    const createNewGame = () => {
+    const createNewGame = async () => {
+      const isDuplicate = games.some(game => game.id === id || game.name === name);
 
+      if (isDuplicate) {
+        alert("Game id or game name is already taken");
+        return; 
+      }
+
+      const newGame = {
+        id: id,
+        name: name,
+        owner: localStorage.getItem('email'),
+        questions: [{}]
+      };
+
+      games.push(newGame)
+
+      try {
+        const response = await axios.put('http://localhost:5005/admin/games', {
+          games: games
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        getDashboardGames(token);
+        setShowCreateForm(false);
+        setId('');
+        setName('');
+      } catch (err) {
+        alert(err.response.data.error);
+      }
     }
 
     return (
@@ -54,13 +82,13 @@ function Dashboard({ token }) {
               <input
                 type="text"
                 placeholder="Enter game ID"
-                value={newGameName}
+                value={id}
                 onChange={(e) => setId(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Enter game name"
-                value={newGameName}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <Button onClick={createNewGame} variant='primary'>Create Game</Button>
