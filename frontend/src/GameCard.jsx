@@ -7,10 +7,12 @@ const GameCard = ({ game } ) => {
         navigate(`/game/${game.id}`);
     };
 
+    console.log(game)
+
     return (
         <div>
             <h1>
-                {game.name}
+                Title: {game.name}
             </h1>
             <img 
             src={game.thumbnail} 
@@ -18,6 +20,8 @@ const GameCard = ({ game } ) => {
             alt="image"
             width="80vh"
             height="80vh"/>
+            <h1>Number of questions: {game.questions.length}</h1>
+            <h1>sum of each individual questions duration</h1>
         </div>
     )
     
