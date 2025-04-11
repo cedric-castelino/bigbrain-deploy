@@ -1,19 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Button from 'react-bootstrap/Button'
-import { useState } from 'react';
-
 
 const GameCard = ({ game } ) => {
-    console.log(game)
-    return(
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/game/${game.id}`);
+    };
+
+    return (
         <div>
             <h1>
                 {game.name}
             </h1>
-            <h1>
-                {game.thumbnail}
-            </h1>
+            <img 
+            src={game.thumbnail} 
+            onClick={handleClick}
+            alt="image"
+            width="80vh"
+            height="80vh"/>
         </div>
     )
     

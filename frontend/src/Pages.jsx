@@ -4,6 +4,7 @@ import axios from 'axios';
 import Register from './Register';
 import Login from './Login';
 import Dashboard from './Dashboard';
+import EditGame from './EditGame';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -65,6 +66,7 @@ function App() {
         <Route path="/register" element={<Register successJob={successJob} token={token}/>} />
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
         <Route path="/dashboard" element={<Dashboard token={token}/>} />
+        <Route path="/game/:gameId" element={<EditGame token={token} />} />
       </Routes>
     </>
   )
