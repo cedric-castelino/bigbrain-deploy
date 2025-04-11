@@ -3,6 +3,8 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button'
 import { useState, useEffect } from 'react';
 
+import Gamecard from './GameCard';
+
 function Dashboard({ token }) {
     const [games, setGames] = useState([]);
     const navigate = useNavigate();
@@ -37,9 +39,7 @@ function Dashboard({ token }) {
           ) : (
             <div className="games-list">
               {games.map(game => (
-                <div key={game.id} className="game-item">
-                  {game.name} 
-                </div>
+                <Gamecard key={game.id} game={game}/>
               ))}
             </div>
           )}
