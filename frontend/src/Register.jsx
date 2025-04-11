@@ -41,17 +41,21 @@ function Register({ successJob, token}) {
           alert(err.response.data.error);
         }      
     }
+  }
 
-
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      register();
+    }
   }
 
   return (
     <>
       <section className="register-page">
         <h1>Register</h1>
-        Email: <input value={email} onChange={e => setEmail(e.target.value)} type="text"/> <br/> 
-        password: <input value={password} onChange={e => setPassword(e.target.value)} type="password"/> <br/> 
-        password: <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} type="password"/> <br/> 
+        Email: <input value={email} onChange={e => setEmail(e.target.value)} type="text" onKeyDown={handleKeyPress}/> <br/> 
+        password: <input value={password} onChange={e => setPassword(e.target.value)} type="password" onKeyDown={handleKeyPress}/> <br/> 
+        password: <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} type="password" onKeyDown={handleKeyPress}/> <br/> 
         <Button onClick={register} variant='primary'>Register</Button>
       </section>
     </>
