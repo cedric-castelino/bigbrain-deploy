@@ -84,35 +84,46 @@ function Dashboard({ token }) {
   }
 
   return (
-      <div>
+      <div className='m-4'>
         <h1>Dashboard</h1>
+        <table className='w-full'>
+          <tr className='flex justify-between items-center'>
+            <td>
+              <Button class="btn btn-primary" onClick={() => setShowCreateForm(!showCreateForm)}>
+                {showCreateForm ? 'Cancel' : 'Create New Game'}
+              </Button>
 
-        <button onClick={() => setShowCreateForm(!showCreateForm)}>
-          {showCreateForm ? 'Cancel' : 'Create New Game'}
-        </button>
+              {showCreateForm && (
+                <div style={{ marginTop: '1rem' }}>
+                  <input
+                    type="text"
+                    placeholder="Enter game ID"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter game name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                  <Button onClick={createNewGame} variant='success'>Create Game</Button>
+                </div>
+              )}
+            </td>
 
-        {showCreateForm && (
-          <div style={{ marginTop: '1rem' }}>
-            <input
-              type="text"
-              placeholder="Enter game ID"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Enter game name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-            <Button onClick={createNewGame} variant='primary'>Create Game</Button>
-          </div>
-        )}
+            <td>
+              <button type="button" class="btn btn-danger">Delete</button>
+            </td>
+          </tr>
+        </table>
+        
+        
 
         {games.length === 0 ? (
           <p>No games found</p>

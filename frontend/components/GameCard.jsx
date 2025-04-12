@@ -19,7 +19,7 @@ const GameCard = ({ game } ) => {
             width="80vh"
             height="80vh"/>
             <h1>Number of questions: {game.questions.length}</h1>
-            <h1>sum of each</h1>
+            <h1>sum of each question: </h1>
         </div>
     )
     
