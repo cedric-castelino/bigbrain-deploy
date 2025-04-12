@@ -24,6 +24,13 @@ function App() {
     setToken(localStorage.getItem('token'))
   }, []);
 
+  useEffect(() => {
+    // Check if we're at the root path
+    if (window.location.pathname === '/') {
+      navigate('/login', { replace: true });
+    }
+  }, [navigate]);
+
   const successJob = (token, email, password) => {
     localStorage.setItem('token', token)
     localStorage.setItem('email', email)
