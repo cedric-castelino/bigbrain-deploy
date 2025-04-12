@@ -2,41 +2,42 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
-import Button from 'react-bootstrap/Button'
-
-
-
 function Login ({ successJob, token,}) {
+  // Collects user input for the login form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(''); 
   const navigate = useNavigate();
 
+  // Checks if the user is already logged in
   useEffect(() => {
       if (token) {
           navigate('/dashboard');
       }
     }, [token, navigate]);
   
-
-
+  // Runs whenever the user submits the login form
   const login = async () => {
     setError('');
 
     try {
+      // Sends the inputted data to the backend 
       const response = await axios.post('http://localhost:5005/admin/auth/login', {
         email: email,
         password: password
       })
 
+      // The returned token is stored in local storage with the email and password
       const token = response.data.token;
       successJob(token, email, password)
       
     } catch (err) {
+      // Displays an error message if one is encountered
       setError(err.response.data.error);
     }
   };
 
+  // Allows the user to submit the login form by pressing the enter button
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       login();
@@ -54,6 +55,7 @@ function Login ({ successJob, token,}) {
         <label className="fieldset-label">Password</label>
         <input value={password} onChange={e => setPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Password" />
 
+        {/* Only shows when an error has been stored */}
         {error && (
           <div role="alert" className="alert alert-warning mt-2 mb-0">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">

@@ -2,33 +2,25 @@ import { useState, useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
-import Button from 'react-bootstrap/Button'
-
-function Register({ successJob, token }) {
+function Register({ successJob }) {
+  // Collects user input for the register form
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
   const [error, setError] = useState(''); 
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    // Move your navigation logic here
-    if (token) {
-        navigate('/dashboard');
-    }
-  }, [token, navigate]); // Include dependencies
-
+  // Checks if the email is in a valid format (___@___.___)
   function checkEmailValidity (event) {
     const emailRegex = /^.+\@.+\..+$/;
-    let emailValid = false;
-    emailValid = emailRegex.test(event); // check if the email is in the correct form
-    return emailValid;
+    return emailRegex.test(event);
   };
 
+  // Runs whenever the user submits the register form
   const register = async () => {
     setError('');
 
+    // Checks for any errors with the user input
     if (name === '' || email === '' || password === '' || confirmPassword === '') {
       setError("Input fields cannot be empty");
     } else if (confirmPassword !== password) {
@@ -37,21 +29,25 @@ function Register({ successJob, token }) {
       setError("Invalid email entered");
     } else {
         try {
+          // Sends the inputted data to the backend 
           const response = await axios.post('http://localhost:5005/admin/auth/register', {
             email: email,
             password: password,
             name: name
           })
 
+          // The returned token is stored in local storage with the email and password
           const token = response.data.token;
           successJob(token, email, password)
           
         } catch (err) {
+          // Displays an error message if one is encountered
           setError(err.response.data.error);
         }      
     }
   }
 
+  // Allows the user to submit the register form by pressing the enter button
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       register();
@@ -75,6 +71,7 @@ function Register({ successJob, token }) {
         <label className="fieldset-label">Confirm Password</label>
         <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Confirm Password" />
 
+        {/* Only shows when an error has been stored */}
         {error && (
           <div role="alert" className="alert alert-warning mt-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
