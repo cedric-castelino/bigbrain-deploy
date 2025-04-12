@@ -34,16 +34,22 @@ function Login ({ successJob, token,}) {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      login();
+    }
+  }
+
   return (
     <div data-theme="nord" className="flex items-center justify-center min-h-screen bg-blue-200">
       <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
         <legend className="fieldset-legend text-center text-3xl">Login</legend>
         
         <label className="fieldset-label">Email</label>
-        <input value={email} onChange={e => setEmail(e.target.value)} type="email" className="input" placeholder="Email" />
+        <input value={email} onChange={e => setEmail(e.target.value)} onKeyDown={handleKeyPress} type="email" className="input" placeholder="Email" />
         
         <label className="fieldset-label">Password</label>
-        <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="input" placeholder="Password" />
+        <input value={password} onChange={e => setPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Password" />
       
         <button onClick={login} className="btn btn-primary md:btn-md flex-1 mt-3">Login</button>
         <div className="flex gap-x-1 w-full mt-3"> 
