@@ -8,13 +8,12 @@ const GameCard = ({ game } ) => {
     };
 
     return (
-        <div className='bg-gray-100 rounded-lg shadow p-4'>
+        <div className='bg-gray-100 rounded-lg shadow p-4' onClick={handleClick}>
             <h1>
                 Title: {game.name}
             </h1>
             <img 
             src={game.thumbnail} 
-            onClick={handleClick}
             alt="image"
             width="80vh"
             height="80vh"/>

@@ -143,7 +143,12 @@ function Dashboard({ token }) {
               <button type="button" className="btn btn-danger" onClick={() => setDeletePopUp(true)}>Delete</button>
               <DeleteModal open={deletePopUp} onClose={() => setDeletePopUp(false)}>
                 {games.map(game => (
-                  <div onClick={() => {deleteGame(game.id); setDeletePopUp(false);}} key={game.id} className='bg-gray-200 mt-2 p-2 rounded-md flex justify-center hover:cursor-pointer hover:bg-gray-300'>
+                  <div onClick={() => {
+                    deleteGame(game.id); 
+                    setDeletePopUp(false);
+                    }} 
+                    key={game.id} 
+                    className='bg-gray-200 mt-2 p-2 rounded-md flex justify-center hover:cursor-pointer hover:bg-gray-300'>
                     {game.name}
                   </div>
                 ))}
