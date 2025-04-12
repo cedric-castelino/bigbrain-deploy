@@ -5,9 +5,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button'
 
 function Register({ successJob, token }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
+  const [error, setError] = useState(''); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,23 +27,27 @@ function Register({ successJob, token }) {
   };
 
   const register = async () => {
+    setError('');
 
-    if (confirmPassword !== password || password === '') {
-      alert("Passwords are not the same");
+    if (name === '' || email === '' || password === '' || confirmPassword === '') {
+      setError("Input fields cannot be empty");
+    } else if (confirmPassword !== password) {
+      setError("Passwords are not the same");
     } else if (!checkEmailValidity(email)) {
-      alert("Email isn't correct");
+      setError("Invalid email entered");
     } else {
         try {
           const response = await axios.post('http://localhost:5005/admin/auth/register', {
             email: email,
-            password: password
+            password: password,
+            name: name
           })
 
           const token = response.data.token;
           successJob(token, email, password)
           
         } catch (err) {
-          alert(err.response.data.error);
+          setError(err.response.data.error);
         }      
     }
   }
@@ -56,6 +62,9 @@ function Register({ successJob, token }) {
     <div data-theme="nord" className="flex items-center justify-center min-h-screen bg-blue-200">
       <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
         <legend className="fieldset-legend text-center text-3xl">Register</legend>
+
+        <label className="fieldset-label">Name</label>
+        <input value={name} onChange={e => setName(e.target.value)} onKeyDown={handleKeyPress} type="name" className="input" placeholder="Name" />
         
         <label className="fieldset-label">Email</label>
         <input value={email} onChange={e => setEmail(e.target.value)} onKeyDown={handleKeyPress} type="email" className="input" placeholder="Email" />
@@ -65,8 +74,17 @@ function Register({ successJob, token }) {
 
         <label className="fieldset-label">Confirm Password</label>
         <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Confirm Password" />
-      
-        <button onClick={register} className="btn btn-primary md:btn-md flex-1 mt-3">Register</button>
+
+        {error && (
+          <div role="alert" className="alert alert-warning mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
+
+        <button onClick={register} className="btn btn-primary md:btn-md flex-1 mt-2">Register</button>
         <div className="flex gap-x-1 w-full mt-3"> 
           Already have an account? <Link to="/login">Login</Link>
         </div>
