@@ -1,3 +1,4 @@
+import Button from "react-bootstrap/esm/Button";
 
 function DeleteModal ({open, onClose, children}) {
 
@@ -9,9 +10,13 @@ function DeleteModal ({open, onClose, children}) {
                     {children}
                 </div>
             </div>
-            <button className="py-1 px-2 border border-neutral-200 rounded-md text-gray-400 bg-white mt-2" onClick={onClose}>
-                    close
-            </button>
+            <Button
+                    onClick={onClose}
+                    variant="danger"
+                    className={`mt-2 transition all ${open ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}
+                >
+                    Close
+            </Button>
         </div>
     )
 };

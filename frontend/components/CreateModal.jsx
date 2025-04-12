@@ -6,24 +6,24 @@ function CreateModal ({open, onClose, onCreate, id, setId, name, setName, handle
     return (
         <div className={`fixed inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/20" : "invisible"}`}>
             
-            <div className={`max-h-[70vh] overflow-auto bg-white roudned-lg shadow p-6 transition all max-w-md overflow-auto ${open ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}>
+            <div className={`max-h-[70vh] overflow-auto bg-white rounded-lg shadow p-6 transition all max-w-md overflow-auto ${open ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}>
                 <div className="flex flex-col gap-2">
                     <input
-                        className="p-2 bg-gray-200"
+                        className="p-2 bg-gray-200 rounded-md"
                         type="text"
                         placeholder="Enter game ID"
                         value={id}
                         onChange={(e) => setId(e.target.value)}
                     />
                     <input
-                        className="p-2 bg-gray-200"
+                        className="p-2 bg-gray-200 rounded-md"
                         type="text"
                         placeholder="Enter game name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
                     <input
-                        className="p-2 bg-gray-200"
+                        className="p-2 bg-gray-200 rounded-md"
                         type="file"
                         accept="image/*"
                         onChange={handleFileChange}
@@ -37,9 +37,14 @@ function CreateModal ({open, onClose, onCreate, id, setId, name, setName, handle
                 </div>
                 
             </div>
-                <button className="py-1 px-2 border border-neutral-200 rounded-md text-gray-400 bg-white mt-2" onClick={onClose}>
-                    close
-                </button>
+
+            <Button
+                onClick={onClose}
+                variant="danger"
+                className={`mt-2 transition all ${open ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}
+            >
+                Close
+            </Button>
         </div>
     )
 };
