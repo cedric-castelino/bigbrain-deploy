@@ -58,13 +58,13 @@ function Register({ successJob, token }) {
         <legend className="fieldset-legend text-center text-3xl">Register</legend>
         
         <label className="fieldset-label">Email</label>
-        <input value={email} onChange={e => setEmail(e.target.value)} type="email" className="input" placeholder="Email" />
+        <input value={email} onChange={e => setEmail(e.target.value)} onKeyDown={handleKeyPress} type="email" className="input" placeholder="Email" />
         
         <label className="fieldset-label">Password</label>
-        <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="input" placeholder="Password" />
+        <input value={password} onChange={e => setPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Password" />
 
         <label className="fieldset-label">Confirm Password</label>
-        <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} type="password" className="input" placeholder="Confirm Password" />
+        <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Confirm Password" />
       
         <button onClick={register} className="btn btn-primary md:btn-md flex-1 mt-3">Register</button>
         <div className="flex gap-x-1 w-full mt-3"> 
