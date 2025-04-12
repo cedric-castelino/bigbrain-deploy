@@ -1,6 +1,6 @@
 import { useState, useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import Button from 'react-bootstrap/Button'
 
@@ -53,15 +53,26 @@ function Register({ successJob, token }) {
   }
 
   return (
-    <>
-      <section className="register-page">
-        <h1>Register</h1>
-        Email: <input value={email} onChange={e => setEmail(e.target.value)} type="text" onKeyDown={handleKeyPress}/> <br/> 
-        password: <input value={password} onChange={e => setPassword(e.target.value)} type="password" onKeyDown={handleKeyPress}/> <br/> 
-        password: <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} type="password" onKeyDown={handleKeyPress}/> <br/> 
-        <Button onClick={register} variant='primary'>Register</Button>
-      </section>
-    </>
+    <div data-theme="nord" className="flex items-center justify-center min-h-screen bg-blue-200">
+      <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+        <legend className="fieldset-legend text-center text-3xl">Register</legend>
+        
+        <label className="fieldset-label">Email</label>
+        <input value={email} onChange={e => setEmail(e.target.value)} type="email" className="input" placeholder="Email" />
+        
+        <label className="fieldset-label">Password</label>
+        <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="input" placeholder="Password" />
+
+        <label className="fieldset-label">Confirm Password</label>
+        <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} type="password" className="input" placeholder="Confirm Password" />
+      
+        <button onClick={register} className="btn btn-primary md:btn-md flex-1 mt-3">Register</button>
+        <div className="flex gap-x-1 w-full mt-3"> 
+          Already have an account? <Link to="/login">Login</Link>
+        </div>
+      </fieldset>
+    </div>
+    
   )
 }
 

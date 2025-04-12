@@ -59,27 +59,20 @@ function App() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-blue-200">
       {token ? (
         <>
           <button onClick={logout}>Logout</button>
         </>
-      ) : (
-        <>
-          <Link to="/register">Register</Link>
-          &nbsp;|&nbsp;
-          <Link to="/login">Login</Link>
-        </>
-      )
+      ) : null
     }
-      <hr />
       <Routes>
         <Route path="/register" element={<Register successJob={successJob} token={token}/>} />
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
         <Route path="/dashboard" element={<Dashboard token={token}/>} />
         <Route path="/game/:gameId" element={<EditGame token={token} />} />
       </Routes>
-    </>
+    </div>
   )
 }
 

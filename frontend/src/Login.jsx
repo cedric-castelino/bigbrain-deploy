@@ -46,7 +46,7 @@ function Login ({ successJob, token,}) {
         <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="input" placeholder="Password" />
       
         <button onClick={login} className="btn btn-primary md:btn-md flex-1 mt-3">Login</button>
-        <div className="flex gap-x-1 w-full mt-4"> 
+        <div className="flex gap-x-1 w-full mt-3"> 
           Dont have an account? <Link to="/register">Register</Link>
         </div>
       </fieldset>
