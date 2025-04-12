@@ -27,7 +27,7 @@ function App() {
   useEffect(() => {
     // Check if we're at the root path
     if (window.location.pathname === '/') {
-      navigate('/login', { replace: true });
+      navigate('/login');
     }
   }, [navigate]);
 
