@@ -1,8 +1,8 @@
 
-function Modal ({open, onClose, children}) {
+function DeleteModal ({open, onClose, children}) {
 
     return (
-        <div className={`fixed inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/20" : "invisible"}`} onClick={onClose}>
+        <div className={`fixed inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/20" : "invisible"}`}>
             <button className="py-1 px-2 border border-neutral-200 rounded-md text-gray-400 bg-white mb-2" onClick={onClose}>
                     close
                 </button>
@@ -16,4 +16,4 @@ function Modal ({open, onClose, children}) {
     )
 };
 
-export default Modal;
+export default DeleteModal;
