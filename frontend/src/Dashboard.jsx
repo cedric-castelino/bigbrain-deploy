@@ -8,6 +8,7 @@ import DeleteModal from '../components/deleteModal';
 import CreateModal from '../components/CreateModal';
 
 function Dashboard({ token }) {
+  const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
   const [games, setGames] = useState([]);
   const [id, setId] = useState('');
   const [name, setName] = useState('');
@@ -38,7 +39,7 @@ function Dashboard({ token }) {
         setThumbnail(event.target.result); 
       };
       reader.readAsDataURL(selectedFile);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -63,7 +64,7 @@ function Dashboard({ token }) {
       name: name,
       owner: localStorage.getItem('email'),
       questions: [{}],
-      thumbnail: thumbnail
+      thumbnail: thumbnail || defaultImg
     };
 
     games.push(newGame)

@@ -8,7 +8,7 @@ const GameCard = ({ game } ) => {
     };
 
     return (
-        <div className='bg-gray-100 rounded-lg shadow p-4' onClick={handleClick}>
+        <div className='bg-gray-100 rounded-lg shadow p-4 hover:cursor-pointer' onClick={handleClick}>
             <h1>
                 Title: {game.name}
             </h1>
