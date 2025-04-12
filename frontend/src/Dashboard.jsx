@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 
 import Gamecard from '../components/GameCard';
+import Modal from '../components/Modal';
 
 function Dashboard({ token }) {
   const [games, setGames] = useState([]);
@@ -11,6 +12,7 @@ function Dashboard({ token }) {
   const [name, setName] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [deletePopUp, setDeletePopUp] = useState(false);
   const navigate = useNavigate();
   
   const getDashboardGames = async (token) => {
@@ -83,13 +85,41 @@ function Dashboard({ token }) {
     }
   }
 
+  const deleteGame = async (id) => {
+    let newGamesArray = []
+
+    games.map(game => {
+      if (game.id !== id) {
+        newGamesArray.push(game);
+      }
+    })
+
+    try {
+      const response = await axios.put('http://localhost:5005/admin/games', {
+        games: newGamesArray
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      getDashboardGames(token);
+      setId('');
+      setName('');
+    } catch (err) {
+      alert(err.response.data.error);
+    }
+
+  }
+
   return (
       <div className='m-4'>
         <h1>Dashboard</h1>
         <table className='w-full'>
-          <tr className='flex justify-between items-center'>
+          <tbody>
+            <tr className='flex justify-between items-center'>
             <td>
-              <Button class="btn btn-primary" onClick={() => setShowCreateForm(!showCreateForm)}>
+              <Button className="btn btn-primary" onClick={() => setShowCreateForm(!showCreateForm)}>
                 {showCreateForm ? 'Cancel' : 'Create New Game'}
               </Button>
 
@@ -118,9 +148,18 @@ function Dashboard({ token }) {
             </td>
 
             <td>
-              <button type="button" class="btn btn-danger">Delete</button>
+              <button type="button" className="btn btn-danger" onClick={() => setDeletePopUp(true)}>Delete</button>
+              <Modal open={deletePopUp} onClose={() => setDeletePopUp(false)}>
+                {games.map(game => (
+                  <div onClick={() => {deleteGame(game.id)}} key={game.id} className='bg-gray-200 mt-2 p-2 rounded-md flex justify-center hover:cursor-pointer hover:bg-gray-300'>
+                    {game.name}
+                  </div>
+                ))}
+              </Modal>
             </td>
           </tr>
+          </tbody>
+          
         </table>
         
         
