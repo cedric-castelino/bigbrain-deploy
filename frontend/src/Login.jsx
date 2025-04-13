@@ -45,7 +45,7 @@ function Login ({ successJob, token,}) {
   }
 
   return (
-    <div data-theme="nord" className="flex items-center justify-center min-h-screen bg-blue-200">
+    <div className="flex items-center justify-center min-h-screen bg-blue-200">
       <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
         <legend className="fieldset-legend text-center text-3xl">Login</legend>
         

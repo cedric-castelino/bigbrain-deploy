@@ -59,7 +59,7 @@ function App() {
   }
 
   return (
-    <div className="fixed inset-0 bg-blue-200 overflow-y-auto">
+    <div data-theme="nord" className="fixed inset-0 bg-blue-200 overflow-y-auto">
       {token ? (
         <>
           <button onClick={logout}>Logout</button>

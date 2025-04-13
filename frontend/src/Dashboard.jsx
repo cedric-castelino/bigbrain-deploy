@@ -180,7 +180,7 @@ function Dashboard({ token }) {
             <span>No Games Found.</span>
           </div>
         ) : (
-          <div data-theme="nord" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
             {games.map(game => (
               <Gamecard key={game.id} game={game}/>
             ))}

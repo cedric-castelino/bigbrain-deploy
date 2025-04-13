@@ -3,7 +3,7 @@ function CreateGameModal ({open, onClose, onCreate, id, setId, name, setName, ha
 
     return (
         // Displays a transparent grey background for the modal
-        <div data-theme="nord" className={`fixed z-50 inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/60" : "invisible"}`}>
+        <div className={`fixed z-50 inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/60" : "invisible"}`}>
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box bg-white">
                     <legend className="fieldset-legend text-center text-3xl">Create a New Game</legend>
                     
