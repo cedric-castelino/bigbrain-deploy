@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/esm/Button';
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
-import CreateModal from '../components/CreateModal';
+import CreateGameModal from '../components/CreateGameModal';
 
 function Dashboard({ token }) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -15,6 +15,7 @@ function Dashboard({ token }) {
   const [thumbnail, setThumbnail] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [createPopuUp, setCreatePopUp] = useState(false);
+  const [createGameError, setCreateGameError] = useState('');
   const navigate = useNavigate();
   
   const getDashboardGames = async (token) => {
@@ -55,7 +56,7 @@ function Dashboard({ token }) {
     const isDuplicate = games.some(game => game.id === id || game.name === name);
 
     if (isDuplicate) {
-      alert("Game id or game name is already taken");
+      setCreateGameError("Game id or game name is already taken");
       return; 
     }
 
@@ -81,8 +82,11 @@ function Dashboard({ token }) {
       getDashboardGames(token);
       setId('');
       setName('');
+      setCreateGameError('');
+      return true;
     } catch (err) {
-      alert(err.response.data.error);
+      setCreateGameError(err.response.data.error);
+      return false;
     }
   }
 
@@ -124,18 +128,24 @@ function Dashboard({ token }) {
                 Create New Game
               </Button>
               
-              <CreateModal
+              <CreateGameModal
                 open={createPopuUp}
-                onClose={() => setCreatePopUp(false)}
+                onClose={() => {
+                  setCreatePopUp(false);
+                  setCreateGameError(''); 
+                }}
                 id={id}
                 setId={setId}
                 name={name}
                 setName={setName}
                 handleFileChange={handleFileChange}
-                onCreate={() => {
-                  createNewGame();
-                  setCreatePopUp(false);
+                onCreate={async () => {
+                  const success = await createNewGame();
+                  if (success) {
+                    setCreatePopUp(false); 
+                  }
                 }}
+                createGameError={createGameError}
               />
 
             </td>

@@ -59,7 +59,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-blue-200">
+    <div className="fixed inset-0 bg-blue-200 overflow-y-auto">
       {token ? (
         <>
           <button onClick={logout}>Logout</button>
