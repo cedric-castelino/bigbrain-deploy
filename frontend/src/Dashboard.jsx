@@ -15,7 +15,7 @@ function Dashboard({ token }) {
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [createPopuUp, setCreatePopUp] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
-  const [activeStatus, SetActiveStatus] = useState(false);
+  const [activeStatus, setActiveStatus] = useState(false);
   const [sessionPopUp, setSessionPopUp] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null); // Add this new state
   const navigate = useNavigate();
@@ -119,14 +119,43 @@ function Dashboard({ token }) {
     } catch (err) {
       alert(err.response.data.error);
     }
-
   }
+
+  const endGameMutate = async (token) => {
+    try {
+        const response = await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
+            mutationType: "END"
+        }, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+        })
+    } catch (err) {
+        alert(err.response.data.error);
+    }
+}
 
   return (
       <div className='m-4'>
         <div className='flex flex-row justify-between'>
           <h1>Dashboard</h1>
-          <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "bg-[#db3549]"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
+          <div className='flex flex-row'>
+            {
+              activeStatus && (
+                <p className={`p-2 rounded-md text-white bg-[#db3549] mr-2 hover:cursor-pointer hover:bg-[#b32a35]`}
+                   onClick={() => {
+                    setActiveStatus(false);
+                    endGameMutate(token);
+                  }}
+                >
+                  <b>
+                    End session
+                  </b>
+                </p>
+              )
+            }
+            <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "bg-[#db3549]"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
+          </div>
         </div>
         
         <table className='w-full'>
@@ -195,7 +224,7 @@ function Dashboard({ token }) {
               token={token}
               game={game}
               activeStatus={activeStatus}
-              setActiveStatus={SetActiveStatus}
+              setActiveStatus={setActiveStatus}
               sessionPopUp={sessionPopUp}
               setSessionPopUp={setSessionPopUp}
               selectedGameId={selectedGameId}

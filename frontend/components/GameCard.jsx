@@ -20,10 +20,10 @@ const GameCard = ({
         navigate(`/game/${game.id}`);
     };
 
-    const mutateGame = async (token, state) => {
+    const startGameMutate = async (token) => {
         try {
             const response = await axios.post(`http://localhost:5005/admin/game/${game.id}/mutate`, {
-                mutationType: state
+                mutationType: "START"
             }, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -32,7 +32,7 @@ const GameCard = ({
         } catch (err) {
             alert(err.response.data.error);
         }
-      }
+    }
 
     return (
         <div className="card bg-base-100 w-100 shadow-sm mt-6">
@@ -62,7 +62,7 @@ const GameCard = ({
                                 setActiveStatus(!activeStatus);
                                 setSelectedGameId(game.id);
                                 setSessionPopUp(true);
-                                mutateGame(token, "END")
+                                startGameMutate(token);
                             }}>
                             Start Game
                         </button>
