@@ -10,7 +10,6 @@ import CreateGameModal from '../components/CreateGameModal';
 function Dashboard({ token }) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
   const [games, setGames] = useState([]);
-  const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [deletePopUp, setDeletePopUp] = useState(false);
@@ -56,20 +55,20 @@ function Dashboard({ token }) {
   }, [token, navigate]);
 
   const createNewGame = async () => {
-    if (name === '' || id === '') {
-      setCreateGameError("Game Name or ID cannot be empty");
+    if (name === '') {
+      setCreateGameError("Game Name cannot be empty");
       return; 
     } 
 
-    const isDuplicate = games.some(game => game.id === id || game.name === name);
+    const isDuplicate = games.some(game => game.name === name);
     if (isDuplicate) {
-      setCreateGameError("Game Name or ID is already taken");
+      setCreateGameError("Game Name is already taken");
       return; 
     }
     
 
     const newGame = {
-      id: id,
+      id: Math.floor(Math.random() * 1001),
       name: name,
       owner: localStorage.getItem('email'),
       questions: [{}],
@@ -88,7 +87,6 @@ function Dashboard({ token }) {
       });
 
       getDashboardGames(token);
-      setId('');
       setName('');
       setCreateGameError('');
       return true;
@@ -117,7 +115,6 @@ function Dashboard({ token }) {
       });
 
       getDashboardGames(token);
-      setId('');
       setName('');
     } catch (err) {
       alert(err.response.data.error);
@@ -145,12 +142,9 @@ function Dashboard({ token }) {
                 onClose={() => {
                   setCreatePopUp(false);
                   setName(''); 
-                  setId(''); 
                   setThumbnail(''); 
                   setCreateGameError(''); 
                 }}
-                id={id}
-                setId={setId}
                 name={name}
                 setName={setName}
                 handleFileChange={handleFileChange}

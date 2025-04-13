@@ -1,20 +1,11 @@
 // Creates a popup for when the user wants to create a new game
-function CreateGameModal ({open, onClose, onCreate, id, setId, name, setName, handleFileChange, error}) {
+function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileChange, error}) {
 
     return (
         // Displays a transparent grey background for the modal
         <div className={`fixed z-50 inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/60" : "invisible"}`}>
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box bg-white">
                     <legend className="fieldset-legend text-center text-3xl">Create a New Game</legend>
-                    
-                    <label className="fieldset-label text-slate-900">New Game ID</label>
-                    <input
-                        className="p-2 bg-gray-200 rounded-md"
-                        type="text"
-                        placeholder="New Game ID"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                    />
 
                     <label className="fieldset-label text-slate-900">New Game Name</label>
                     <input
