@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const GameCard = ({ game } ) => {
+const GameCard = ({ game, activeStatus, setActiveStatus} ) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -27,6 +27,9 @@ const GameCard = ({ game } ) => {
                 </div>
                 <div className="card-actions">
                 <button onClick={handleClick} className="btn btn-primary mt-auto">Edit Game</button>
+                <button className="btn btn-primary m" onClick={() => {setActiveStatus(!activeStatus)}}>
+                    Start Game
+                </button>
                 </div>
             </div>
         </div>

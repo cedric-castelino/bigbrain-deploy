@@ -16,6 +16,7 @@ function Dashboard({ token }) {
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [createPopuUp, setCreatePopUp] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
+  const [activeStatus, SetActiveStatus] = useState(false);
   const navigate = useNavigate();
   
   const getDashboardGames = async (token) => {
@@ -59,6 +60,7 @@ function Dashboard({ token }) {
       setCreateGameError("Game id or game name is already taken");
       return; 
     }
+    
 
     const newGame = {
       id: id,
@@ -116,10 +118,14 @@ function Dashboard({ token }) {
     }
 
   }
-
+  console.log(activeStatus)
   return (
       <div className='m-4'>
-        <h1>Dashboard</h1>
+        <div className='flex flex-row justify-between'>
+          <h1>Dashboard</h1>
+          <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "bg-[#db3549]"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
+        </div>
+        
         <table className='w-full'>
           <tbody>
             <tr className='flex justify-between items-center'>
@@ -182,7 +188,11 @@ function Dashboard({ token }) {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
             {games.map(game => (
-              <Gamecard key={game.id} game={game}/>
+              <Gamecard key={game.id}
+              game={game}
+              activeStatus={activeStatus}
+              setActiveStatus={SetActiveStatus}
+              />
             ))}
           </div>
         )}
