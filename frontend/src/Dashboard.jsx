@@ -18,6 +18,7 @@ function Dashboard({ token }) {
   const [createGameError, setCreateGameError] = useState('');
   const [activeStatus, SetActiveStatus] = useState(false);
   const [sessionPopUp, setSessionPopUp] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState(null); // Add this new state
   const navigate = useNavigate();
   
   const getDashboardGames = async (token) => {
@@ -202,6 +203,8 @@ function Dashboard({ token }) {
               setActiveStatus={SetActiveStatus}
               sessionPopUp={sessionPopUp}
               setSessionPopUp={setSessionPopUp}
+              selectedGameId={selectedGameId}
+              setSelectedGameId={setSelectedGameId}
               />
             ))}
           </div>

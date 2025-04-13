@@ -2,7 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import StartSessionModal from './StartSessionModal';
 import { AiFillFrown } from "react-icons/ai";
 
-const GameCard = ({ game, activeStatus, setActiveStatus, sessionPopUp, setSessionPopUp } ) => {
+const GameCard = ({
+    game, 
+    activeStatus, 
+    setActiveStatus, 
+    sessionPopUp, 
+    setSessionPopUp,
+    selectedGameId,
+    setSelectedGameId
+} ) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -32,14 +40,18 @@ const GameCard = ({ game, activeStatus, setActiveStatus, sessionPopUp, setSessio
                 <button className="btn btn-primary m" 
                 onClick={() => {
                     setActiveStatus(!activeStatus);
+                    setSelectedGameId(game.id);
                     setSessionPopUp(true);
                     }}>
                     Start Game
                 </button>
-                <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
-                    SessionURL: {`http://localhost:3000/${game.id}`}
-                    <AiFillFrown />
-                </StartSessionModal>
+                {/* Now only render modal for the selected game */}
+                {selectedGameId === game.id && sessionPopUp && (
+                    <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
+                        SessionURL: {`http://localhost:3000/${game.id}`}
+                        <AiFillFrown />
+                    </StartSessionModal>
+                )}
                 </div>
             </div>
         </div>
