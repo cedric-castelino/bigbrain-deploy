@@ -71,6 +71,7 @@ function App() {
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
         <Route path="/dashboard" element={<Dashboard token={token}/>} />
         <Route path="/game/:gameId" element={<EditGame token={token} />} />
+        <Route path="/session/:sessionId" element={<EditGame token={token} />} />
       </Routes>
     </div>
   )

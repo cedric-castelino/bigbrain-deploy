@@ -2,12 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/esm/Button';
-import { AiFillFrown } from "react-icons/ai";
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
 import CreateGameModal from '../components/CreateGameModal';
-import StartSessionModal from '../components/StartSessionModal';
 
 function Dashboard({ token }) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -200,13 +198,10 @@ function Dashboard({ token }) {
               game={game}
               activeStatus={activeStatus}
               setActiveStatus={SetActiveStatus}
+              sessionPopUp={sessionPopUp}
               setSessionPopUp={setSessionPopUp}
               />
             ))}
-            <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
-                SessionURL: SOMETHING
-                <AiFillFrown />
-              </StartSessionModal>
           </div>
         )}
       </div>

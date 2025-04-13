@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+import StartSessionModal from './StartSessionModal';
+import { AiFillFrown } from "react-icons/ai";
 
-const GameCard = ({ game, activeStatus, setActiveStatus, setSessionPopUp } ) => {
+const GameCard = ({ game, activeStatus, setActiveStatus, sessionPopUp, setSessionPopUp } ) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -34,9 +36,14 @@ const GameCard = ({ game, activeStatus, setActiveStatus, setSessionPopUp } ) => 
                     }}>
                     Start Game
                 </button>
+                <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
+                    SessionURL: {`http://localhost:3000/${game.id}`}
+                    <AiFillFrown />
+                </StartSessionModal>
                 </div>
             </div>
         </div>
+        
     )
     
 }
