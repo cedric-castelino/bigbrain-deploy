@@ -53,23 +53,28 @@ const GameCard = ({
                     <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">?</span>
                 </div>
                 <div className="card-actions">
-                <button onClick={handleClick} className="btn btn-primary mt-auto">Edit Game</button>
-                <button className="btn btn-primary m" 
-                onClick={() => {
-                    setActiveStatus(!activeStatus);
-                    setSelectedGameId(game.id);
-                    setSessionPopUp(true);
-                    mutateGame(token, "END")
-                    }}>
-                    Start Game
-                </button>
-                {/* Now only render modal for the selected game */}
-                {selectedGameId === game.id && sessionPopUp && (
-                    <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
-                        SessionURL: {`http://localhost:3000/session/${game.id}`}
-                        <AiFillFrown />
-                    </StartSessionModal>
-                )}
+                    <button onClick={handleClick} className="btn btn-primary mt-auto">Edit Game</button>
+                    
+                    {!activeStatus && (
+                        <button 
+                            className="btn btn-primary"
+                            onClick={() => {
+                                setActiveStatus(!activeStatus);
+                                setSelectedGameId(game.id);
+                                setSessionPopUp(true);
+                                mutateGame(token, "END")
+                            }}>
+                            Start Game
+                        </button>
+                    )}
+                    
+                    {/* Now only render modal for the selected game */}
+                    {selectedGameId === game.id && sessionPopUp && (
+                        <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
+                            SessionURL: {`http://localhost:3000/session/${game.id}`}
+                            <AiFillFrown />
+                        </StartSessionModal>
+                    )}
                 </div>
             </div>
         </div>
