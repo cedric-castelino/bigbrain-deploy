@@ -34,7 +34,7 @@ function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileCha
 
                   </fieldset>
             {/* Exits the modal without creating a new game */}
-            <button onClick={onClose} className="btn !bg-red-700 text-white mt-2">Close</button>
+            <button onClick={onClose} className="btn !bg-red-600 text-white mt-2">Close</button>
         </div>
     )
 };

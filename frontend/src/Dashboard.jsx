@@ -138,30 +138,16 @@ function Dashboard({ token }) {
   return (
       <div className='m-4'>
         <div className='flex flex-row justify-between'>
+        <button className="btn btn-lg !bg-zinc-600 text-white absolute top-2 right-6 hover:!bg-zinc-700">Logout</button>
           <h1>Dashboard</h1>
           <div className='flex flex-row'>
-            {
-              activeStatus && (
-                <p className={`p-2 rounded-md text-white bg-[#db3549] mr-2 hover:cursor-pointer hover:bg-[#b32a35]`}
-                   onClick={() => {
-                    setActiveStatus(false);
-                    endGameMutate(token);
-                  }}
-                >
-                  <b>
-                    End session
-                  </b>
-                </p>
-              )
-            }
-            <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "bg-[#db3549]"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
           </div>
         </div>
         
         <table className='w-full'>
           <tbody>
             <tr className='flex justify-between items-center'>
-            <td>
+            <td className='flex gap-2'>
               <Button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>
                 Create New Game
               </Button>
@@ -186,10 +172,7 @@ function Dashboard({ token }) {
                 error={createGameError}
               />
 
-            </td>
-
-            <td>
-              <button type="button" className="btn btn-danger" onClick={() => setDeletePopUp(true)}>Delete</button>
+              <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900" onClick={() => setDeletePopUp(true)}>Delete Game</button>
               <DeleteModal open={deletePopUp} onClose={() => setDeletePopUp(false)}>
                 {games.map(game => (
                   <div onClick={() => {
@@ -202,6 +185,23 @@ function Dashboard({ token }) {
                   </div>
                 ))}
               </DeleteModal>
+            </td>
+            <td className="ml-auto flex justify-between items-center gap-2">
+              <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "!bg-red-700"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
+              {
+                activeStatus && (
+                  <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900`}
+                    onClick={() => {
+                      setActiveStatus(false);
+                      endGameMutate(token);
+                    }}
+                  >
+                    <b>
+                      End Session
+                    </b>
+                  </p>
+                )
+              }
             </td>
           </tr>
           </tbody>

@@ -62,7 +62,7 @@ function App() {
     <div data-theme="nord" className="fixed inset-0 bg-blue-200 overflow-y-auto">
       {token ? (
         <>
-          <button onClick={logout}>Logout</button>
+          <button onClick={logout} className="btn btn-lg bg-secondary text-white absolute top-2 right-6">Logout</button>
         </>
       ) : null
     }
