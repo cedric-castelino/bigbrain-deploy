@@ -145,7 +145,7 @@ function Dashboard({ token }) {
                     setCreatePopUp(false); 
                   }
                 }}
-                createGameError={createGameError}
+                error={createGameError}
               />
 
             </td>
@@ -173,9 +173,14 @@ function Dashboard({ token }) {
         
 
         {games.length === 0 ? (
-          <p>No games found</p>
+          <div role="alert" className="alert alert-error mt-6 !bg-red-200">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="h-6 w-6 shrink-0 stroke-current">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>No Games Found.</span>
+          </div>
         ) : (
-          <div className="grid grid-cols-3 gap-6 mt-6">
+          <div data-theme="nord" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
             {games.map(game => (
               <Gamecard key={game.id} game={game}/>
             ))}
