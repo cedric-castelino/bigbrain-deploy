@@ -54,6 +54,11 @@ function Dashboard({ token }) {
   }, [token, navigate]);
 
   const createNewGame = async () => {
+    if (name === '') {
+      setCreateGameError("Game name cannot be empty");
+      return; 
+    }
+
     const isDuplicate = games.some(game => game.id === id || game.name === name);
 
     if (isDuplicate) {

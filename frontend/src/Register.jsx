@@ -59,16 +59,16 @@ function Register({ successJob }) {
       <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
         <legend className="fieldset-legend text-center text-3xl">Register</legend>
 
-        <label className="fieldset-label">Name</label>
+        <label className="fieldset-label text-slate-900">Name</label>
         <input value={name} onChange={e => setName(e.target.value)} onKeyDown={handleKeyPress} type="name" className="input" placeholder="Name" />
         
-        <label className="fieldset-label">Email</label>
+        <label className="fieldset-label text-slate-900">Email</label>
         <input value={email} onChange={e => setEmail(e.target.value)} onKeyDown={handleKeyPress} type="email" className="input" placeholder="Email" />
         
-        <label className="fieldset-label">Password</label>
+        <label className="fieldset-label text-slate-900">Password</label>
         <input value={password} onChange={e => setPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Password" />
 
-        <label className="fieldset-label">Confirm Password</label>
+        <label className="fieldset-label text-slate-900">Confirm Password</label>
         <input value={confirmPassword} onChange={e => setconfirmPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Confirm Password" />
 
         {/* Only shows when an error has been stored */}

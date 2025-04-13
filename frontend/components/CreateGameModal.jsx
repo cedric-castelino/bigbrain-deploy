@@ -7,7 +7,7 @@ function CreateGameModal ({open, onClose, onCreate, id, setId, name, setName, ha
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box bg-white">
                     <legend className="fieldset-legend text-center text-3xl">Create a New Game</legend>
                     
-                    <label className="fieldset-label">New Game ID</label>
+                    <label className="fieldset-label text-slate-900">New Game ID</label>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
@@ -16,7 +16,7 @@ function CreateGameModal ({open, onClose, onCreate, id, setId, name, setName, ha
                         onChange={(e) => setId(e.target.value)}
                     />
 
-                    <label className="fieldset-label">New Game Name</label>
+                    <label className="fieldset-label text-slate-900">New Game Name</label>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
@@ -25,7 +25,7 @@ function CreateGameModal ({open, onClose, onCreate, id, setId, name, setName, ha
                         onChange={(e) => setName(e.target.value)}
                     />
 
-                    <label className="fieldset-label">New Game Thumbnail</label>
+                    <label className="fieldset-label text-slate-900">New Game Thumbnail</label>
                     <input type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
 
                     {/* Only shows when an error has been stored */}

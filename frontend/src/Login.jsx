@@ -49,10 +49,10 @@ function Login ({ successJob, token,}) {
       <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
         <legend className="fieldset-legend text-center text-3xl">Login</legend>
         
-        <label className="fieldset-label">Email</label>
+        <label className="fieldset-label text-slate-900">Email</label>
         <input value={email} onChange={e => setEmail(e.target.value)} onKeyDown={handleKeyPress} type="email" className="input" placeholder="Email" />
         
-        <label className="fieldset-label">Password</label>
+        <label className="fieldset-label text-slate-900">Password</label>
         <input value={password} onChange={e => setPassword(e.target.value)} onKeyDown={handleKeyPress} type="password" className="input" placeholder="Password" />
 
         {/* Only shows when an error has been stored */}
