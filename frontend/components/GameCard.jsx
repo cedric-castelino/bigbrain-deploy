@@ -48,7 +48,7 @@ const GameCard = ({
                 {/* Now only render modal for the selected game */}
                 {selectedGameId === game.id && sessionPopUp && (
                     <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
-                        SessionURL: {`http://localhost:3000/${game.id}`}
+                        SessionURL: {`http://localhost:3000/session/${game.id}`}
                         <AiFillFrown />
                     </StartSessionModal>
                 )}
