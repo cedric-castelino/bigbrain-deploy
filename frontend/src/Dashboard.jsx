@@ -55,15 +55,14 @@ function Dashboard({ token }) {
   }, [token, navigate]);
 
   const createNewGame = async () => {
-    if (name === '') {
-      setCreateGameError("Game name cannot be empty");
+    if (name === '' || id === '') {
+      setCreateGameError("Game Name or ID cannot be empty");
       return; 
-    }
+    } 
 
     const isDuplicate = games.some(game => game.id === id || game.name === name);
-
     if (isDuplicate) {
-      setCreateGameError("Game id or game name is already taken");
+      setCreateGameError("Game Name or ID is already taken");
       return; 
     }
     
@@ -144,6 +143,9 @@ function Dashboard({ token }) {
                 open={createPopuUp}
                 onClose={() => {
                   setCreatePopUp(false);
+                  setName(''); 
+                  setId(''); 
+                  setThumbnail(''); 
                   setCreateGameError(''); 
                 }}
                 id={id}
