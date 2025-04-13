@@ -198,6 +198,7 @@ function Dashboard({ token }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
             {games.map(game => (
               <Gamecard key={game.id}
+              token={token}
               game={game}
               activeStatus={activeStatus}
               setActiveStatus={SetActiveStatus}

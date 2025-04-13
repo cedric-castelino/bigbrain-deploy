@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import StartSessionModal from './StartSessionModal';
 import { AiFillFrown } from "react-icons/ai";
 
 const GameCard = ({
+    token,
     game, 
     activeStatus, 
     setActiveStatus, 
@@ -10,12 +12,27 @@ const GameCard = ({
     setSessionPopUp,
     selectedGameId,
     setSelectedGameId
-} ) => {
+    }) => {
+
     const navigate = useNavigate();
 
     const handleClick = () => {
         navigate(`/game/${game.id}`);
     };
+
+    const mutateGame = async (token, state) => {
+        try {
+            const response = await axios.post(`http://localhost:5005/admin/game/${game.id}/mutate`, {
+                mutationType: state
+            }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+            })
+        } catch (err) {
+            alert(err.response.data.error);
+        }
+      }
 
     return (
         <div className="card bg-base-100 w-100 shadow-sm mt-6">
@@ -42,6 +59,7 @@ const GameCard = ({
                     setActiveStatus(!activeStatus);
                     setSelectedGameId(game.id);
                     setSessionPopUp(true);
+                    mutateGame(token, "END")
                     }}>
                     Start Game
                 </button>
