@@ -2,10 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/esm/Button';
+import { AiFillFrown } from "react-icons/ai";
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
 import CreateGameModal from '../components/CreateGameModal';
+import StartSessionModal from '../components/StartSessionModal';
 
 function Dashboard({ token }) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -17,6 +19,7 @@ function Dashboard({ token }) {
   const [createPopuUp, setCreatePopUp] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
   const [activeStatus, SetActiveStatus] = useState(false);
+  const [sessionPopUp, setSessionPopUp] = useState(false);
   const navigate = useNavigate();
   
   const getDashboardGames = async (token) => {
@@ -123,7 +126,7 @@ function Dashboard({ token }) {
     }
 
   }
-  console.log(activeStatus)
+
   return (
       <div className='m-4'>
         <div className='flex flex-row justify-between'>
@@ -197,8 +200,13 @@ function Dashboard({ token }) {
               game={game}
               activeStatus={activeStatus}
               setActiveStatus={SetActiveStatus}
+              setSessionPopUp={setSessionPopUp}
               />
             ))}
+            <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
+                SessionURL: SOMETHING
+                <AiFillFrown />
+              </StartSessionModal>
           </div>
         )}
       </div>
