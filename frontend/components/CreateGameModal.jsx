@@ -1,5 +1,5 @@
 // Creates a popup for when the user wants to create a new game
-function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileChange, error, editing}) {
+function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileChange, error, editing, fileInputRef}) {
 
     return (
         // Displays a transparent grey background for the modal
@@ -17,7 +17,7 @@ function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileCha
                     />
 
                     <label className="fieldset-label text-slate-900">Game Thumbnail</label>
-                    <input type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
+                    <input ref={fileInputRef} type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
 
                     {/* Only shows when an error has been stored */}
                     {error && (

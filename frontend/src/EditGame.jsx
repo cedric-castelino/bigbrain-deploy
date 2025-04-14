@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
     BrowserRouter as Router,
@@ -18,6 +18,8 @@ const EditGame = ({ token }) => {
     const [name, setName] = useState('');
     const [thumbnail, setThumbnail] = useState('');
     const [createGameError, setCreateGameError] = useState('');
+    const [imageError, setimageError] = useState(false);
+    const fileInputRef = useRef(null);
     const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
     const navigate = useNavigate();
 
@@ -43,12 +45,18 @@ const EditGame = ({ token }) => {
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
-    
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            setThumbnail(event.target.result); 
-          };
-          reader.readAsDataURL(selectedFile);
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+            if (!validImageTypes.includes(selectedFile.type)) {
+                setimageError(true);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setThumbnail(event.target.result); 
+            };
+            reader.readAsDataURL(selectedFile);
         } 
     };
 
@@ -59,12 +67,19 @@ const EditGame = ({ token }) => {
                 return; 
             } 
               
-                const isDuplicate = games.some(game => game.name === name);
-            if (isDuplicate) {
+            const isDuplicate = games.some(game => game.name === name);
+            if (isDuplicate && name !== game.name) {
                 setCreateGameError("Game Name is already taken");
                 return; 
             }
-              
+
+            if (imageError) {
+                setCreateGameError("Invalid file type");
+                resetFileInput();
+                setimageError(false);
+                return;
+            }
+  
             game.name = name;
             if (thumbnail) {
                 game.thumbnail = thumbnail;
@@ -87,6 +102,7 @@ const EditGame = ({ token }) => {
           getDashboardGames(token);
           setName('');
           setThumbnail('');
+          resetFileInput();
           setCreateGameError('');
           return true;
         } catch (err) {
@@ -94,7 +110,13 @@ const EditGame = ({ token }) => {
           return false;
         }
     }
-    
+
+    const resetFileInput = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.value = null; 
+        }
+    }
+
     return (
         <div className='m-4'>
             <h1 className="!mb-16 sm:!mb-4">Edit Game</h1>
@@ -129,6 +151,7 @@ const EditGame = ({ token }) => {
                         setCreatePopUp(false);
                         setName(''); 
                         setThumbnail(''); 
+                        resetFileInput();
                         setCreateGameError(''); 
                         }}
                         name={name}
@@ -142,6 +165,7 @@ const EditGame = ({ token }) => {
                         }}
                         error={createGameError}
                         editing={false}
+                        fileInputRef={fileInputRef}
                     />
                   </div>
                 </div>

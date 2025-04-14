@@ -70,7 +70,7 @@ const GameCard = ({
             <figure className="px-10 pt-10 mb-0">
                 <img
                 src={game.thumbnail} 
-                alt="Shoes"
+                alt="Game Thumbnail"
                 className="rounded-xl border-2 border-black w-[100%]" />
             </figure>
             <div className="card-body items-center text-center flex flex-col justify-between">

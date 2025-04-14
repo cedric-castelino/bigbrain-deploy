@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
@@ -15,10 +15,12 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [createPopuUp, setCreatePopUp] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
+  const [imageError, setimageError] = useState(false);
   const [sessionPopUp, setSessionPopUp] = useState(false);
   const [resultsPopUp, setResultsPopUp] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   
   const getDashboardGames = async (token) => {
     try {
@@ -40,6 +42,12 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+      if (!validImageTypes.includes(selectedFile.type)) {
+        setimageError(true);
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -80,6 +88,13 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
       setCreateGameError("Game Name is already taken");
       return; 
     }
+
+    if (imageError) {
+      setCreateGameError("Invalid file type");
+      resetFileInput();
+      setimageError(false);
+      return;
+    }
     
 
     const newGame = {
@@ -103,6 +118,8 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
       getDashboardGames(token);
       setName('');
+      setThumbnail('');
+      resetFileInput();
       setCreateGameError('');
       return true;
     } catch (err) {
@@ -154,6 +171,12 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }
 
+  const resetFileInput = () => {
+    if (fileInputRef.current) {
+        fileInputRef.current.value = null; 
+    }
+  }
+
   return (
       <div className='m-4'>
         <div className='flex flex-row justify-between'>
@@ -177,6 +200,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                   setCreatePopUp(false);
                   setName(''); 
                   setThumbnail(''); 
+                  resetFileInput();
                   setCreateGameError(''); 
                 }}
                 name={name}
@@ -190,6 +214,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                 }}
                 error={createGameError}
                 editing={true}
+                fileInputRef={fileInputRef}
               />
 
               <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900" onClick={() => setDeletePopUp(true)}>Delete Game</button>
