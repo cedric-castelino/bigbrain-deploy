@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import StartSessionModal from './StartSessionModal';
-import { AiFillFrown } from "react-icons/ai";
 import { useEffect } from 'react';
 
 const GameCard = ({
@@ -84,10 +83,18 @@ const GameCard = ({
                     
                     {/* Now only render modal for the selected game */}
                     {selectedGameId === game.id && sessionPopUp && (
-                        <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)}>
-                            SessionURL: {`http://localhost:3000/session/${game.id}`}
-                            <AiFillFrown />
+                        <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)} className='flex flex-row justify-center items-center'>
+                            <div>
+                                <p>
+                                    SessionURL: {`http://localhost:3000/session/${game.id}`}    
+                                </p>
+                                <p className='btn btn-soft btn-primary w-[20vh]'
+                                onClick={() => {navigator.clipboard.writeText(`http://localhost:3000/session/${game.id}`)}}>
+                                    Copy Link
+                                </p>
+                            </div>
                         </StartSessionModal>
+                        
                     )}
                 </div>
             </div>
