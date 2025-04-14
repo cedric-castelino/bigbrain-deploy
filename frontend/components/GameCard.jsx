@@ -89,7 +89,7 @@ const GameCard = ({
                         >
                             <div>
                                 <p>
-                                    SessionURL: {`http://localhost:3000/session/${game.id}`}    
+                                    SessionID: {`${game.id}`}    
                                 </p>
                                 <p className='btn btn-soft btn-primary w-[20vh]'
                                 onClick={() => {navigator.clipboard.writeText(`http://localhost:3000/session/${game.id}`)}}>
