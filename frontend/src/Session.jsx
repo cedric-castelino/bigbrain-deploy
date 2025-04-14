@@ -21,38 +21,35 @@ const Session = ({ token, setActiveStatus, endGameMutate }) => {
     
     return (
         <>
-            {(activeStatus && activeGameId === sessionId) && (
-                <div className="flex justify-center mt-2">
-                    <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
-                        onClick={() => {
-                            setActiveStatus(false);
-                            endGameMutate(token);
-                        }}
-                        >
-                        <b>End Session</b>
-                    </p>
+            {(activeStatus && activeGameId === sessionId) ? (
+                <div>
+                    <div className="flex justify-center mt-2">
+                        <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
+                            onClick={() => {
+                                setActiveStatus(false);
+                                endGameMutate(token);
+                            }}
+                            >
+                            <b>End Session</b>
+                        </p>
 
-                    <p className={`p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto`}
-                        onClick={() => {
-                        }}
-                        >
-                        <b>Advance</b>
-                    </p>
+                        <p className={`p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto`}
+                            onClick={() => {
+                            }}
+                            >
+                            <b>Advance</b>
+                        </p>
+                    </div>
+                    <div>
+                        {renderGameContent()}
+                    </div>
                 </div>
                 
-            )}
-{
-
-            (activeStatus && activeGameId === sessionId) ? (
-                <div>
-                    {renderGameContent()}
-                </div>
             ) : (
                 <div className="flex flex-col items-center mt-3">
                     <h1>Please wait</h1>
                 </div>
-            )
-            }
+            )}
         </>
     );
 };
