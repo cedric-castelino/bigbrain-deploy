@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Session = ({ token, setActiveStatus }) => {
+    const linkedSession = useParams();
+
     const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
     const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
-    const sessionId = localStorage.getItem('activeGameId');
+    const sessionId = localStorage.getItem('sessionId');
     const [gameState, setGameState] = useState("START");
 
     useEffect(() => {
@@ -21,9 +23,9 @@ const Session = ({ token, setActiveStatus }) => {
     const renderGameContent = () => {
         switch(gameState) {
             case "START":
-                return (<p>start</p>)
+                return (<p>Waiting for players to connect</p>)
             case "ADVANCE":
-                return (<p>advnacing</p>)
+                return (<p>advan</p>)
             case "END":
                 return (<p>results screen</p>)
         }
@@ -66,8 +68,12 @@ const Session = ({ token, setActiveStatus }) => {
     }
 
     const getStatus = async (token) => {
+        console.log(token)
+        console.log(sessionId)
         try {
-            const response = await axios.get(`http://localhost:5005/admin/game/${activeGameId}/status`, {
+            const response = await axios.get(`http://localhost:5005/admin/session/${sessionId}/status`, {
+                sessionid: sessionId
+            }, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             }
@@ -80,7 +86,7 @@ const Session = ({ token, setActiveStatus }) => {
     
     return (
         <>
-            {(activeStatus && activeGameId === sessionId) ? (
+            {(activeStatus && linkedSession.sessionId === sessionId) ? (
                 <div>
                     <div className="flex justify-center mt-2">
                         <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
