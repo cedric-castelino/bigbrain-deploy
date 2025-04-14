@@ -33,6 +33,10 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }
 
+  const navigateSession = () => {
+    navigate(`/session/${localStorage.getItem("sessionId")}`)
+  }
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -204,6 +208,19 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
             </td>
             <td className="ml-auto flex justify-between items-center gap-2">
               <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "!bg-red-700"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
+              {
+                activeStatus && (
+                  <p className={`p-2 rounded-md text-white !bg-yellow-600 mr-2 hover:cursor-pointer hover:!bg-yellow-900`}
+                    onClick={() => {
+                      navigateSession()
+                    }}
+                  >
+                    <b>
+                      GoToSession
+                    </b>
+                  </p>
+                )
+              }
               {
                 activeStatus && (
                   <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900`}
