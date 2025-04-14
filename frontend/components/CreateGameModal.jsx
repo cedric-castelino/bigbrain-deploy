@@ -1,22 +1,22 @@
 // Creates a popup for when the user wants to create a new game
-function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileChange, error}) {
+function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileChange, error, editing}) {
 
     return (
         // Displays a transparent grey background for the modal
         <div className={`fixed z-50 inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/60" : "invisible"}`}>
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box bg-white">
-                    <legend className="fieldset-legend text-center text-3xl">Create a New Game</legend>
-
-                    <label className="fieldset-label text-slate-900">New Game Name</label>
+                    {editing ? (<legend className="fieldset-legend text-center text-3xl">Create a New Game</legend>):
+                    <legend className="fieldset-legend text-center text-3xl">Edit Game</legend>}
+                    <label className="fieldset-label text-slate-900">Game Name</label>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
-                        placeholder="New Game Name"
+                        placeholder="Game Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
 
-                    <label className="fieldset-label text-slate-900">New Game Thumbnail</label>
+                    <label className="fieldset-label text-slate-900">Game Thumbnail</label>
                     <input type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
 
                     {/* Only shows when an error has been stored */}
@@ -30,7 +30,8 @@ function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileCha
                     )}
 
                     {/* Submits the form to create a new game */}
-                    <button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Create Game</button>
+                    {editing ? (<button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Create Game</button>):
+                    <button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Edit Game</button>}
 
                   </fieldset>
             {/* Exits the modal without creating a new game */}
