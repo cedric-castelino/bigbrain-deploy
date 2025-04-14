@@ -190,17 +190,14 @@ const EditGame = ({ token }) => {
 
         const minutes = Math.floor(totalDuration / 60);
         const seconds = totalDuration % 60;
-
         const parts = [];
 
         if (minutes > 0) {
             parts.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
         }
-        
         if (seconds > 0 || parts.length === 0) {
             parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
         }
-
         return parts.join(' and ');
     }
 

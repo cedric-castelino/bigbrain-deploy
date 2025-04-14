@@ -34,7 +34,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         onChange={(e) => setcorrectAnswer(e.target.value)}
                         checked={correctAnswer === 'Option A'}
                         defaultChecked />
-                        <p className="!text-zinc-500">- mark option as correct</p>
+                        <p className="!text-zinc-500">- mark option A as correct</p>
                     </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
@@ -51,7 +51,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         className="radio radio-xs" 
                         onChange={(e) => setcorrectAnswer(e.target.value)}
                         checked={correctAnswer === 'Option B'}/>
-                        <p className="!text-zinc-500">- mark option as correct</p>
+                        <p className="!text-zinc-500">- mark option B as correct</p>
                     </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
@@ -68,7 +68,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         className="radio radio-xs" 
                         onChange={(e) => setcorrectAnswer(e.target.value)}
                         checked={correctAnswer === 'Option C'}/>
-                        <p className="!text-zinc-500">- mark option as correct</p>
+                        <p className="!text-zinc-500">- mark option C as correct</p>
                     </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
@@ -85,7 +85,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         className="radio radio-xs" 
                         onChange={(e) => setcorrectAnswer(e.target.value)}
                         checked={correctAnswer === 'Option D'}/>
-                        <p className="!text-zinc-500">- mark option as correct</p>
+                        <p className="!text-zinc-500">- mark option D as correct</p>
                     </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"

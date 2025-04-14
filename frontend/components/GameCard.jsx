@@ -65,6 +65,26 @@ const GameCard = ({
         }
     }
 
+    const getTotalDuration = (questions) => {
+        let totalDuration = 0;
+        for (const question of questions) {
+            totalDuration += Number(question.duration);
+        }
+
+        const minutes = Math.floor(totalDuration / 60);
+        const seconds = totalDuration % 60;
+        const parts = [];
+
+        if (minutes > 0) {
+            parts.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
+        }
+        if (seconds > 0 || parts.length === 0) {
+            parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+        }
+
+        return parts.join(' and ');
+    }
+
     return (
         <div className="card bg-base-100 w-100 shadow-sm mt-6">
             <figure className="px-10 pt-10 mb-0">
@@ -81,7 +101,7 @@ const GameCard = ({
                 </div>
                 <div className="input-group justify-center mt-2 mb-2">
                     <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Total Duration</span>
-                    <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">?</span>
+                    <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">{getTotalDuration(game.questions)}</span>
                 </div>
                 <div className="card-actions">
                     <button onClick={handleClick} className="btn btn-primary mt-auto">Edit Game</button>
