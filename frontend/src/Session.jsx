@@ -8,15 +8,18 @@ const Session = ({ token, setActiveStatus }) => {
     const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
     const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
-    const [numberOfQuestions, setNumberOfQuestions] = useState(null);
-    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(-1);
-    const [gameState, setGameState] = useState("waitForPlayersJoin");
+    const [numberOfQuestions, setNumberOfQuestions] = useState(parseInt(localStorage.getItem('NumberOfQuestions')));
+    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(parseInt(localStorage.getItem('currentQuestionPosition')));
+    const [gameState, setGameState] = useState(localStorage.getItem("gameState"));
     const [hasResults, setHasResults] = useState(false);
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
     const sessionId = localStorage.getItem('sessionId');
-    const localToken = localStorage.getItem('token')
+    const localToken = localStorage.getItem('token');
+    const localGameState = localStorage.getItem('gameState');
+    const localCurrentQuestionPosition = parseInt(localStorage.getItem('currentQuestionPosition'));
+    const localNumberOfQuestions = parseInt(localStorage.getItem('NumberOfQuestions'));
 
     useEffect(() => {
         const checkResults = async () => {
@@ -33,6 +36,9 @@ const Session = ({ token, setActiveStatus }) => {
         setLocalActiveStatus(localStorage.getItem('activeStatus'));
         setLocalActiveGameId(localStorage.getItem('activeGameId'));
         setLocalSessionId(localStorage.getItem('sessionId'));
+        setCurrentQuestionPosition(localCurrentQuestionPosition)
+        setNumberOfQuestions(localNumberOfQuestions)
+        setGameState(localGameState)
 
         if (sessionId && localToken) {
             getStatus(localToken);
@@ -42,27 +48,34 @@ const Session = ({ token, setActiveStatus }) => {
 
     // Update gameState based on currentQuestionPosition
     useEffect(() => {
+        console.log(currentQuestionPosition)
+        console.log(numberOfQuestions)
         if (currentQuestionPosition === -1) {
             setGameState("waitForPlayersJoin");
         } else if (currentQuestionPosition === 0) {
             setGameState("displayQuestions");
         } else if (currentQuestionPosition + 1 > numberOfQuestions) {
-            localStorage.removeItem('activeStatus')
-            localStorage.removeItem('activeGameId')
-            localStorage.removeItem('sessionId')
+            localStorage.removeItem('activeStatus');
+            localStorage.removeItem('activeGameId');
+            localStorage.removeItem('sessionId');
+            localStorage.removeItem('gameState');
+            localStorage.removeItem('currentQuestionPosition');
+            localStorage.removeItem('localNumberOfQuestions');
             setGameState("results");
         }
     }, [currentQuestionPosition]);
 
     const renderGameContent = () => {
         if (gameState === "waitForPlayersJoin" && hasResults) {
-            setGameState("results")
+            setGameState("results");
         }
 
         switch(gameState) {
             case "waitForPlayersJoin":
+                localStorage.setItem('gameState', 'waitForPlayersJoin');
                 return (<p>Waiting for players to connect</p>)
             case "displayQuestions":
+                localStorage.setItem('gameState', 'displayQuestions');
                 return (
                     <div>
                         <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
@@ -70,6 +83,7 @@ const Session = ({ token, setActiveStatus }) => {
                     </div>
                 )
             case "results":
+                localStorage.setItem('gameState', 'results');
                 return (
                     <div>
                         <p>Results screen</p>
@@ -86,6 +100,8 @@ const Session = ({ token, setActiveStatus }) => {
         localStorage.removeItem('activeStatus');
         localStorage.removeItem('activeGameId');
         localStorage.removeItem('sessionId');
+        localStorage.removeItem('gameState');
+        localStorage.removeItem('currentQuestionPosition');
         setLocalActiveStatus(null);
         setLocalActiveGameId(null);
         setLocalSessionId(null);
@@ -119,6 +135,7 @@ const Session = ({ token, setActiveStatus }) => {
             });
             getStatus(token);
             const newPosition = response.data.data.position;
+            localStorage.setItem('currentQuestionPosition', newPosition.toString())
             setCurrentQuestionPosition(newPosition);
             if (newPosition === numberOfQuestions) {
                 endGameFunctionality()
@@ -139,7 +156,9 @@ const Session = ({ token, setActiveStatus }) => {
                     sessionid: sessionId
                 }
             })
-            setNumberOfQuestions(response.data.results.questions.length)
+            const lngth = response.data.results.questions.length;
+            setNumberOfQuestions(lngth);
+            localStorage.setItem('NumberOfQuestions', lngth.toString());
         } catch (err) {
             alert(err.response.data.error);
         }

@@ -52,6 +52,14 @@ function App() {
       localStorage.removeItem('token');
       localStorage.removeItem('email');
       localStorage.removeItem('password');
+      localStorage.removeItem('NumberOfQuestions');
+      localStorage.removeItem('currentQuestionPosition');
+      localStorage.removeItem('gameState');
+      localStorage.removeItem('localNumberOfQuestions');
+      localStorage.removeItem('activeStatus');
+      localStorage.removeItem('activeGameId');
+      localStorage.removeItem('sessionId');
+
       setToken(null);
       navigate('/login');
     } catch (err) {

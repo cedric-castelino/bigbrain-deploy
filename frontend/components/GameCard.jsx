@@ -52,6 +52,9 @@ const GameCard = ({
             localStorage.setItem('activeStatus', 'true');
             localStorage.setItem('activeGameId', game.id.toString());
             localStorage.setItem('sessionId', newSessionId);
+            localStorage.setItem('gameState', 'waitForPlayersJoin');
+            localStorage.setItem('currentQuestionPosition', -1);
+            localStorage.setItem('NumberOfQuestions', -1);
 
             setSessionId(newSessionId);
         
