@@ -164,11 +164,14 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
         })
         localStorage.removeItem('activeStatus');
         localStorage.removeItem('activeGameId');
-        localStorage.removeItem('sessionId');
         setResultsPopUp(true);
     } catch (err) {
         alert(err.response.data.error);
     }
+  }
+
+  const goToResultPage = () => {
+    navigate(`/session/${localStorage.getItem('sessionId')}`)
   }
 
   const resetFileInput = () => {
@@ -262,7 +265,9 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
               }
               <ViewResultsModal open={resultsPopUp} onClose={() => setResultsPopUp(false)}>
                 <div className='btn btn-primary'
-                     onClick={() => {}}>
+                     onClick={() => {
+                      goToResultPage();
+                     }}>
                   Would you like to view the results?
                 </div>
               </ViewResultsModal>

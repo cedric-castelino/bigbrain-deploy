@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Session = ({ token, setActiveStatus }) => {
     const linkedSession = useParams();
+    const navigate = useNavigate();
 
     const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
@@ -48,8 +50,6 @@ const Session = ({ token, setActiveStatus }) => {
 
     // Update gameState based on currentQuestionPosition
     useEffect(() => {
-        console.log(currentQuestionPosition)
-        console.log(numberOfQuestions)
         if (currentQuestionPosition === -1) {
             setGameState("waitForPlayersJoin");
         } else if (currentQuestionPosition === 0) {
@@ -181,9 +181,15 @@ const Session = ({ token, setActiveStatus }) => {
             return false;
         }
     }
+
+    const navigate_to_dashboard = async () => {
+        navigate('/dashboard');
+    }
+
     
     return (
         <>
+            <button onClick={navigate_to_dashboard} className="btn bg-primary hover:!bg-blue-600 text-white absolute top-16 right-6 sm:top-2 sm:right-[8.25rem] sm:btn-lg btn-lg">Dashboard</button>
             {((activeStatus && linkedSession.sessionId === sessionId)) ? (
                 <div>
                     <div className="flex justify-center mt-2">
