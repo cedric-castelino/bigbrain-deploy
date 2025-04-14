@@ -17,7 +17,7 @@ function Dashboard({ token }) {
   const [createGameError, setCreateGameError] = useState('');
   const [activeStatus, setActiveStatus] = useState(false);
   const [sessionPopUp, setSessionPopUp] = useState(false);
-  const [selectedGameId, setSelectedGameId] = useState(null); // Add this new state
+  const [selectedGameId, setSelectedGameId] = useState(null);
   const navigate = useNavigate();
   
   const getDashboardGames = async (token) => {
@@ -53,6 +53,17 @@ function Dashboard({ token }) {
     
     getDashboardGames(token);
   }, [token, navigate]);
+
+  useEffect(() => {
+    // Check for active game in localStorage
+    const storedActiveStatus = localStorage.getItem('activeStatus') === 'true';
+    const storedActiveGameId = localStorage.getItem('activeGameId');
+    
+    if (storedActiveStatus && storedActiveGameId) {
+      setActiveStatus(true);
+      setSelectedGameId(Number(storedActiveGameId));
+    }
+  }, []);
 
   const createNewGame = async () => {
     if (name === '') {
@@ -122,6 +133,7 @@ function Dashboard({ token }) {
   }
 
   const endGameMutate = async (token) => {
+    console.log(selectedGameId)
     try {
         const response = await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
             mutationType: "END"
@@ -130,6 +142,8 @@ function Dashboard({ token }) {
             'Authorization': `Bearer ${token}`,
         }
         })
+        localStorage.removeItem('activeStatus');
+        localStorage.removeItem('activeGameId');
     } catch (err) {
         alert(err.response.data.error);
     }

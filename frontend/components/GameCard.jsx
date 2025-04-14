@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import StartSessionModal from './StartSessionModal';
 import { AiFillFrown } from "react-icons/ai";
+import { useEffect } from 'react';
 
 const GameCard = ({
     token,
@@ -16,6 +17,17 @@ const GameCard = ({
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const storedActiveStatus = localStorage.getItem('activeStatus') === 'true';
+        const storedActiveGameId = localStorage.getItem('activeGameId');
+        
+        // Update state if there's an active game in localStorage
+        if (storedActiveStatus) {
+            setActiveStatus(true);
+            setSelectedGameId(Number(storedActiveGameId));
+        }
+    }, [setActiveStatus, setSelectedGameId]);
+
     const handleClick = () => {
         navigate(`/game/${game.id}`);
     };
@@ -29,6 +41,8 @@ const GameCard = ({
                 'Authorization': `Bearer ${token}`,
             }
             })
+            localStorage.setItem('activeStatus', 'true');
+            localStorage.setItem('activeGameId', game.id.toString());
         } catch (err) {
             alert(err.response.data.error);
         }
