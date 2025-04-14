@@ -134,7 +134,6 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   }
 
   const endGameMutate = async (token) => {
-    console.log(selectedGameId)
     try {
         const response = await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
             mutationType: "END"

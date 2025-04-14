@@ -9,8 +9,9 @@ const Session = ({ token, setActiveStatus }) => {
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
     const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
     const [numberOfQuestions, setNumberOfQuestions] = useState(null);
-    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(0);
+    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(-1);
     const [gameState, setGameState] = useState("waitForPlayersJoin");
+    const [results, setResults] = useState(null);
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
@@ -20,14 +21,24 @@ const Session = ({ token, setActiveStatus }) => {
         setLocalActiveStatus(localStorage.getItem('activeStatus'));
         setLocalActiveGameId(localStorage.getItem('activeGameId'));
         setLocalSessionId(localStorage.getItem('sessionId'));
+
+        if (sessionId && token) {
+            getStatus(token);
+        }
+
     }, []);
 
     // Update gameState based on currentQuestionPosition
     useEffect(() => {
-        if (currentQuestionPosition === 0) {
+        if (currentQuestionPosition === -1) {
             setGameState("waitForPlayersJoin");
-        } else if (currentQuestionPosition >= 1) {
+        } else if (currentQuestionPosition === 0) {
             setGameState("displayQuestions");
+        } else if (currentQuestionPosition + 1 > numberOfQuestions) {
+            localStorage.removeItem('activeStatus')
+            localStorage.removeItem('activeGameId')
+            localStorage.removeItem('sessionId')
+            setGameState("results");
         }
     }, [currentQuestionPosition]);
 
@@ -69,6 +80,7 @@ const Session = ({ token, setActiveStatus }) => {
     }
 
     const advanceGame = async (token) => {
+
         try {
             const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId}/mutate`, {
                 mutationType: "ADVANCE"
@@ -80,10 +92,10 @@ const Session = ({ token, setActiveStatus }) => {
             getStatus(token);
             const newPosition = response.data.data.position;
             setCurrentQuestionPosition(newPosition);
-
-            if (newPosition >= 0) {
-                setGameState("displayQuestions");
+            if (newPosition === numberOfQuestions) {
+                console.log("the last game")
             }
+            
         } catch (err) {
             alert(err.response.data.error);
         }
@@ -94,17 +106,38 @@ const Session = ({ token, setActiveStatus }) => {
             const response = await axios.get(`http://localhost:5005/admin/session/${sessionId}/status`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
+                },
+                params: {  // If you need to send the sessionId as a query parameter
+                    sessionid: sessionId
                 }
-            });
+            })
             setNumberOfQuestions(response.data.results.questions.length)
         } catch (err) {
-            alert(err.response.data.error || "Error getting status");
+            alert(err.response.data.error);
+        }
+    }
+
+    const getResults = async (token) => {
+        try {
+            const response = await axios.get(`http://localhost:5005/admin/session/${linkedSession.sessionId}/results`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                params: {  // If you need to send the sessionId as a query parameter
+                    sessionid: linkedSession.sessionId
+                }
+            })
+            console.log(response);
+            return true;
+        } catch (err) {
+            alert(err.response.data.error);
+            return false;
         }
     }
     
     return (
         <>
-            {(activeStatus && linkedSession.sessionId === sessionId) ? (
+            {((activeStatus && linkedSession.sessionId === sessionId)) ? (
                 <div>
                     <div className="flex justify-center mt-2">
                         <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
@@ -115,12 +148,20 @@ const Session = ({ token, setActiveStatus }) => {
                             <b>End Session</b>
                         </p>
 
-                        <p className={`p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto`}
+                        <p className={`${gameState === "results" ? "" : "p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto"}`}
                             onClick={() => {
                                 advanceGame(token);
                             }}
                         >
-                            <b>{gameState === "waitForPlayersJoin" ? "Start" : "Advance"}</b>
+                            <b>
+                                {gameState === "results" 
+                                    ? "" 
+                                    : gameState === "waitForPlayersJoin" 
+                                    ? "Start" 
+                                    : (gameState === "displayQuestions" && currentQuestionPosition + 1 === numberOfQuestions) 
+                                        ? "View Results" 
+                                        : "Next Question"}
+                            </b>
                         </p>
                     </div>
                     <div>
@@ -130,7 +171,7 @@ const Session = ({ token, setActiveStatus }) => {
                 
             ) : (
                 <div className="flex flex-col items-center mt-3">
-                    <h1>Please wait</h1>
+                    <h1>No results avaliable</h1>
                 </div>
             )}
         </>
