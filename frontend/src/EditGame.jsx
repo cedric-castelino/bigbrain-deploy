@@ -9,16 +9,25 @@ import {
     useNavigate
   } from "react-router-dom"
 import CreateGameModal from '../components/CreateGameModal';
+import CreateQuestionModal from '../components/CreateQuestionModal';
 
 const EditGame = ({ token }) => {
     const { gameId } = useParams(); 
     const [game, setGame] = useState([]);
     const [games, setGames] = useState([]);
-    const [createPopuUp, setCreatePopUp] = useState(false);
+    const [editPopUp, setEditPopUp] = useState(false);
+    const [createQPopuUp, setCreateQPopUp] = useState(false);
     const [name, setName] = useState('');
     const [thumbnail, setThumbnail] = useState('');
     const [createGameError, setCreateGameError] = useState('');
     const [imageError, setimageError] = useState(false);
+    const [duration, setDuration] = useState('');
+    const [question, setQuestion] = useState('');
+    const [optionA, setOptionA] = useState('');
+    const [optionB, setOptionB] = useState('');
+    const [optionC, setOptionC] = useState('');
+    const [optionD, setOptionD] = useState('');
+    const [questionError, setquestionError] = useState(false);
     const fileInputRef = useRef(null);
     const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
     const navigate = useNavigate();
@@ -62,11 +71,7 @@ const EditGame = ({ token }) => {
 
     const editGame = async (reset) => {
         if (!reset) {
-            if (name === '') {
-                setCreateGameError("Game Name cannot be empty");
-                return; 
-            } 
-              
+
             const isDuplicate = games.some(game => game.name === name);
             if (isDuplicate && name !== game.name) {
                 setCreateGameError("Game Name is already taken");
@@ -79,8 +84,11 @@ const EditGame = ({ token }) => {
                 setimageError(false);
                 return;
             }
-  
-            game.name = name;
+            
+            if (name !== '') {
+                game.name = name;
+            }
+
             if (thumbnail) {
                 game.thumbnail = thumbnail;
             }
@@ -128,7 +136,7 @@ const EditGame = ({ token }) => {
                 </div>
             ) : (
             
-            <div className="hero bg-base-200">
+            <div className="hero bg-base-200 bg-white">
                 <div className='join join-vertical sm:join-horizontal w-full'>
                   <img
                     src={game.thumbnail}
@@ -142,13 +150,13 @@ const EditGame = ({ token }) => {
                       Total Duration: ?
                     </p>
                     <div className='join join-vertical sm:join-horizontal gap-2'>
-                        <button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>Edit Game Info</button>
+                        <button className="btn btn-primary" onClick={() => setEditPopUp(true)}>Edit Game Info</button>
                         <button className="btn btn-primary" onClick={() => editGame(true)}>Reset Thumbnail</button>
                     </div>
                     <CreateGameModal
-                        open={createPopuUp}
+                        open={editPopUp}
                         onClose={() => {
-                        setCreatePopUp(false);
+                        setEditPopUp(false);
                         setName(''); 
                         setThumbnail(''); 
                         resetFileInput();
@@ -160,7 +168,7 @@ const EditGame = ({ token }) => {
                         onCreate={async () => {
                         const success = await editGame(false);
                         if (success) {
-                            setCreatePopUp(false); 
+                            setEditPopUp(false); 
                         }
                         }}
                         error={createGameError}
@@ -172,7 +180,32 @@ const EditGame = ({ token }) => {
             </div>
             )}
             <td className='flex gap-2 mt-3'>
-                <button className="btn btn-primary">Add Question</button>
+                <button className="btn btn-primary" onClick={() => setCreateQPopUp(true)}>Add Question</button>
+                <CreateQuestionModal
+                        open={createQPopuUp}
+                        onClose={() => {
+                        setCreateQPopUp(false);
+                        }}
+                        onCreate={async () => {
+                        const success = await editGame(false);
+                        if (success) {
+                            setCreateQPopUp(false); 
+                        }
+                        }}
+                        error={questionError}
+                        duration={duration}
+                        setDuration={setDuration}
+                        question={question}
+                        setQuestion={setQuestion}
+                        optionA={optionA}
+                        setOptionA={setOptionA}
+                        optionB={optionB}
+                        setOptionB={setOptionB}
+                        optionC={optionC}
+                        setOptionC={setOptionC}
+                        optionD={optionD}
+                        setOptionD={setOptionD}
+                />
                 <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
             </td>
         </div>
