@@ -8,7 +8,7 @@ import DeleteModal from '../components/deleteModal';
 import CreateGameModal from '../components/CreateGameModal';
 import ViewResultsModal from '../components/ViewResultsModal';
 
-function Dashboard({ token }) {
+function Dashboard({ token, activeStatus, setActiveStatus }) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
   const [games, setGames] = useState([]);
   const [name, setName] = useState('');
@@ -16,7 +16,6 @@ function Dashboard({ token }) {
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [createPopuUp, setCreatePopUp] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
-  const [activeStatus, setActiveStatus] = useState(false);
   const [sessionPopUp, setSessionPopUp] = useState(false);
   const [resultsPopUp, setResultsPopUp] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
@@ -149,7 +148,7 @@ function Dashboard({ token }) {
     } catch (err) {
         alert(err.response.data.error);
     }
-}
+  }
 
   return (
       <div className='m-4'>
