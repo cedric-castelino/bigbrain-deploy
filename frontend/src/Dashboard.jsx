@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/esm/Button';
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
@@ -164,9 +163,9 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
           <tbody>
             <tr className='flex justify-between items-center'>
             <td className='flex gap-2'>
-              <Button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>
+              <button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>
                 Create New Game
-              </Button>
+              </button>
               
               <CreateGameModal
                 open={createPopuUp}

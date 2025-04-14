@@ -57,14 +57,13 @@ function App() {
     } catch (err) {
       alert(err.response.data.error);
     }
-
   }
 
   return (
     <div data-theme="nord" className="fixed inset-0 bg-blue-200 overflow-y-auto">
       {token ? (
         <>
-          <button onClick={logout} className="btn btn-lg bg-secondary text-white absolute top-2 right-6">Logout</button>
+          <button onClick={logout} className="btn btn-lg bg-secondary hover:!bg-zinc-700 text-white absolute top-2 right-6">Logout</button>
         </>
       ) : null
     }
