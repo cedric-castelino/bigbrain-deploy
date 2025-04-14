@@ -15,8 +15,8 @@ const Session = ({ token }) => {
                         {sessionId}
                     </div>
                 ) : (
-                    <div>
-                        NOTHING HERE
+                    <div className="flex flex-col items-center mt-3">
+                        <h1>No game session has been started for this gameID</h1>
                     </div>
                 )
             }
