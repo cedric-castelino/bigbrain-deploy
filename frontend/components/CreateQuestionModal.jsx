@@ -1,6 +1,6 @@
 // Creates a popup for when the user wants to add a new question
 function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, question, setQuestion,
-    optionA, setOptionA, optionB, setOptionB, optionC, setOptionC, optionD, setOptionD}) {
+    optionA, setOptionA, optionB, setOptionB, optionC, setOptionC, optionD, setOptionD, correctAnswer, setcorrectAnswer}) {
 
     return (
         // Displays a transparent grey background for the modal
@@ -9,15 +9,12 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                 <legend className="fieldset-legend text-center text-3xl">Add Question</legend>
                     <label className="fieldset-label text-slate-900">Duration</label>
                     <input
-                        className="input validator"
+                        className="p-2 bg-gray-200 rounded-md"
                         type="number"
                         required placeholder="Duration in Seconds"
-                        min="1"
-                        max="60"
                         value={duration}
                         onChange={(e) => setDuration(e.target.value)}
                     />
-                    <p className="validator-hint mb-1">Must be between be 1 to 60</p>
 
                     <label className="fieldset-label text-slate-900">Question</label>
                     <textarea 
@@ -27,8 +24,18 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                     />
-                    <hr></hr>
-                    <label className="fieldset-label text-slate-900">Option A</label>
+                    <hr className="m-2"></hr>
+                    <div className='join join-horizontal gap-2 h-[20px]'>
+                        <label className="fieldset-label text-slate-900">Option A</label>
+                        <input type="radio" 
+                        name="correctAnswer" 
+                        value="Option A" 
+                        className="radio radio-xs" 
+                        onChange={(e) => setcorrectAnswer(e.target.value)}
+                        checked={correctAnswer === 'Option A'}
+                        defaultChecked />
+                        <p className="!text-zinc-500">- mark option as correct</p>
+                    </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
@@ -36,7 +43,16 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         value={optionA}
                         onChange={(e) => setOptionA(e.target.value)}
                     />
-                    <label className="fieldset-label text-slate-900">Option B</label>
+                    <div className='join join-horizontal gap-2 h-[20px]'>
+                        <label className="fieldset-label text-slate-900">Option B</label>
+                        <input type="radio" 
+                        name="correctAnswer" 
+                        value="Option B" 
+                        className="radio radio-xs" 
+                        onChange={(e) => setcorrectAnswer(e.target.value)}
+                        checked={correctAnswer === 'Option B'}/>
+                        <p className="!text-zinc-500">- mark option as correct</p>
+                    </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
@@ -44,7 +60,16 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         value={optionB}
                         onChange={(e) => setOptionB(e.target.value)}
                     />
-                    <label className="fieldset-label text-slate-900">Option C</label>
+                    <div className='join join-horizontal gap-2 h-[20px]'>
+                        <label className="fieldset-label text-slate-900">Option C</label>
+                        <input type="radio" 
+                        name="correctAnswer" 
+                        value="Option C" 
+                        className="radio radio-xs" 
+                        onChange={(e) => setcorrectAnswer(e.target.value)}
+                        checked={correctAnswer === 'Option C'}/>
+                        <p className="!text-zinc-500">- mark option as correct</p>
+                    </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
@@ -52,7 +77,16 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                         value={optionC}
                         onChange={(e) => setOptionC(e.target.value)}
                     />
-                    <label className="fieldset-label text-slate-900">Option D</label>
+                    <div className='join join-horizontal gap-2 h-[20px]'>
+                        <label className="fieldset-label text-slate-900">Option D</label>
+                        <input type="radio" 
+                        name="correctAnswer" 
+                        value="Option D" 
+                        className="radio radio-xs" 
+                        onChange={(e) => setcorrectAnswer(e.target.value)}
+                        checked={correctAnswer === 'Option D'}/>
+                        <p className="!text-zinc-500">- mark option as correct</p>
+                    </div>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
                         type="text"
@@ -64,7 +98,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
 
                     {/* Only shows when an error has been stored */}
                     {error && (
-                    <div role="alert" className="alert alert-warning mt-2 mb-0">
+                    <div role="alert" className="alert alert-warning mt-2 mb-0 p-1 !pl-4">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>

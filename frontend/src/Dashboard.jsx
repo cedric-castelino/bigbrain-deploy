@@ -101,7 +101,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
       id: Math.floor(Math.random() * 1001),
       name: name,
       owner: localStorage.getItem('email'),
-      questions: [{}],
+      questions: [],
       thumbnail: thumbnail || defaultImg
     };
 

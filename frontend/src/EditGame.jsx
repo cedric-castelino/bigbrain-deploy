@@ -27,12 +27,13 @@ const EditGame = ({ token }) => {
     const [optionB, setOptionB] = useState('');
     const [optionC, setOptionC] = useState('');
     const [optionD, setOptionD] = useState('');
-    const [questionError, setquestionError] = useState(false);
+    const [correctAnswer, setcorrectAnswer] = useState('');
+    const [questionError, setquestionError] = useState('');
     const fileInputRef = useRef(null);
     const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
     const navigate = useNavigate();
 
-    const getDashboardGames = async (token) => {
+    const getGameData = async (token) => {
         const response = await axios.get('http://localhost:5005/admin/games', {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -43,7 +44,7 @@ const EditGame = ({ token }) => {
     }
 
     useEffect(() => {
-        getDashboardGames(token);
+        getGameData(token);
         console.log(game);
     }, [token]);
 
@@ -107,11 +108,67 @@ const EditGame = ({ token }) => {
             }
           });
     
-          getDashboardGames(token);
+          getGameData(token);
           setName('');
           setThumbnail('');
           resetFileInput();
-          setCreateGameError('');
+          setCreateGameError(' ');
+          return true;
+        } catch (err) {
+          setCreateGameError(err.response.data.error);
+          return false;
+        }
+    }
+
+    const addQuestion = async () => {
+        if (duration === '' || question === '' || optionA === '' || optionB === '' || optionC === '' || optionD === '') {
+            setquestionError("Question Inputs Cannot be Empty");
+            return; 
+        }
+
+        if (Number(duration) < 0 || Number(duration) > 60) {
+            setquestionError("Duration must be between 1 and 60");
+            return; 
+        }
+
+        if (correctAnswer === '') {
+            setquestionError("Correct Answer must be Selected");
+            return; 
+        }
+
+        let currentQuestions = game.questions;
+        const newQuestion = {
+            duration: duration,
+            correntAnswers: [correctAnswer],
+            question: question,
+            options: {
+                optionA: optionA,
+                optionB: optionB,
+                optionC: optionC,
+                optionD: optionD
+            }
+        }
+        currentQuestions.push(newQuestion);
+      
+        games[games.findIndex(g => g.id === game.id)] = game;
+        try {
+          await axios.put('http://localhost:5005/admin/games', {
+            games: games
+          }, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+    
+          getGameData(token);
+          setDuration('');
+          setQuestion('');
+          setOptionA('');
+          setOptionB('');
+          setOptionC('');
+          setOptionD('');
+          setcorrectAnswer('');
+          setquestionError('');
           return true;
         } catch (err) {
           setCreateGameError(err.response.data.error);
@@ -123,6 +180,28 @@ const EditGame = ({ token }) => {
         if (fileInputRef.current) {
             fileInputRef.current.value = null; 
         }
+    }
+
+    const getTotalDuration = (questions) => {
+        let totalDuration = 0;
+        for (const question of questions) {
+            totalDuration += Number(question.duration);
+        }
+
+        const minutes = Math.floor(totalDuration / 60);
+        const seconds = totalDuration % 60;
+
+        const parts = [];
+
+        if (minutes > 0) {
+            parts.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
+        }
+        
+        if (seconds > 0 || parts.length === 0) {
+            parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+        }
+
+        return parts.join(' and ');
     }
 
     return (
@@ -147,7 +226,7 @@ const EditGame = ({ token }) => {
                       Number of Questions: {game.questions.length}
                     </p>
                     <p className="py-0">
-                      Total Duration: ?
+                      Total Duration: {getTotalDuration(game.questions)}
                     </p>
                     <div className='join join-vertical sm:join-horizontal gap-2'>
                         <button className="btn btn-primary" onClick={() => setEditPopUp(true)}>Edit Game Info</button>
@@ -185,9 +264,17 @@ const EditGame = ({ token }) => {
                         open={createQPopuUp}
                         onClose={() => {
                         setCreateQPopUp(false);
+                        setDuration('');
+                        setQuestion('');
+                        setOptionA('');
+                        setOptionB('');
+                        setOptionC('');
+                        setOptionD('');
+                        setcorrectAnswer('');
+                        setquestionError('');
                         }}
                         onCreate={async () => {
-                        const success = await editGame(false);
+                        const success = await addQuestion();
                         if (success) {
                             setCreateQPopUp(false); 
                         }
@@ -205,6 +292,8 @@ const EditGame = ({ token }) => {
                         setOptionC={setOptionC}
                         optionD={optionD}
                         setOptionD={setOptionD}
+                        correctAnswer={correctAnswer}
+                        setcorrectAnswer={setcorrectAnswer}
                 />
                 <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
             </td>
