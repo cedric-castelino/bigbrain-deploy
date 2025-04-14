@@ -8,26 +8,46 @@ const Session = ({ token, setActiveStatus }) => {
     const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
     const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
+    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(-1);
+    const [gameState, setGameState] = useState("waitForPlayersJoin");
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
     const sessionId = localStorage.getItem('sessionId');
-    const [gameState, setGameState] = useState("START");
 
     useEffect(() => {
         setLocalActiveStatus(localStorage.getItem('activeStatus'));
         setLocalActiveGameId(localStorage.getItem('activeGameId'));
-        setLocalSessionId(localStorage.getItem('sessionId'))
+        setLocalSessionId(localStorage.getItem('sessionId'));
+        
+        // Get initial status when component mounts
+        if (sessionId && token) {
+            getStatus(token);
+        }
     }, []);
+
+    // Update gameState based on currentQuestionPosition
+    useEffect(() => {
+        if (currentQuestionPosition === -1) {
+            setGameState("waitForPlayersJoin");
+        } else if (currentQuestionPosition >= 0) {
+            setGameState("displayQuestions");
+        }
+    }, [currentQuestionPosition]);
 
     const renderGameContent = () => {
         switch(gameState) {
-            case "START":
+            case "waitForPlayersJoin":
                 return (<p>Waiting for players to connect</p>)
-            case "ADVANCE":
-                return (<p>advan</p>)
-            case "END":
-                return (<p>results screen</p>)
+            case "displayQuestions":
+                return (
+                    <div>
+                        <p>Question position: {currentQuestionPosition}</p>
+                        <p>TIMER</p>
+                    </div>
+                )
+            case "results":
+                return (<p>Results screen</p>)
         }
     }
 
@@ -36,10 +56,10 @@ const Session = ({ token, setActiveStatus }) => {
             const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId}/mutate`, {
                 mutationType: "END"
             }, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-            })
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
             localStorage.removeItem('activeStatus');
             localStorage.removeItem('activeGameId');
             localStorage.removeItem('sessionId');
@@ -57,30 +77,26 @@ const Session = ({ token, setActiveStatus }) => {
             const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId}/mutate`, {
                 mutationType: "ADVANCE"
             }, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-            })
-            console.log(response.data.data.position)
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            setCurrentQuestionPosition(response.data.data.position);
         } catch (err) {
             alert(err.response.data.error);
         }
     }
 
     const getStatus = async (token) => {
-        console.log(token)
-        console.log(sessionId)
         try {
             const response = await axios.get(`http://localhost:5005/admin/session/${sessionId}/status`, {
-                sessionid: sessionId
-            }, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-            })
-            console.log(response)
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            setCurrentQuestionPosition(response.data.position);
         } catch (err) {
-            alert(err.response.data.error);
+            alert(err.response.data.error || "Error getting status");
         }
     }
     
@@ -93,16 +109,16 @@ const Session = ({ token, setActiveStatus }) => {
                             onClick={() => {
                                 endGameMutate(token);
                             }}
-                            >
+                        >
                             <b>End Session</b>
                         </p>
 
                         <p className={`p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto`}
                             onClick={() => {
-                                getStatus(token);
+                                advanceGame(token);
                             }}
-                            >
-                            <b>Advance</b>
+                        >
+                            <b>{currentQuestionPosition === -1 ? "Start" : "Advance"}</b>
                         </p>
                     </div>
                     <div>
