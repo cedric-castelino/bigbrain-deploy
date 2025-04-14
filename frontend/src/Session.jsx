@@ -8,7 +8,8 @@ const Session = ({ token, setActiveStatus }) => {
     const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
     const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
-    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(-1);
+    const [numberOfQuestions, setNumberOfQuestions] = useState(null);
+    const [currentQuestionPosition, setCurrentQuestionPosition] = useState(0);
     const [gameState, setGameState] = useState("waitForPlayersJoin");
 
     const activeStatus = localStorage.getItem('activeStatus');
@@ -19,18 +20,13 @@ const Session = ({ token, setActiveStatus }) => {
         setLocalActiveStatus(localStorage.getItem('activeStatus'));
         setLocalActiveGameId(localStorage.getItem('activeGameId'));
         setLocalSessionId(localStorage.getItem('sessionId'));
-        
-        // Get initial status when component mounts
-        if (sessionId && token) {
-            getStatus(token);
-        }
     }, []);
 
     // Update gameState based on currentQuestionPosition
     useEffect(() => {
-        if (currentQuestionPosition === -1) {
+        if (currentQuestionPosition === 0) {
             setGameState("waitForPlayersJoin");
-        } else if (currentQuestionPosition >= 0) {
+        } else if (currentQuestionPosition >= 1) {
             setGameState("displayQuestions");
         }
     }, [currentQuestionPosition]);
@@ -42,7 +38,7 @@ const Session = ({ token, setActiveStatus }) => {
             case "displayQuestions":
                 return (
                     <div>
-                        <p>Question position: {currentQuestionPosition}</p>
+                        <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
                         <p>TIMER</p>
                     </div>
                 )
@@ -81,7 +77,13 @@ const Session = ({ token, setActiveStatus }) => {
                     'Authorization': `Bearer ${token}`,
                 }
             });
-            setCurrentQuestionPosition(response.data.data.position);
+            getStatus(token);
+            const newPosition = response.data.data.position;
+            setCurrentQuestionPosition(newPosition);
+
+            if (newPosition >= 0) {
+                setGameState("displayQuestions");
+            }
         } catch (err) {
             alert(err.response.data.error);
         }
@@ -94,7 +96,7 @@ const Session = ({ token, setActiveStatus }) => {
                     'Authorization': `Bearer ${token}`,
                 }
             });
-            setCurrentQuestionPosition(response.data.position);
+            setNumberOfQuestions(response.data.results.questions.length)
         } catch (err) {
             alert(err.response.data.error || "Error getting status");
         }
@@ -118,7 +120,7 @@ const Session = ({ token, setActiveStatus }) => {
                                 advanceGame(token);
                             }}
                         >
-                            <b>{currentQuestionPosition === -1 ? "Start" : "Advance"}</b>
+                            <b>{gameState === "waitForPlayersJoin" ? "Start" : "Advance"}</b>
                         </p>
                     </div>
                     <div>
