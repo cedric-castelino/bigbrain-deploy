@@ -220,8 +220,9 @@ function Dashboard({ token }) {
                 )
               }
               <ViewResultsModal open={resultsPopUp} onClose={() => setResultsPopUp(false)}>
-                <div>
-                  TESTING VIEW RESULTS
+                <div className='btn btn-primary'
+                     onClick={() => {}}>
+                  Would you like to view the results?
                 </div>
               </ViewResultsModal>
             </td>
