@@ -50,8 +50,6 @@ const Session = ({ token, setActiveStatus }) => {
 
     // Update gameState based on currentQuestionPosition
     useEffect(() => {
-        console.log(currentQuestionPosition)
-        console.log(numberOfQuestions)
         if (currentQuestionPosition === -1) {
             setGameState("waitForPlayersJoin");
         } else if (currentQuestionPosition === 0) {
