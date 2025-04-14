@@ -11,19 +11,31 @@ const Session = ({ token, setActiveStatus }) => {
     const [numberOfQuestions, setNumberOfQuestions] = useState(null);
     const [currentQuestionPosition, setCurrentQuestionPosition] = useState(-1);
     const [gameState, setGameState] = useState("waitForPlayersJoin");
-    const [results, setResults] = useState(null);
+    const [hasResults, setHasResults] = useState(false);
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
     const sessionId = localStorage.getItem('sessionId');
+    const localToken = localStorage.getItem('token')
+
+    useEffect(() => {
+        const checkResults = async () => {
+            // Only check for results if no active session is running
+            if (!activeStatus) {
+                const success = await getResults(localToken);
+                setHasResults(success);
+            }
+        };
+        checkResults();
+    }, [localToken, activeStatus]);  // Re-check when the activeStatus changes
 
     useEffect(() => {
         setLocalActiveStatus(localStorage.getItem('activeStatus'));
         setLocalActiveGameId(localStorage.getItem('activeGameId'));
         setLocalSessionId(localStorage.getItem('sessionId'));
 
-        if (sessionId && token) {
-            getStatus(token);
+        if (sessionId && localToken) {
+            getStatus(localToken);
         }
 
     }, []);
@@ -43,6 +55,10 @@ const Session = ({ token, setActiveStatus }) => {
     }, [currentQuestionPosition]);
 
     const renderGameContent = () => {
+        if (gameState === "waitForPlayersJoin" && hasResults) {
+            setGameState("results")
+        }
+
         switch(gameState) {
             case "waitForPlayersJoin":
                 return (<p>Waiting for players to connect</p>)
@@ -54,8 +70,26 @@ const Session = ({ token, setActiveStatus }) => {
                     </div>
                 )
             case "results":
-                return (<p>Results screen</p>)
+                return (
+                    <div>
+                        <p>Results screen</p>
+                        <h1>data</h1>
+                        <h1>data</h1>
+                        <h1>data</h1>
+                    </div>
+                
+            )
         }
+    }
+
+    const endGameFunctionality = async () => {
+        localStorage.removeItem('activeStatus');
+        localStorage.removeItem('activeGameId');
+        localStorage.removeItem('sessionId');
+        setLocalActiveStatus(null);
+        setLocalActiveGameId(null);
+        setLocalSessionId(null);
+        setActiveStatus(false);
     }
 
     const endGameMutate = async (token) => {
@@ -67,13 +101,7 @@ const Session = ({ token, setActiveStatus }) => {
                     'Authorization': `Bearer ${token}`,
                 }
             });
-            localStorage.removeItem('activeStatus');
-            localStorage.removeItem('activeGameId');
-            localStorage.removeItem('sessionId');
-            setLocalActiveStatus(null);
-            setLocalActiveGameId(null);
-            setLocalSessionId(null);
-            setActiveStatus(false);
+            endGameFunctionality()
         } catch (err) {
             alert(err.response.data.error);
         }
@@ -93,7 +121,7 @@ const Session = ({ token, setActiveStatus }) => {
             const newPosition = response.data.data.position;
             setCurrentQuestionPosition(newPosition);
             if (newPosition === numberOfQuestions) {
-                console.log("the last game")
+                endGameFunctionality()
             }
             
         } catch (err) {
@@ -171,7 +199,7 @@ const Session = ({ token, setActiveStatus }) => {
                 
             ) : (
                 <div className="flex flex-col items-center mt-3">
-                    <h1>No results avaliable</h1>
+                    <h1>{renderGameContent()}</h1>
                 </div>
             )}
         </>
