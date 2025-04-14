@@ -8,10 +8,17 @@ import {
     Link, 
     useNavigate
   } from "react-router-dom"
+import CreateGameModal from '../components/CreateGameModal';
 
 const EditGame = ({ token }) => {
     const { gameId } = useParams(); 
     const [game, setGame] = useState([]);
+    const [games, setGames] = useState([]);
+    const [createPopuUp, setCreatePopUp] = useState(false);
+    const [name, setName] = useState('');
+    const [thumbnail, setThumbnail] = useState('');
+    const [createGameError, setCreateGameError] = useState('');
+    const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
     const navigate = useNavigate();
 
     const getDashboardGames = async (token) => {
@@ -20,6 +27,7 @@ const EditGame = ({ token }) => {
             'Authorization': `Bearer ${token}`,
         }
         })
+        setGames(response.data.games);
         setGame(response.data.games.find(game => game.id === Number(gameId)));
     }
 
@@ -32,11 +40,61 @@ const EditGame = ({ token }) => {
         navigate('/dashboard');
     }
 
-    const get_duration = () => {
-        duration = 0;
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+    
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            setThumbnail(event.target.result); 
+          };
+          reader.readAsDataURL(selectedFile);
+        } 
+    };
 
+    const editGame = async (reset) => {
+        if (!reset) {
+            if (name === '') {
+                setCreateGameError("Game Name cannot be empty");
+                return; 
+            } 
+              
+                const isDuplicate = games.some(game => game.name === name);
+            if (isDuplicate) {
+                setCreateGameError("Game Name is already taken");
+                return; 
+            }
+              
+            game.name = name;
+            if (thumbnail) {
+                game.thumbnail = thumbnail;
+            }
+      
+            games[games.findIndex(g => g.id === game.id)] = game;
+        } else {
+            game.thumbnail = defaultImg;
+        }
+
+        try {
+          await axios.put('http://localhost:5005/admin/games', {
+            games: games
+          }, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+    
+          getDashboardGames(token);
+          setName('');
+          setThumbnail('');
+          setCreateGameError('');
+          return true;
+        } catch (err) {
+          setCreateGameError(err.response.data.error);
+          return false;
+        }
     }
-
+    
     return (
         <div className='m-4'>
             <h1 className="!mb-16 sm:!mb-4">Edit Game</h1>
@@ -61,7 +119,30 @@ const EditGame = ({ token }) => {
                     <p className="py-0">
                       Total Duration: ?
                     </p>
-                    <button className="btn btn-primary">Edit Game Info</button>
+                    <div className='join join-vertical sm:join-horizontal gap-2'>
+                        <button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>Edit Game Info</button>
+                        <button className="btn btn-primary" onClick={() => editGame(true)}>Reset Thumbnail</button>
+                    </div>
+                    <CreateGameModal
+                        open={createPopuUp}
+                        onClose={() => {
+                        setCreatePopUp(false);
+                        setName(''); 
+                        setThumbnail(''); 
+                        setCreateGameError(''); 
+                        }}
+                        name={name}
+                        setName={setName}
+                        handleFileChange={handleFileChange}
+                        onCreate={async () => {
+                        const success = await editGame(false);
+                        if (success) {
+                            setCreatePopUp(false); 
+                        }
+                        }}
+                        error={createGameError}
+                        editing={false}
+                    />
                   </div>
                 </div>
             </div>

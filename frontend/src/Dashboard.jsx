@@ -189,6 +189,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                   }
                 }}
                 error={createGameError}
+                editing={true}
               />
 
               <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900" onClick={() => setDeletePopUp(true)}>Delete Game</button>
