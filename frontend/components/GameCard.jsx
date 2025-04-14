@@ -81,9 +81,12 @@ const GameCard = ({
                         </button>
                     )}
                     
-                    {/* Now only render modal for the selected game */}
-                    {selectedGameId === game.id && sessionPopUp && (
-                        <StartSessionModal open={sessionPopUp} onClose={() => setSessionPopUp(false)} className='flex flex-row justify-center items-center'>
+                    {/* Always render the modal, controlled by open prop */}
+                        <StartSessionModal 
+                            open={selectedGameId === game.id && sessionPopUp} 
+                            onClose={() => setSessionPopUp(false)} 
+                            className='flex flex-row justify-center items-center'
+                        >
                             <div>
                                 <p>
                                     SessionURL: {`http://localhost:3000/session/${game.id}`}    
@@ -94,8 +97,6 @@ const GameCard = ({
                                 </p>
                             </div>
                         </StartSessionModal>
-                        
-                    )}
                 </div>
             </div>
         </div>

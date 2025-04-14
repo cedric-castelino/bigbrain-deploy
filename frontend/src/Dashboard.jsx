@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
 import CreateGameModal from '../components/CreateGameModal';
+import ViewResultsModal from '../components/ViewResultsModal';
 
 function Dashboard({ token }) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -17,6 +18,7 @@ function Dashboard({ token }) {
   const [createGameError, setCreateGameError] = useState('');
   const [activeStatus, setActiveStatus] = useState(false);
   const [sessionPopUp, setSessionPopUp] = useState(false);
+  const [resultsPopUp, setResultsPopUp] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
   const navigate = useNavigate();
   
@@ -208,6 +210,7 @@ function Dashboard({ token }) {
                     onClick={() => {
                       setActiveStatus(false);
                       endGameMutate(token);
+                      setResultsPopUp(true);
                     }}
                   >
                     <b>
@@ -216,6 +219,11 @@ function Dashboard({ token }) {
                   </p>
                 )
               }
+              <ViewResultsModal open={resultsPopUp} onClose={() => setResultsPopUp(false)}>
+                <div>
+                  TESTING VIEW RESULTS
+                </div>
+              </ViewResultsModal>
             </td>
           </tr>
           </tbody>
