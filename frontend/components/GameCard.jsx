@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import StartSessionModal from './StartSessionModal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const GameCard = ({
     token,
@@ -15,15 +15,19 @@ const GameCard = ({
     }) => {
 
     const navigate = useNavigate();
+    const [sessionId, setSessionId] = useState('');
+
 
     useEffect(() => {
         const storedActiveStatus = localStorage.getItem('activeStatus') === 'true';
         const storedActiveGameId = localStorage.getItem('activeGameId');
+        const storedSessionId = localStorage.getItem('sessionId');
         
         // Update state if there's an active game in localStorage
         if (storedActiveStatus) {
             setActiveStatus(true);
             setSelectedGameId(Number(storedActiveGameId));
+            setSessionId(storedSessionId)
         }
     }, [setActiveStatus, setSelectedGameId]);
 
@@ -33,6 +37,9 @@ const GameCard = ({
 
     const startGameMutate = async (token) => {
         try {
+            setActiveStatus(true);
+            setSelectedGameId(game.id);
+
             const response = await axios.post(`http://localhost:5005/admin/game/${game.id}/mutate`, {
                 mutationType: "START"
             }, {
@@ -40,8 +47,16 @@ const GameCard = ({
                 'Authorization': `Bearer ${token}`,
             }
             })
+
+            const newSessionId = response.data.data.sessionId;
             localStorage.setItem('activeStatus', 'true');
             localStorage.setItem('activeGameId', game.id.toString());
+            localStorage.setItem('sessionId', newSessionId);
+
+            setSessionId(newSessionId);
+        
+            // Now show the modal after everything is ready
+            setSessionPopUp(true);
         } catch (err) {
             alert(err.response.data.error);
         }
@@ -72,9 +87,6 @@ const GameCard = ({
                         <button 
                             className="btn btn-primary"
                             onClick={() => {
-                                setActiveStatus(!activeStatus);
-                                setSelectedGameId(game.id);
-                                setSessionPopUp(true);
                                 startGameMutate(token);
                             }}>
                             Start Game
@@ -89,10 +101,10 @@ const GameCard = ({
                         >
                             <div>
                                 <p>
-                                    SessionID: {`${game.id}`}    
+                                    SessionID: {`${sessionId}`}    
                                 </p>
                                 <p className='btn btn-soft btn-primary w-[20vh]'
-                                onClick={() => {navigator.clipboard.writeText(`http://localhost:3000/session/${game.id}`)}}>
+                                onClick={() => {navigator.clipboard.writeText(`http://localhost:3000/session/${sessionId}`)}}>
                                     Copy Link
                                 </p>
                             </div>

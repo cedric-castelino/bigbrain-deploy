@@ -8,7 +8,7 @@ import DeleteModal from '../components/deleteModal';
 import CreateGameModal from '../components/CreateGameModal';
 import ViewResultsModal from '../components/ViewResultsModal';
 
-function Dashboard({ token, activeStatus, setActiveStatus }) {
+function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
   const [games, setGames] = useState([]);
   const [name, setName] = useState('');
@@ -145,6 +145,7 @@ function Dashboard({ token, activeStatus, setActiveStatus }) {
         })
         localStorage.removeItem('activeStatus');
         localStorage.removeItem('activeGameId');
+        localStorage.removeItem('sessionId');
         setResultsPopUp(true);
     } catch (err) {
         alert(err.response.data.error);
@@ -154,7 +155,7 @@ function Dashboard({ token, activeStatus, setActiveStatus }) {
   return (
       <div className='m-4'>
         <div className='flex flex-row justify-between'>
-        <button className="btn btn-lg !bg-zinc-600 text-white absolute top-2 right-6 hover:!bg-zinc-700">Logout</button>
+        <button onClick={logout} className="btn btn-lg !bg-zinc-600 text-white absolute top-2 right-6 hover:!bg-zinc-700">Logout</button>
           <h1>Dashboard</h1>
           <div className='flex flex-row'>
           </div>

@@ -3,17 +3,19 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Session = ({ token, setActiveStatus }) => {
-    const { sessionId } = useParams(); 
     const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
     const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
+    const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
+    const sessionId = localStorage.getItem('activeGameId');
     const [gameState, setGameState] = useState("START");
 
     useEffect(() => {
         setLocalActiveStatus(localStorage.getItem('activeStatus'));
         setLocalActiveGameId(localStorage.getItem('activeGameId'));
+        setLocalSessionId(localStorage.getItem('sessionId'))
     }, []);
 
     const renderGameContent = () => {
@@ -38,13 +40,43 @@ const Session = ({ token, setActiveStatus }) => {
             })
             localStorage.removeItem('activeStatus');
             localStorage.removeItem('activeGameId');
+            localStorage.removeItem('sessionId');
             setLocalActiveStatus(null);
             setLocalActiveGameId(null);
+            setLocalSessionId(null);
             setActiveStatus(false);
         } catch (err) {
             alert(err.response.data.error);
         }
-      }
+    }
+
+    const advanceGame = async (token) => {
+        try {
+            const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId}/mutate`, {
+                mutationType: "ADVANCE"
+            }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+            })
+            console.log(response.data.data.position)
+        } catch (err) {
+            alert(err.response.data.error);
+        }
+    }
+
+    const getStatus = async (token) => {
+        try {
+            const response = await axios.get(`http://localhost:5005/admin/game/${activeGameId}/status`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+            })
+            console.log(response)
+        } catch (err) {
+            alert(err.response.data.error);
+        }
+    }
     
     return (
         <>
@@ -61,6 +93,7 @@ const Session = ({ token, setActiveStatus }) => {
 
                         <p className={`p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto`}
                             onClick={() => {
+                                getStatus(token);
                             }}
                             >
                             <b>Advance</b>

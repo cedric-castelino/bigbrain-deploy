@@ -71,7 +71,7 @@ function App() {
       <Routes>
         <Route path="/register" element={<Register successJob={successJob} token={token}/>} />
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
-        <Route path="/dashboard" element={<Dashboard token={token} activeStatus={activeStatus} setActiveStatus={setActiveStatus}/>} />
+        <Route path="/dashboard" element={<Dashboard token={token} activeStatus={activeStatus} setActiveStatus={setActiveStatus} logout={logout}/>} />
         <Route path="/game/:gameId" element={<EditGame token={token} />} />
         <Route path="/session/:sessionId" element={<Session token={token} setActiveStatus={setActiveStatus}/>} />
       </Routes>
