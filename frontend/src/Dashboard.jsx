@@ -145,6 +145,7 @@ function Dashboard({ token, activeStatus, setActiveStatus }) {
         })
         localStorage.removeItem('activeStatus');
         localStorage.removeItem('activeGameId');
+        setResultsPopUp(true);
     } catch (err) {
         alert(err.response.data.error);
     }
@@ -209,7 +210,6 @@ function Dashboard({ token, activeStatus, setActiveStatus }) {
                     onClick={() => {
                       setActiveStatus(false);
                       endGameMutate(token);
-                      setResultsPopUp(true);
                     }}
                   >
                     <b>
