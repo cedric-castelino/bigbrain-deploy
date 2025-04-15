@@ -11,10 +11,10 @@ function Login ({ successJob, token,}) {
 
   // Checks if the user is already logged in
   useEffect(() => {
-      if (token) {
-          navigate('/dashboard');
-      }
-    }, [token, navigate]);
+    if (token) {
+      navigate('/dashboard');
+    }
+  }, [token, navigate]);
   
   // Runs whenever the user submits the login form
   const login = async () => {

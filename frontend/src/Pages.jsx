@@ -74,7 +74,7 @@ function App() {
           <button onClick={logout} className="btn btn-lg bg-secondary hover:!bg-zinc-700 text-white absolute top-2 right-6">Logout</button>
         </>
       ) : null
-    }
+      }
       <Routes>
         <Route path="/register" element={<Register successJob={successJob} token={token}/>} />
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
