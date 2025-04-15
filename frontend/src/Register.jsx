@@ -1,6 +1,6 @@
-import { useState, useEffect} from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Register({ successJob }) {
   // Collects user input for the register form
@@ -12,7 +12,7 @@ function Register({ successJob }) {
 
   // Checks if the email is in a valid format (___@___.___)
   function checkEmailValidity (event) {
-    const emailRegex = /^.+\@.+\..+$/;
+    const emailRegex = /^.+@.+\..+$/;
     return emailRegex.test(event);
   };
 

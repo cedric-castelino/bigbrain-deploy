@@ -210,73 +210,73 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }
 
-    const getResults = async (token) => {
-        try {
-            const response = await axios.get(`http://localhost:5005/admin/session/${linkedSession.sessionId}/results`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-                params: {  // If you need to send the sessionId as a query parameter
-                    sessionid: linkedSession.sessionId
-                }
-            })
-            console.log(response);
-            return true;
-        } catch (err) {
-            alert(err.response.data.error);
-            return false;
+  const getResults = async (token) => {
+    try {
+      const response = await axios.get(`http://localhost:5005/admin/session/${linkedSession.sessionId}/results`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        params: {  // If you need to send the sessionId as a query parameter
+          sessionid: linkedSession.sessionId
         }
+      })
+      console.log(response);
+      return true;
+    } catch (err) {
+      alert(err.response.data.error);
+      return false;
     }
+  }
 
-    const navigate_to_dashboard = async () => {
-        navigate('/dashboard');
-    }
+  const navigate_to_dashboard = async () => {
+    navigate('/dashboard');
+  }
 
     
-    return (
-        <>
-            <button onClick={navigate_to_dashboard} className="btn bg-primary hover:!bg-blue-600 text-white absolute top-16 right-6 sm:top-2 sm:right-[8.25rem] sm:btn-lg btn-lg">Dashboard</button>
-            {((activeStatus && linkedSession.sessionId === sessionId)) ? (
-                <div>
-                    <div className="flex justify-center mt-2">
-                        <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
-                            onClick={() => {
-                                endGameMutate(token);
-                                setGameState("results")
-                            }}
-                        >
-                            <b>End Session</b>
-                        </p>
+  return (
+    <>
+      <button onClick={navigate_to_dashboard} className="btn bg-primary hover:!bg-blue-600 text-white absolute top-16 right-6 sm:top-2 sm:right-[8.25rem] sm:btn-lg btn-lg">Dashboard</button>
+      {((activeStatus && linkedSession.sessionId === sessionId)) ? (
+        <div>
+          <div className="flex justify-center mt-2">
+            <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
+              onClick={() => {
+                endGameMutate(token);
+                setGameState("results")
+              }}
+            >
+              <b>End Session</b>
+            </p>
 
-                        <p className={`${gameState === "results" ? "" : "p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto"}`}
-                            onClick={() => {
-                                advanceGame(token);
-                                getStatus(localToken)
-                            }}
-                        >
-                            <b>
-                                {gameState === "results" 
-                                    ? "" 
-                                    : gameState === "waitForPlayersJoin" 
-                                    ? "Start" 
-                                    : (gameState === "displayQuestions" && currentQuestionPosition + 1 === numberOfQuestions) 
-                                        ? "View Results" 
-                                        : "Next Question"}
-                            </b>
-                        </p>
-                    </div>
-                    <div>
-                        {renderGameContent()}
-                    </div>
-                </div>
+            <p className={`${gameState === "results" ? "" : "p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto"}`}
+              onClick={() => {
+                advanceGame(token);
+                getStatus(localToken)
+              }}
+            >
+              <b>
+                {gameState === "results" 
+                  ? "" 
+                  : gameState === "waitForPlayersJoin" 
+                    ? "Start" 
+                    : (gameState === "displayQuestions" && currentQuestionPosition + 1 === numberOfQuestions) 
+                      ? "View Results" 
+                      : "Next Question"}
+              </b>
+            </p>
+          </div>
+          <div>
+            {renderGameContent()}
+          </div>
+        </div>
                 
-            ) : (
-                <div className="flex flex-col items-center mt-3">
-                    <h1>{renderGameContent()}</h1>
-                </div>
-            )}
-        </>
-    );
+      ) : (
+        <div className="flex flex-col items-center mt-3">
+          <h1>{renderGameContent()}</h1>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Session;

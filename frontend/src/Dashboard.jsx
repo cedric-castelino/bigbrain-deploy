@@ -108,7 +108,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     games.push(newGame)
 
     try {
-      const response = await axios.put('http://localhost:5005/admin/games', {
+      await axios.put('http://localhost:5005/admin/games', {
         games: games
       }, {
         headers: {
@@ -138,7 +138,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     })
 
     try {
-      const response = await axios.put('http://localhost:5005/admin/games', {
+      await axios.put('http://localhost:5005/admin/games', {
         games: newGamesArray
       }, {
         headers: {
@@ -155,7 +155,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
   const endGameMutate = async (token) => {
     try {
-      const response = await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
+      await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
         mutationType: "END"
       }, {
         headers: {

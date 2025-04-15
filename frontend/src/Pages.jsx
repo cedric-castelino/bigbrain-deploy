@@ -10,10 +10,8 @@ import Session from './Session';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
-  Link, 
   useNavigate
 } from "react-router-dom"
 
@@ -43,7 +41,7 @@ function App() {
   
   const logout = async () => {
     try {
-      const response = await axios.post('http://localhost:5005/admin/auth/logout', {}, {
+      await axios.post('http://localhost:5005/admin/auth/logout', {}, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
