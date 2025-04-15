@@ -140,7 +140,8 @@ const EditGame = ({ token }) => {
                 optionB: optionB,
                 optionC: optionC,
                 optionD: optionD
-            }
+            },
+            id: currentQuestions.length + 1
         }
         currentQuestions.push(newQuestion);
       
@@ -199,6 +200,28 @@ const EditGame = ({ token }) => {
         return thumbnail === defaultImg;
     };
 
+    const deleteQuestion = async (id) => {
+        let currentQuestions = game.questions.filter(q => q.id !== id);
+        let count = 1
+        for (const question of currentQuestions) {
+            question.id = count;
+            count += 1;
+        }
+
+        game.questions = currentQuestions;
+        games[games.findIndex(g => g.id === game.id)] = game;
+
+        await axios.put('http://localhost:5005/admin/games', {
+          games: games
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      
+        getGameData(token);
+    };
+
     return (
         <div className='m-4'>
             <h1 className="!mb-16 sm:!mb-4">Edit Game</h1>
@@ -254,45 +277,42 @@ const EditGame = ({ token }) => {
                         </div>
                         </div>
                     </div>
-                    <td className='flex gap-2 mt-3'>
-                        <button className="btn btn-primary" onClick={() => setCreateQPopUp(true)}>Add Question</button>
-                        <CreateQuestionModal
-                                open={createQPopuUp}
-                                onClose={() => {
-                                setCreateQPopUp(false);
-                                setDuration('');
-                                setQuestion('');
-                                setOptionA('');
-                                setOptionB('');
-                                setOptionC('');
-                                setOptionD('');
-                                setcorrectAnswer('');
-                                setquestionError('');
-                                }}
-                                onCreate={async () => {
-                                const success = await addQuestion();
-                                if (success) {
-                                    setCreateQPopUp(false); 
-                                }
-                                }}
-                                error={questionError}
-                                duration={duration}
-                                setDuration={setDuration}
-                                question={question}
-                                setQuestion={setQuestion}
-                                optionA={optionA}
-                                setOptionA={setOptionA}
-                                optionB={optionB}
-                                setOptionB={setOptionB}
-                                optionC={optionC}
-                                setOptionC={setOptionC}
-                                optionD={optionD}
-                                setOptionD={setOptionD}
-                                correctAnswer={correctAnswer}
-                                setcorrectAnswer={setcorrectAnswer}
-                        />
-                        <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
-                    </td>
+                    <button className="btn btn-primary mt-4" onClick={() => setCreateQPopUp(true)}>Add Question</button>
+                    <CreateQuestionModal
+                        open={createQPopuUp}
+                        onClose={() => {
+                        setCreateQPopUp(false);
+                        setDuration('');
+                        setQuestion('');
+                        setOptionA('');
+                        setOptionB('');
+                        setOptionC('');
+                        setOptionD('');
+                        setcorrectAnswer('');
+                        setquestionError('');
+                        }}
+                        onCreate={async () => {
+                        const success = await addQuestion();
+                        if (success) {
+                            setCreateQPopUp(false); 
+                        }
+                        }}
+                        error={questionError}
+                        duration={duration}
+                        setDuration={setDuration}
+                        question={question}
+                        setQuestion={setQuestion}
+                        optionA={optionA}
+                        setOptionA={setOptionA}
+                        optionB={optionB}
+                        setOptionB={setOptionB}
+                        optionC={optionC}
+                        setOptionC={setOptionC}
+                        optionD={optionD}
+                        setOptionD={setOptionD}
+                        correctAnswer={correctAnswer}
+                        setcorrectAnswer={setcorrectAnswer}
+                    />
                     {game.questions.length === 0 ? (
                         <div role="alert" className="alert alert-error mt-6 !bg-red-200">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="h-6 w-6 shrink-0 stroke-current">
@@ -303,9 +323,9 @@ const EditGame = ({ token }) => {
                         ) : (
                         <div className="grid grid-cols-1 bg-blue-200">
                             {game.questions.map(question => (
-                            <DisplayQuestions 
-                            token={token}
-                            question={question}
+                            <DisplayQuestions key={question.id}
+                                question={question}
+                                onDelete={() => {deleteQuestion(question.id)}}
                             />
                             ))}
                         </div>

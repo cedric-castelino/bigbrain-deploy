@@ -1,8 +1,4 @@
-const DisplayQuestions = ({token, question}) => {
-
-    const handleClick = () => {
-        navigate(`/game/${game.id}`);
-    };
+const DisplayQuestions = ({question, onDelete}) => {
 
     return (
         <ul className="list bg-base-100 rounded-box shadow-md mt-4 mb-0 !pl-0"> 
@@ -52,7 +48,7 @@ const DisplayQuestions = ({token, question}) => {
                 </div>
                 <div className='join join-vertical gap-2 border-l border-gray-300 pl-4'>
                     <button className="btn btn-primary">Edit Question</button>
-                    <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
+                    <button type="button" onClick={onDelete} className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
                 </div>
             </li>
             

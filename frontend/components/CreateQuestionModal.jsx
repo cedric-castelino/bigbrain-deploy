@@ -28,12 +28,12 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                     <div className='join join-horizontal gap-2 h-[20px]'>
                         <label className="fieldset-label text-slate-900">Option A</label>
                         <input type="radio" 
-                        name="correctAnswer" 
-                        value="Option A" 
-                        className="radio radio-xs" 
-                        onChange={(e) => setcorrectAnswer(e.target.value)}
-                        checked={correctAnswer === 'Option A'}
-                        defaultChecked />
+                            name="correctAnswer" 
+                            value="Option A" 
+                            className="radio radio-xs" 
+                            onChange={(e) => setcorrectAnswer(e.target.value)}
+                            checked={correctAnswer === 'Option A'}
+                        />
                         <p className="!text-zinc-500">- mark option A as correct</p>
                     </div>
                     <input
