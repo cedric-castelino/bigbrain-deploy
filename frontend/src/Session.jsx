@@ -14,6 +14,8 @@ const Session = ({ token, setActiveStatus }) => {
     const [currentQuestionPosition, setCurrentQuestionPosition] = useState(parseInt(localStorage.getItem('currentQuestionPosition')));
     const [gameState, setGameState] = useState(localStorage.getItem("gameState"));
     const [hasResults, setHasResults] = useState(false);
+    const [questions, setQuestions] = useState([]);
+    const [questionTimer, setQuestionTimer] = useState(0);
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
@@ -79,7 +81,13 @@ const Session = ({ token, setActiveStatus }) => {
                 return (
                     <div>
                         <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
-                        <p>TIMER</p>
+                        <div>
+                            <div>
+                            {questions[currentQuestionPosition]?.duration
+                                ? `Duration: ${questions[currentQuestionPosition].duration}s`
+                                : "Loading question..."}
+                            </div>
+                        </div>
                     </div>
                 )
             case "results":
@@ -157,8 +165,15 @@ const Session = ({ token, setActiveStatus }) => {
                 }
             })
             const lngth = response.data.results.questions.length;
+            setQuestions(response.data.results.questions)
             setNumberOfQuestions(lngth);
             localStorage.setItem('NumberOfQuestions', lngth.toString());
+            if (response && 
+                localCurrentQuestionPosition + 1 < lngth && 
+                localCurrentQuestionPosition >= -1) {
+                setQuestionTimer(response.data.results.questions[localCurrentQuestionPosition + 1].duration);
+            }
+            
         } catch (err) {
             alert(err.response.data.error);
         }
