@@ -24,14 +24,14 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   
   const getDashboardGames = async (token) => {
     try {
-        const response = await axios.get('http://localhost:5005/admin/games', {
+      const response = await axios.get('http://localhost:5005/admin/games', {
         headers: {
-            'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         }
-        })
-        setGames(response.data.games)
+      })
+      setGames(response.data.games)
     } catch (err) {
-        alert(err.response.data.error);
+      alert(err.response.data.error);
     }
   }
 
@@ -59,8 +59,8 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
   useEffect(() => {
     if (!token) {
-        navigate('/login');
-        return;
+      navigate('/login');
+      return;
     }
     
     getDashboardGames(token);
@@ -155,18 +155,18 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
   const endGameMutate = async (token) => {
     try {
-        const response = await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
-            mutationType: "END"
-        }, {
+      const response = await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
+        mutationType: "END"
+      }, {
         headers: {
-            'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         }
-        })
-        localStorage.removeItem('activeStatus');
-        localStorage.removeItem('activeGameId');
-        setResultsPopUp(true);
+      })
+      localStorage.removeItem('activeStatus');
+      localStorage.removeItem('activeGameId');
+      setResultsPopUp(true);
     } catch (err) {
-        alert(err.response.data.error);
+      alert(err.response.data.error);
     }
   }
 
@@ -176,22 +176,22 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
   const resetFileInput = () => {
     if (fileInputRef.current) {
-        fileInputRef.current.value = null; 
+      fileInputRef.current.value = null; 
     }
   }
 
   return (
-      <div className='m-4'>
-        <div className='flex flex-row justify-between'>
+    <div className='m-4'>
+      <div className='flex flex-row justify-between'>
         <button onClick={logout} className="btn btn-lg !bg-zinc-600 text-white absolute top-2 right-6 hover:!bg-zinc-700">Logout</button>
-          <h1>Dashboard</h1>
-          <div className='flex flex-row'>
-          </div>
+        <h1>Dashboard</h1>
+        <div className='flex flex-row'>
         </div>
+      </div>
         
-        <table className='w-full'>
-          <tbody>
-            <tr className='flex justify-between items-center'>
+      <table className='w-full'>
+        <tbody>
+          <tr className='flex justify-between items-center'>
             <td className='flex gap-2'>
               <button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>
                 Create New Game
@@ -226,9 +226,9 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                   <div onClick={() => {
                     deleteGame(game.id); 
                     setDeletePopUp(false);
-                    }} 
-                    key={game.id} 
-                    className='bg-gray-200 mt-2 p-2 rounded-md flex justify-center hover:cursor-pointer hover:bg-gray-300'>
+                  }} 
+                  key={game.id} 
+                  className='bg-gray-200 mt-2 p-2 rounded-md flex justify-center hover:cursor-pointer hover:bg-gray-300'>
                     {game.name}
                   </div>
                 ))}
@@ -265,31 +265,31 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
               }
               <ViewResultsModal open={resultsPopUp} onClose={() => setResultsPopUp(false)}>
                 <div className='btn btn-primary'
-                     onClick={() => {
-                      goToResultPage();
-                     }}>
+                  onClick={() => {
+                    goToResultPage();
+                  }}>
                   Would you like to view the results?
                 </div>
               </ViewResultsModal>
             </td>
           </tr>
-          </tbody>
+        </tbody>
           
-        </table>
+      </table>
         
         
 
-        {games.length === 0 ? (
-          <div role="alert" className="alert alert-error mt-6 !bg-red-200">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="h-6 w-6 shrink-0 stroke-current">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>No Games Found.</span>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
-            {games.map(game => (
-              <Gamecard key={game.id}
+      {games.length === 0 ? (
+        <div role="alert" className="alert alert-error mt-6 !bg-red-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="h-6 w-6 shrink-0 stroke-current">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>No Games Found.</span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 bg-blue-200">
+          {games.map(game => (
+            <Gamecard key={game.id}
               token={token}
               game={game}
               activeStatus={activeStatus}
@@ -298,12 +298,12 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
               setSessionPopUp={setSessionPopUp}
               selectedGameId={selectedGameId}
               setSelectedGameId={setSelectedGameId}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default Dashboard

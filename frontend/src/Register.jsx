@@ -28,22 +28,22 @@ function Register({ successJob }) {
     } else if (!checkEmailValidity(email)) {
       setError("Invalid email entered");
     } else {
-        try {
-          // Sends the inputted data to the backend 
-          const response = await axios.post('http://localhost:5005/admin/auth/register', {
-            email: email,
-            password: password,
-            name: name
-          })
+      try {
+        // Sends the inputted data to the backend 
+        const response = await axios.post('http://localhost:5005/admin/auth/register', {
+          email: email,
+          password: password,
+          name: name
+        })
 
-          // The returned token is stored in local storage with the email and password
-          const token = response.data.token;
-          successJob(token, email, password)
+        // The returned token is stored in local storage with the email and password
+        const token = response.data.token;
+        successJob(token, email, password)
           
-        } catch (err) {
-          // Displays an error message if one is encountered
-          setError(err.response.data.error);
-        }      
+      } catch (err) {
+        // Displays an error message if one is encountered
+        setError(err.response.data.error);
+      }      
     }
   }
 
