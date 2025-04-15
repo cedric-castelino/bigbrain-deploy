@@ -89,11 +89,33 @@ const Session = ({ token, setActiveStatus }) => {
                     <div>
                         <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
                         <div>
-                            <div>
                             {questionTimer > 0
                                 ? `Duration: ${questionTimer}s`
                                 : "Question is finished"}
-                            </div>
+
+                            {questions.length > 0 && currentQuestionPosition >= 0 && currentQuestionPosition < questions.length ? (
+                                <ul>
+                                    <li>
+                                        Question: {questions[currentQuestionPosition].question}
+                                    </li>
+                                    <li>
+                                        Option A: {questions[currentQuestionPosition].options.optionA}
+                                    </li>
+                                    <li>
+                                        Option B: {questions[currentQuestionPosition].options.optionB || ""}
+                                    </li>
+                                    <li>
+                                        Option C: {questions[currentQuestionPosition].options.optionC || ""}
+                                    </li>
+                                    <li>
+                                        Option D: {questions[currentQuestionPosition].options.optionD || ""}
+                                    </li>
+                                </ul>
+                            ) : (
+                                <p>Loading questions...</p>
+                            )}
+
+                                
                         </div>
                     </div>
                 )
@@ -220,6 +242,7 @@ const Session = ({ token, setActiveStatus }) => {
                         <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
                             onClick={() => {
                                 endGameMutate(token);
+                                setGameState("results")
                             }}
                         >
                             <b>End Session</b>
@@ -228,6 +251,7 @@ const Session = ({ token, setActiveStatus }) => {
                         <p className={`${gameState === "results" ? "" : "p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto"}`}
                             onClick={() => {
                                 advanceGame(token);
+                                getStatus(localToken)
                             }}
                         >
                             <b>
