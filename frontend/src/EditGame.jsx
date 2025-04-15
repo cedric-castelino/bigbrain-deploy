@@ -24,6 +24,8 @@ const EditGame = ({ token }) => {
     const [optionD, setOptionD] = useState('');
     const [correctAnswer, setcorrectAnswer] = useState('');
     const [questionError, setquestionError] = useState('');
+    const [editQuestion, setEditQuestion] = useState(false);
+    const [editQuestionID, setEditQuestionID] = useState('');
     const fileInputRef = useRef(null);
     const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
     const navigate = useNavigate();
@@ -130,7 +132,6 @@ const EditGame = ({ token }) => {
             return; 
         }
 
-        let currentQuestions = game.questions;
         const newQuestion = {
             duration: duration,
             correctAnswers: [correctAnswer],
@@ -141,9 +142,9 @@ const EditGame = ({ token }) => {
                 optionC: optionC,
                 optionD: optionD
             },
-            id: currentQuestions.length + 1
+            id: game.questions.length + 1
         }
-        currentQuestions.push(newQuestion);
+        game.questions.push(newQuestion);
       
         games[games.findIndex(g => g.id === game.id)] = game;
         try {
@@ -167,6 +168,66 @@ const EditGame = ({ token }) => {
           return true;
         } catch (err) {
             setquestionError(err.response.data.error);
+          return false;
+        }
+    }
+
+    const editQuestionContent = async (id) => {
+
+        if (Number(duration) < 0 || Number(duration) > 60) {
+            setquestionError("Duration must be between 1 and 60");
+            return; 
+        }
+
+        for (const current_question of game.questions) {
+            if (current_question.id === id) {
+                if (duration !== '') {
+                    current_question.duration = duration;
+                }
+                if (question !== '') {
+                    current_question.question = question;
+                }
+                if (optionA !== '') {
+                    current_question.options.optionA = optionA;
+                }
+                if (optionB !== '') {
+                    current_question.options.optionB = optionB;
+                }
+                if (optionC !== '') {
+                    current_question.options.optionC = optionC;
+                }
+                if (optionD !== '') {
+                    current_question.options.optionD = optionD;
+                }
+                if (correctAnswer !== '') {
+                    current_question.correctAnswers[0] = correctAnswer;
+                }
+            }
+        }
+      
+        games[games.findIndex(g => g.id === game.id)] = game;
+        try {
+          await axios.put('http://localhost:5005/admin/games', {
+            games: games
+          }, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+    
+          getGameData(token);
+          setDuration('');
+          setQuestion('');
+          setOptionA('');
+          setOptionB('');
+          setOptionC('');
+          setOptionD('');
+          setcorrectAnswer('');
+          setquestionError('');
+          return true;
+        } catch (err) {
+          console.log(err);
+          setquestionError(err.response.data.error);
           return false;
         }
     }
@@ -277,7 +338,11 @@ const EditGame = ({ token }) => {
                         </div>
                         </div>
                     </div>
-                    <button className="btn btn-primary mt-4" onClick={() => setCreateQPopUp(true)}>Add Question</button>
+                    <button className="btn btn-primary mt-4" 
+                        onClick={() => {
+                            setCreateQPopUp(true);
+                            setEditQuestion(false);
+                        }}>Add Question</button>
                     <CreateQuestionModal
                         open={createQPopuUp}
                         onClose={() => {
@@ -312,6 +377,13 @@ const EditGame = ({ token }) => {
                         setOptionD={setOptionD}
                         correctAnswer={correctAnswer}
                         setcorrectAnswer={setcorrectAnswer}
+                        editing={editQuestion}
+                        onEdit={async () => {
+                            const success = await editQuestionContent(editQuestionID);
+                            if (success) {
+                                setCreateQPopUp(false); 
+                            }
+                            }}
                     />
                     {game.questions.length === 0 ? (
                         <div role="alert" className="alert alert-error mt-6 !bg-red-200">
@@ -325,6 +397,10 @@ const EditGame = ({ token }) => {
                             {game.questions.map(question => (
                             <DisplayQuestions key={question.id}
                                 question={question}
+                                onEdit={() => {
+                                    setEditQuestion(true);
+                                    setEditQuestionID(question.id);
+                                    setCreateQPopUp(true)}}
                                 onDelete={() => {deleteQuestion(question.id)}}
                             />
                             ))}

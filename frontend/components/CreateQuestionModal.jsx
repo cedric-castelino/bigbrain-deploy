@@ -1,12 +1,13 @@
 // Creates a popup for when the user wants to add a new question
-function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, question, setQuestion,
-    optionA, setOptionA, optionB, setOptionB, optionC, setOptionC, optionD, setOptionD, correctAnswer, setcorrectAnswer}) {
+function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, question, setQuestion,optionA, 
+    setOptionA, optionB, setOptionB, optionC, setOptionC, optionD, setOptionD, correctAnswer, setcorrectAnswer, editing, onEdit}) {
 
     return (
         // Displays a transparent grey background for the modal
         <div className={`fixed z-50 inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/60" : "invisible"}`}>
             <fieldset className="fieldset w-sm bg-base-200 border border-base-300 p-4 rounded-box bg-white">
-                <legend className="fieldset-legend text-center text-3xl">Add Question</legend>
+                {editing ? (<legend className="fieldset-legend text-center text-3xl">Edit Question</legend>):
+                    <legend className="fieldset-legend text-center text-3xl">Add Question</legend>}
                     <label className="fieldset-label text-slate-900">Duration</label>
                     <input
                         className="p-2 bg-gray-200 rounded-md"
@@ -107,7 +108,8 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                     )}
 
                     {/* Submits the form to create a new game */}
-                    <button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Add Question</button>
+                    {editing ? (<button onClick={onEdit} className="btn btn-primary md:btn-md flex-1 mt-2">Edit Question</button>):
+                    <button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Add Question</button>}
 
                   </fieldset>
             {/* Exits the modal without creating a new game */}

@@ -1,4 +1,4 @@
-const DisplayQuestions = ({question, onDelete}) => {
+const DisplayQuestions = ({question, onEdit, onDelete}) => {
 
     return (
         <ul className="list bg-base-100 rounded-box shadow-md mt-4 mb-0 !pl-0"> 
@@ -47,7 +47,7 @@ const DisplayQuestions = ({question, onDelete}) => {
                     <div className="text-xs font-semibold opacity-80 ml-4">{question.options.optionD}</div>
                 </div>
                 <div className='join join-vertical gap-2 border-l border-gray-300 pl-4'>
-                    <button className="btn btn-primary">Edit Question</button>
+                    <button onClick={onEdit} className="btn btn-primary">Edit Question</button>
                     <button type="button" onClick={onDelete} className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
                 </div>
             </li>
