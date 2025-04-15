@@ -18,7 +18,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
 
                     <label className="fieldset-label text-slate-900">Question</label>
                     <textarea 
-                        className="textarea"
+                        className="textarea w-[335px]"
                         type="text"
                         placeholder="Displayed Question"
                         value={question}

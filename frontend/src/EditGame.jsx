@@ -1,15 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Link, 
-    useNavigate
-  } from "react-router-dom"
+import { useNavigate} from "react-router-dom"
 import CreateGameModal from '../components/CreateGameModal';
 import CreateQuestionModal from '../components/CreateQuestionModal';
+import DisplayQuestions from '../components/DisplayQuestions';
 
 const EditGame = ({ token }) => {
     const { gameId } = useParams(); 
@@ -19,7 +14,7 @@ const EditGame = ({ token }) => {
     const [createQPopuUp, setCreateQPopUp] = useState(false);
     const [name, setName] = useState('');
     const [thumbnail, setThumbnail] = useState('');
-    const [createGameError, setCreateGameError] = useState('');
+    const [editGameError, seteditGameError] = useState('');
     const [imageError, setimageError] = useState(false);
     const [duration, setDuration] = useState('');
     const [question, setQuestion] = useState('');
@@ -45,7 +40,6 @@ const EditGame = ({ token }) => {
 
     useEffect(() => {
         getGameData(token);
-        console.log(game);
     }, [token]);
 
     const navigate_to_dashboard = async () => {
@@ -75,12 +69,12 @@ const EditGame = ({ token }) => {
 
             const isDuplicate = games.some(game => game.name === name);
             if (isDuplicate && name !== game.name) {
-                setCreateGameError("Game Name is already taken");
+                seteditGameError("Game Name is already taken");
                 return; 
             }
 
             if (imageError) {
-                setCreateGameError("Invalid file type");
+                seteditGameError("Invalid file type");
                 resetFileInput();
                 setimageError(false);
                 return;
@@ -112,10 +106,10 @@ const EditGame = ({ token }) => {
           setName('');
           setThumbnail('');
           resetFileInput();
-          setCreateGameError(' ');
+          seteditGameError('');
           return true;
         } catch (err) {
-          setCreateGameError(err.response.data.error);
+            seteditGameError(err.response.data.error);
           return false;
         }
     }
@@ -139,7 +133,7 @@ const EditGame = ({ token }) => {
         let currentQuestions = game.questions;
         const newQuestion = {
             duration: duration,
-            correntAnswers: [correctAnswer],
+            correctAnswers: [correctAnswer],
             question: question,
             options: {
                 optionA: optionA,
@@ -171,7 +165,7 @@ const EditGame = ({ token }) => {
           setquestionError('');
           return true;
         } catch (err) {
-          setCreateGameError(err.response.data.error);
+            setquestionError(err.response.data.error);
           return false;
         }
     }
@@ -201,6 +195,10 @@ const EditGame = ({ token }) => {
         return parts.join(' and ');
     }
 
+    const checkDefaultThumbnail = (thumbnail) => {
+        return thumbnail === defaultImg;
+    };
+
     return (
         <div className='m-4'>
             <h1 className="!mb-16 sm:!mb-4">Edit Game</h1>
@@ -211,89 +209,109 @@ const EditGame = ({ token }) => {
                     <span className="ml-3 loading loading-spinner loading-sm"></span>
                 </div>
             ) : (
-            
-            <div className="hero bg-base-200 bg-white">
-                <div className='join join-vertical sm:join-horizontal w-full'>
-                  <img
-                    src={game.thumbnail}
-                    className="rounded-lg shadow-2xl w-[20%] m-6 mr-0" />
-                  <div className="p-6">
-                    <h1 className="text-5xl font-bold">{game.name}</h1>
-                    <p className="py-0 mb-2">
-                      Number of Questions: {game.questions.length}
-                    </p>
-                    <p className="py-0">
-                      Total Duration: {getTotalDuration(game.questions)}
-                    </p>
-                    <div className='join join-vertical sm:join-horizontal gap-2'>
-                        <button className="btn btn-primary" onClick={() => setEditPopUp(true)}>Edit Game Info</button>
-                        <button className="btn btn-primary" onClick={() => editGame(true)}>Reset Thumbnail</button>
+                <div className='w-full h-full'>
+                    <div className="hero bg-base-200 bg-white">
+                        <div className='join join-vertical sm:join-horizontal w-full'>
+                        <img
+                            src={game.thumbnail}
+                            className="rounded-lg shadow-2xl w-[20%] m-6 mr-0" />
+                        <div className="p-6">
+                            <h1 className="text-5xl font-bold">{game.name}</h1>
+                            <p className="py-0 mb-2">
+                            Number of Questions: {game.questions.length}
+                            </p>
+                            <p className="py-0">
+                            Total Duration: {getTotalDuration(game.questions)}
+                            </p>
+                            <div className='join join-vertical sm:join-horizontal gap-2'>
+                                <button className="btn btn-primary" onClick={() => setEditPopUp(true)}>Edit Game Info</button>
+                                {!checkDefaultThumbnail(game.thumbnail) && (
+                                    <button className="btn btn-primary" onClick={() => editGame(true)}>Reset Thumbnail</button>
+                                )}
+                            </div>
+                            <CreateGameModal
+                                open={editPopUp}
+                                onClose={() => {
+                                setEditPopUp(false);
+                                setName(''); 
+                                setThumbnail(''); 
+                                resetFileInput();
+                                seteditGameError(''); 
+                                }}
+                                name={name}
+                                setName={setName}
+                                handleFileChange={handleFileChange}
+                                onCreate={async () => {
+                                const success = await editGame(false);
+                                if (success) {
+                                    setEditPopUp(false); 
+                                }
+                                }}
+                                error={editGameError}
+                                editing={false}
+                                fileInputRef={fileInputRef}
+                            />
+                        </div>
+                        </div>
                     </div>
-                    <CreateGameModal
-                        open={editPopUp}
-                        onClose={() => {
-                        setEditPopUp(false);
-                        setName(''); 
-                        setThumbnail(''); 
-                        resetFileInput();
-                        setCreateGameError(''); 
-                        }}
-                        name={name}
-                        setName={setName}
-                        handleFileChange={handleFileChange}
-                        onCreate={async () => {
-                        const success = await editGame(false);
-                        if (success) {
-                            setEditPopUp(false); 
-                        }
-                        }}
-                        error={createGameError}
-                        editing={false}
-                        fileInputRef={fileInputRef}
-                    />
-                  </div>
+                    <td className='flex gap-2 mt-3'>
+                        <button className="btn btn-primary" onClick={() => setCreateQPopUp(true)}>Add Question</button>
+                        <CreateQuestionModal
+                                open={createQPopuUp}
+                                onClose={() => {
+                                setCreateQPopUp(false);
+                                setDuration('');
+                                setQuestion('');
+                                setOptionA('');
+                                setOptionB('');
+                                setOptionC('');
+                                setOptionD('');
+                                setcorrectAnswer('');
+                                setquestionError('');
+                                }}
+                                onCreate={async () => {
+                                const success = await addQuestion();
+                                if (success) {
+                                    setCreateQPopUp(false); 
+                                }
+                                }}
+                                error={questionError}
+                                duration={duration}
+                                setDuration={setDuration}
+                                question={question}
+                                setQuestion={setQuestion}
+                                optionA={optionA}
+                                setOptionA={setOptionA}
+                                optionB={optionB}
+                                setOptionB={setOptionB}
+                                optionC={optionC}
+                                setOptionC={setOptionC}
+                                optionD={optionD}
+                                setOptionD={setOptionD}
+                                correctAnswer={correctAnswer}
+                                setcorrectAnswer={setcorrectAnswer}
+                        />
+                        <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
+                    </td>
+                    {game.questions.length === 0 ? (
+                        <div role="alert" className="alert alert-error mt-6 !bg-red-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="h-6 w-6 shrink-0 stroke-current">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>No Questions Found.</span>
+                        </div>
+                        ) : (
+                        <div className="grid grid-cols-1 bg-blue-200">
+                            {game.questions.map(question => (
+                            <DisplayQuestions 
+                            token={token}
+                            question={question}
+                            />
+                            ))}
+                        </div>
+                    )}
                 </div>
-            </div>
             )}
-            <td className='flex gap-2 mt-3'>
-                <button className="btn btn-primary" onClick={() => setCreateQPopUp(true)}>Add Question</button>
-                <CreateQuestionModal
-                        open={createQPopuUp}
-                        onClose={() => {
-                        setCreateQPopUp(false);
-                        setDuration('');
-                        setQuestion('');
-                        setOptionA('');
-                        setOptionB('');
-                        setOptionC('');
-                        setOptionD('');
-                        setcorrectAnswer('');
-                        setquestionError('');
-                        }}
-                        onCreate={async () => {
-                        const success = await addQuestion();
-                        if (success) {
-                            setCreateQPopUp(false); 
-                        }
-                        }}
-                        error={questionError}
-                        duration={duration}
-                        setDuration={setDuration}
-                        question={question}
-                        setQuestion={setQuestion}
-                        optionA={optionA}
-                        setOptionA={setOptionA}
-                        optionB={optionB}
-                        setOptionB={setOptionB}
-                        optionC={optionC}
-                        setOptionC={setOptionC}
-                        optionD={optionD}
-                        setOptionD={setOptionD}
-                        correctAnswer={correctAnswer}
-                        setcorrectAnswer={setcorrectAnswer}
-                />
-                <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
-            </td>
         </div>
     );
 };
