@@ -7,203 +7,203 @@ import CreateQuestionModal from '../components/CreateQuestionModal';
 import DisplayQuestions from '../components/DisplayQuestions';
 
 const EditGame = ({ token }) => {
-    const { gameId } = useParams(); 
-    const [game, setGame] = useState([]);
-    const [games, setGames] = useState([]);
-    const [editPopUp, setEditPopUp] = useState(false);
-    const [createQPopuUp, setCreateQPopUp] = useState(false);
-    const [name, setName] = useState('');
-    const [thumbnail, setThumbnail] = useState('');
-    const [editGameError, seteditGameError] = useState('');
-    const [imageError, setimageError] = useState(false);
-    const [duration, setDuration] = useState('');
-    const [question, setQuestion] = useState('');
-    const [optionA, setOptionA] = useState('');
-    const [optionB, setOptionB] = useState('');
-    const [optionC, setOptionC] = useState('');
-    const [optionD, setOptionD] = useState('');
-    const [correctAnswer, setcorrectAnswer] = useState('');
-    const [questionError, setquestionError] = useState('');
-    const [editQuestion, setEditQuestion] = useState(false);
-    const [editQuestionID, setEditQuestionID] = useState('');
-    const fileInputRef = useRef(null);
-    const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
-    const navigate = useNavigate();
+  const { gameId } = useParams(); 
+  const [game, setGame] = useState([]);
+  const [games, setGames] = useState([]);
+  const [editPopUp, setEditPopUp] = useState(false);
+  const [createQPopuUp, setCreateQPopUp] = useState(false);
+  const [name, setName] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
+  const [editGameError, seteditGameError] = useState('');
+  const [imageError, setimageError] = useState(false);
+  const [duration, setDuration] = useState('');
+  const [question, setQuestion] = useState('');
+  const [optionA, setOptionA] = useState('');
+  const [optionB, setOptionB] = useState('');
+  const [optionC, setOptionC] = useState('');
+  const [optionD, setOptionD] = useState('');
+  const [correctAnswer, setcorrectAnswer] = useState('');
+  const [questionError, setquestionError] = useState('');
+  const [editQuestion, setEditQuestion] = useState(false);
+  const [editQuestionID, setEditQuestionID] = useState('');
+  const fileInputRef = useRef(null);
+  const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+  const navigate = useNavigate();
 
-    const getGameData = async (token) => {
-        const response = await axios.get('http://localhost:5005/admin/games', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        }
-        })
-        setGames(response.data.games);
-        setGame(response.data.games.find(game => game.id === Number(gameId)));
-    }
+  const getGameData = async (token) => {
+    const response = await axios.get('http://localhost:5005/admin/games', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    })
+    setGames(response.data.games);
+    setGame(response.data.games.find(game => game.id === Number(gameId)));
+  }
 
-    useEffect(() => {
-        getGameData(token);
-    }, [token]);
+  useEffect(() => {
+    getGameData(token);
+  }, [token]);
 
-    const navigate_to_dashboard = async () => {
-        navigate('/dashboard');
-    }
+  const navigate_to_dashboard = async () => {
+    navigate('/dashboard');
+  }
 
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-            if (!validImageTypes.includes(selectedFile.type)) {
-                setimageError(true);
-                return;
-            }
+      if (!validImageTypes.includes(selectedFile.type)) {
+        setimageError(true);
+        return;
+      }
 
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setThumbnail(event.target.result); 
-            };
-            reader.readAsDataURL(selectedFile);
-        } 
-    };
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setThumbnail(event.target.result); 
+      };
+      reader.readAsDataURL(selectedFile);
+    } 
+  };
 
-    const editGame = async (reset) => {
-        if (!reset) {
+  const editGame = async (reset) => {
+    if (!reset) {
 
-            const isDuplicate = games.some(game => game.name === name);
-            if (isDuplicate && name !== game.name) {
-                seteditGameError("Game Name is already taken");
-                return; 
-            }
+      const isDuplicate = games.some(game => game.name === name);
+      if (isDuplicate && name !== game.name) {
+        seteditGameError("Game Name is already taken");
+        return; 
+      }
 
-            if (imageError) {
-                seteditGameError("Invalid file type");
-                resetFileInput();
-                setimageError(false);
-                return;
-            }
+      if (imageError) {
+        seteditGameError("Invalid file type");
+        resetFileInput();
+        setimageError(false);
+        return;
+      }
             
-            if (name !== '') {
-                game.name = name;
-            }
+      if (name !== '') {
+        game.name = name;
+      }
 
-            if (thumbnail) {
-                game.thumbnail = thumbnail;
-            }
+      if (thumbnail) {
+        game.thumbnail = thumbnail;
+      }
       
-            games[games.findIndex(g => g.id === game.id)] = game;
-        } else {
-            game.thumbnail = defaultImg;
-        }
-
-        try {
-          await axios.put('http://localhost:5005/admin/games', {
-            games: games
-          }, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-    
-          getGameData(token);
-          setName('');
-          setThumbnail('');
-          resetFileInput();
-          seteditGameError('');
-          return true;
-        } catch (err) {
-            seteditGameError(err.response.data.error);
-          return false;
-        }
+      games[games.findIndex(g => g.id === game.id)] = game;
+    } else {
+      game.thumbnail = defaultImg;
     }
 
-    const addQuestion = async () => {
-        if (duration === '' || question === '' || optionA === '' || optionB === '' || optionC === '' || optionD === '') {
-            setquestionError("Question Inputs Cannot be Empty");
-            return; 
+    try {
+      await axios.put('http://localhost:5005/admin/games', {
+        games: games
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-
-        if (Number(duration) < 0 || Number(duration) > 60) {
-            setquestionError("Duration must be between 1 and 60");
-            return; 
-        }
-
-        if (correctAnswer === '') {
-            setquestionError("Correct Answer must be Selected");
-            return; 
-        }
-
-        const newQuestion = {
-            duration: duration,
-            correctAnswers: [correctAnswer],
-            question: question,
-            options: {
-                optionA: optionA,
-                optionB: optionB,
-                optionC: optionC,
-                optionD: optionD
-            },
-            id: game.questions.length + 1
-        }
-        game.questions.push(newQuestion);
-      
-        games[games.findIndex(g => g.id === game.id)] = game;
-        try {
-          await axios.put('http://localhost:5005/admin/games', {
-            games: games
-          }, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
+      });
     
-          getGameData(token);
-          setDuration('');
-          setQuestion('');
-          setOptionA('');
-          setOptionB('');
-          setOptionC('');
-          setOptionD('');
-          setcorrectAnswer('');
-          setquestionError('');
-          return true;
-        } catch (err) {
-            setquestionError(err.response.data.error);
-          return false;
-        }
+      getGameData(token);
+      setName('');
+      setThumbnail('');
+      resetFileInput();
+      seteditGameError('');
+      return true;
+    } catch (err) {
+      seteditGameError(err.response.data.error);
+      return false;
+    }
+  }
+
+  const addQuestion = async () => {
+    if (duration === '' || question === '' || optionA === '' || optionB === '' || optionC === '' || optionD === '') {
+      setquestionError("Question Inputs Cannot be Empty");
+      return; 
     }
 
-    const editQuestionContent = async (id) => {
+    if (Number(duration) < 0 || Number(duration) > 60) {
+      setquestionError("Duration must be between 1 and 60");
+      return; 
+    }
 
-        if (Number(duration) < 0 || Number(duration) > 60) {
-            setquestionError("Duration must be between 1 and 60");
-            return; 
-        }
+    if (correctAnswer === '') {
+      setquestionError("Correct Answer must be Selected");
+      return; 
+    }
 
-        for (const current_question of game.questions) {
-            if (current_question.id === id) {
-                if (duration !== '') {
-                    current_question.duration = duration;
-                }
-                if (question !== '') {
-                    current_question.question = question;
-                }
-                if (optionA !== '') {
-                    current_question.options.optionA = optionA;
-                }
-                if (optionB !== '') {
-                    current_question.options.optionB = optionB;
-                }
-                if (optionC !== '') {
-                    current_question.options.optionC = optionC;
-                }
-                if (optionD !== '') {
-                    current_question.options.optionD = optionD;
-                }
-                if (correctAnswer !== '') {
-                    current_question.correctAnswers[0] = correctAnswer;
-                }
-            }
+    const newQuestion = {
+      duration: duration,
+      correctAnswers: [correctAnswer],
+      question: question,
+      options: {
+        optionA: optionA,
+        optionB: optionB,
+        optionC: optionC,
+        optionD: optionD
+      },
+      id: game.questions.length + 1
+    }
+    game.questions.push(newQuestion);
+      
+    games[games.findIndex(g => g.id === game.id)] = game;
+    try {
+      await axios.put('http://localhost:5005/admin/games', {
+        games: games
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
+      });
+    
+      getGameData(token);
+      setDuration('');
+      setQuestion('');
+      setOptionA('');
+      setOptionB('');
+      setOptionC('');
+      setOptionD('');
+      setcorrectAnswer('');
+      setquestionError('');
+      return true;
+    } catch (err) {
+      setquestionError(err.response.data.error);
+      return false;
+    }
+  }
+
+  const editQuestionContent = async (id) => {
+
+    if (Number(duration) < 0 || Number(duration) > 60) {
+      setquestionError("Duration must be between 1 and 60");
+      return; 
+    }
+
+    for (const current_question of game.questions) {
+      if (current_question.id === id) {
+        if (duration !== '') {
+          current_question.duration = duration;
+        }
+        if (question !== '') {
+          current_question.question = question;
+        }
+        if (optionA !== '') {
+          current_question.options.optionA = optionA;
+        }
+        if (optionB !== '') {
+          current_question.options.optionB = optionB;
+        }
+        if (optionC !== '') {
+          current_question.options.optionC = optionC;
+        }
+        if (optionD !== '') {
+          current_question.options.optionD = optionD;
+        }
+        if (correctAnswer !== '') {
+          current_question.correctAnswers[0] = correctAnswer;
+        }
+      }
+    }
       
         games[games.findIndex(g => g.id === game.id)] = game;
         try {
