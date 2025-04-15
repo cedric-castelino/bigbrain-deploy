@@ -15,7 +15,7 @@ const Session = ({ token, setActiveStatus }) => {
     const [gameState, setGameState] = useState(localStorage.getItem("gameState"));
     const [hasResults, setHasResults] = useState(false);
     const [questions, setQuestions] = useState([]);
-    const [questionTimer, setQuestionTimer] = useState(0);
+    const [questionTimer, setQuestionTimer] = useState(localStorage.getItem("questionTimer"));
 
     const activeStatus = localStorage.getItem('activeStatus');
     const activeGameId = localStorage.getItem('activeGameId');
@@ -24,6 +24,17 @@ const Session = ({ token, setActiveStatus }) => {
     const localGameState = localStorage.getItem('gameState');
     const localCurrentQuestionPosition = parseInt(localStorage.getItem('currentQuestionPosition'));
     const localNumberOfQuestions = parseInt(localStorage.getItem('NumberOfQuestions'));
+
+    useEffect(() => {
+        if (questionTimer <= 0) return;
+    
+        const intervalId = setInterval(() => {
+          setQuestionTimer((prev) => prev - 1);
+        }, 1000);
+    
+        // Cleanup when component unmounts or timer ends
+        return () => clearInterval(intervalId);
+      }, [questionTimer]);
 
     useEffect(() => {
         const checkResults = async () => {
@@ -43,10 +54,6 @@ const Session = ({ token, setActiveStatus }) => {
         setCurrentQuestionPosition(localCurrentQuestionPosition)
         setNumberOfQuestions(localNumberOfQuestions)
         setGameState(localGameState)
-
-        if (sessionId && localToken) {
-            getStatus(localToken);
-        }
 
     }, []);
 
@@ -83,9 +90,9 @@ const Session = ({ token, setActiveStatus }) => {
                         <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
                         <div>
                             <div>
-                            {questions[currentQuestionPosition]?.duration
-                                ? `Duration: ${questions[currentQuestionPosition].duration}s`
-                                : "Loading question..."}
+                            {questionTimer > 0
+                                ? `Duration: ${questionTimer}s`
+                                : "Question is finished"}
                             </div>
                         </div>
                     </div>
@@ -141,6 +148,7 @@ const Session = ({ token, setActiveStatus }) => {
                     'Authorization': `Bearer ${token}`,
                 }
             });
+            
             getStatus(token);
             const newPosition = response.data.data.position;
             localStorage.setItem('currentQuestionPosition', newPosition.toString())
@@ -172,6 +180,7 @@ const Session = ({ token, setActiveStatus }) => {
                 localCurrentQuestionPosition + 1 < lngth && 
                 localCurrentQuestionPosition >= -1) {
                 setQuestionTimer(response.data.results.questions[localCurrentQuestionPosition + 1].duration);
+                localStorage.setItem('questionTimer', response.data.results.questions[localCurrentQuestionPosition + 1].duration)
             }
             
         } catch (err) {
