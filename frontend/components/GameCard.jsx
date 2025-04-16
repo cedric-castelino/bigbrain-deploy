@@ -127,7 +127,7 @@ const GameCard = ({
                                     SessionID: {`${sessionId}`}    
               </p>
               <p className='btn btn-soft btn-primary w-[20vh]'
-                onClick={() => {navigator.clipboard.writeText(`http://localhost:3000/session/${sessionId}`)}}>
+                onClick={() => {navigator.clipboard.writeText(`http://localhost:3000/playergame`)}}>
                                     Copy Link
               </p>
             </div>
