@@ -6,7 +6,7 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import EditGame from './EditGame';
 import Session from './Session';
-import Playergame from './Playergame';
+import PlayerJoin from './PlayerJoin';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -80,8 +80,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard token={token} activeStatus={activeStatus} setActiveStatus={setActiveStatus} logout={logout}/>} />
         <Route path="/game/:gameId" element={<EditGame token={token} />} />
         <Route path="/session/:sessionId" element={<Session token={token} setActiveStatus={setActiveStatus}/>} />
-        <Route path="/playergame" element={<Playergame token={token} />} />
-        <Route path="/playergame/:sessionId" element={<Playergame token={token} />} />
+        <Route path="/playerjoin" element={<PlayerJoin token={token} />} />
+        <Route path="/playerjoin/:sessionId" element={<PlayerJoin token={token} />} />
+        <Route path="/playergame/:playerId" element={<PlayerJoin token={token} />} />
       </Routes>
     </div>
   )
