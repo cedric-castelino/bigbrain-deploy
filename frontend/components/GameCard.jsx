@@ -11,7 +11,8 @@ const GameCard = ({
   sessionPopUp, 
   setSessionPopUp,
   selectedGameId,
-  setSelectedGameId
+  setSelectedGameId,
+  onDelete
 }) => {
 
   const navigate = useNavigate();
@@ -109,13 +110,14 @@ const GameCard = ({
 
           {!activeStatus && (
             <button 
-              className="btn btn-primary"
+              className="btn !bg-[#29a742] !text-white hover:!bg-green-700 hover:!bg-green-800"
               onClick={() => {
                 startGameMutate(token);
               }}>
                             Start Game
             </button>
           )}
+          <button onClick={onDelete} className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Game</button>
                     
           {/* Always render the modal, controlled by open prop */}
           <StartSessionModal 

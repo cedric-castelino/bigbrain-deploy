@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 import Gamecard from '../components/GameCard';
-import DeleteModal from '../components/DeleteModal';
 import CreateGameModal from '../components/CreateGameModal';
 import ViewResultsModal from '../components/ViewResultsModal';
 
@@ -12,7 +11,6 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   const [games, setGames] = useState([]);
   const [name, setName] = useState('');
   const [thumbnail, setThumbnail] = useState('');
-  const [deletePopUp, setDeletePopUp] = useState(false);
   const [createPopuUp, setCreatePopUp] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
   const [imageError, setimageError] = useState(false);
@@ -238,33 +236,19 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                 editing={true}
                 fileInputRef={fileInputRef}
               />
-              {/* delete game button, opening up the DeleteModal */}
-              <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900" onClick={() => setDeletePopUp(true)}>Delete Game</button>
-              <DeleteModal open={deletePopUp} onClose={() => setDeletePopUp(false)}>
-                {games.map(game => (
-                  <div onClick={() => {
-                    deleteGame(game.id); 
-                    setDeletePopUp(false);
-                  }} 
-                  key={game.id} 
-                  className='bg-gray-200 mt-2 p-2 rounded-md flex justify-center hover:cursor-pointer hover:bg-gray-300'>
-                    {game.name}
-                  </div>
-                ))}
-              </DeleteModal>
             </td>
             <td className="ml-auto flex flex-col md:flex-row justify-between items-center gap-2">
               {/* Includes two buttons and one informative block. Buttons only appear after a session is started */}
               <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "!bg-red-700"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
               {
                 activeStatus && (
-                  <p className={`p-2 rounded-md text-white !bg-yellow-600 mr-2 hover:cursor-pointer hover:!bg-yellow-900`}
+                  <p className={`p-2 rounded-md text-white !bg-yellow-600 hover:cursor-pointer hover:!bg-yellow-900`}
                     onClick={() => {
                       navigateSession()
                     }}
                   >
                     <b>
-                      GoToSession
+                      Go To Session
                     </b>
                   </p>
                 )
@@ -288,7 +272,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                   onClick={() => {
                     goToResultPage();
                   }}>
-                  Would you like to view the results?
+                  View Game Results
                 </div>
               </ViewResultsModal>
             </td>
@@ -318,6 +302,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
               setSessionPopUp={setSessionPopUp}
               selectedGameId={selectedGameId}
               setSelectedGameId={setSelectedGameId}
+              onDelete={() => {deleteGame(game.id)}}
             />
           ))}
         </div>
