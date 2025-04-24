@@ -19,7 +19,7 @@ function PlayerGame ({ token }) {
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
 
   const indexToOption = (index) => {
-    return `Option ${String.fromCharCode(65 + index)}`; // 65 is ASCII for 'A'
+    return `Option ${String.fromCharCode(65 + index)}`;
   };
 
   useEffect(() => {
