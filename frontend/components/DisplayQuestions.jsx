@@ -1,5 +1,12 @@
 const DisplayQuestions = ({question, onEdit, onDelete}) => {
 
+  const getOptionLabel = (index) => `Option ${String.fromCharCode(65 + index)}`; // 'A', 'B', etc.
+  const getOptionClass = (label) => {
+    return question.correctAnswers.includes(label)
+      ? 'bg-lime-300 text-green-950'
+      : 'bg-rose-200 text-red-950';
+  };
+
   return (
     <ul className="list bg-base-100 rounded-box shadow-md mt-4 mb-0 !pl-0"> 
       <li className="list-row">
@@ -9,42 +16,22 @@ const DisplayQuestions = ({question, onEdit, onDelete}) => {
         </div>
         <div className="list-col-grow">
           <div className="text-lg">{question.question}</div>
-          <div className="input-group mt-2 mb-2">
-            <span className={`rounded-md px-0 sm:!px-4 py-0 text-gray-600 ${
-              question.correctAnswers[0] === 'Option A'
-                ? 'bg-lime-300 text-green-950'
-                : 'bg-rose-200 text-red-950'}`}>
-                            Option A
-            </span>
-          </div>
-          <div className="text-xs font-semibold opacity-80 ml-4">{question.options.optionA}</div>
-          <div className="input-group mt-2 mb-2">
-            <span className={`rounded-md px-0 sm:!px-4 py-0 text-gray-600 ${
-              question.correctAnswers[0] === 'Option B'
-                ? 'bg-lime-300 text-green-950'
-                : 'bg-rose-200 text-red-950'}`}>
-                            Option B
-            </span>
-          </div>
-          <div className="text-xs font-semibold opacity-80 ml-4">{question.options.optionB}</div>
-          <div className="input-group mt-2 mb-2">
-            <span className={`rounded-md px-0 sm:!px-4 py-0 text-gray-600 ${
-              question.correctAnswers[0] === 'Option C'
-                ? 'bg-lime-300 text-green-950'
-                : 'bg-rose-200 text-red-950'}`}>
-                            Option C
-            </span>
-          </div>
-          <div className="text-xs font-semibold opacity-80 ml-4">{question.options.optionC}</div>
-          <div className="input-group mt-2 mb-2">
-            <span className={`rounded-md px-0 sm:!px-4 py-0 text-gray-600 ${
-              question.correctAnswers[0] === 'Option D'
-                ? 'bg-lime-300 text-green-950'
-                : 'bg-rose-200 text-red-950'}`}>
-                            Option D
-            </span>
-          </div>
-          <div className="text-xs font-semibold opacity-80 ml-4">{question.options.optionD}</div>
+
+          {question.answers.map((answerText, index) => {
+            const label = getOptionLabel(index); // e.g., Option A
+            return (
+              <div key={label}>
+                <div className="input-group mt-2 mb-1">
+                  <span className={`rounded-md px-0 sm:!px-4 py-0 text-gray-600 ${getOptionClass(label)}`}>
+                    {label}
+                  </span>
+                </div>
+                <div className="text-xs font-semibold opacity-80 ml-4">{answerText}</div>
+              </div>
+            );
+          })}
+
+
         </div>
         <div className='join join-vertical gap-2 border-l border-gray-300 pl-4'>
           <button onClick={onEdit} className="btn btn-primary">Edit Question</button>
