@@ -3,7 +3,7 @@ import Chart from 'chart.js/auto';
 
 function CreatePercentageChart({ results }) {
   const chartRef = useRef(null);
-  let chartInstance = null;
+  const chartInstanceRef = useRef(null);
   
   // Function to calculate correct percentages from results
   function getCorrectPercentages(results) {
@@ -25,13 +25,13 @@ function CreatePercentageChart({ results }) {
   }
 
   useEffect(() => {
-    // Cleanup function to destroy chart when component unmounts
     return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
       }
     };
   }, []);
+  
 
   useEffect(() => {
     renderChart();
@@ -39,20 +39,16 @@ function CreatePercentageChart({ results }) {
 
   // Render chart function
   const renderChart = () => {
-    if (!results || !results.length) return;
-    
+    if (!results || !results.length || !chartRef.current) return;
+  
     const percentages = getCorrectPercentages(results);
-    
-    // Cleanup existing chart if it exists
-    if (chartInstance) {
-      chartInstance.destroy();
+  
+    // Destroy existing chart instance if it exists
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
     }
-
-    // Make sure we have a canvas element to draw on
-    if (!chartRef.current) return;
-
-    // Create new chart
-    chartInstance = new Chart(chartRef.current, {
+  
+    chartInstanceRef.current = new Chart(chartRef.current, {
       type: 'bar',
       data: {
         labels: percentages.map(p => `Q${p.questionIndex}`),
@@ -64,6 +60,7 @@ function CreatePercentageChart({ results }) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false, // Optional: allows full responsive flexibility
         plugins: {
           title: {
             display: true,
@@ -89,10 +86,11 @@ function CreatePercentageChart({ results }) {
       }
     });
   };
+  
 
   return (
     <div className="flex flex-col justify-center items-center bg-white rounded-md">
-      <canvas ref={chartRef} className="w-full h-64"></canvas>
+      <canvas ref={chartRef} className="w-full max-w-full h-64"></canvas>
     </div>
   );
 }

@@ -110,7 +110,7 @@ const Session = ({ token, setActiveStatus }) => {
     case "waitForPlayersJoin":
       localStorage.setItem('gameState', 'waitForPlayersJoin');
       return (
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center mt-40">
           <h1>Waiting for players to connect</h1>
         </div>
       
@@ -118,7 +118,7 @@ const Session = ({ token, setActiveStatus }) => {
     case "displayQuestions":
       localStorage.setItem('gameState', 'displayQuestions');
       return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center mt-40">
           <div className="flex flex-row gap-4 bg-white rounded-[20px] p-4 border-solid border-2 border-blue-300" >
           {questionTimer > 0
                 ? <h1>{`Duration: ${questionTimer}s`}</h1>
@@ -127,38 +127,44 @@ const Session = ({ token, setActiveStatus }) => {
           </div>
         </div>
       )
-    case "results":
-      localStorage.setItem('gameState', 'results');
-      let playerRanking = getPointRanking();
-      return (
-        <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-20">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Points</th>
-              </tr>
-            </thead>
-            <tbody>
-            {playerRanking.map((player, index) => {
-                return (
-                  <tr key={index}>
-                    <th>{index + 1}</th>
-                    <td>{player.name}</td>
-                    <td>{[player.points]}</td>
+      case "results":
+        localStorage.setItem('gameState', 'results');
+        let playerRanking = getPointRanking();
+        return (
+          <div className="flex flex-col gap-6 mt-10 px-4 mt-30">
+            {/* Make table scrollable on smaller screens */}
+            <div className="overflow-x-auto">
+              <table className="table w-full min-w-[300px]">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Points</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <CreatePercentageChart
-          results={results}
-          />
-          <CreateAverageTimeChart
-          results={results}/>
-        </div>
-      )
+                </thead>
+                <tbody>
+                  {playerRanking.map((player, index) => (
+                    <tr key={index}>
+                      <th>{index + 1}</th>
+                      <td>{player.name}</td>
+                      <td>{player.points}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+      
+            {/* Wrap charts in a responsive flex container */}
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-4 w-full">
+              <div className="relative w-full lg:w-1/2">
+                <CreatePercentageChart results={results} />
+              </div>
+              <div className="relative w-full lg:w-1/2">
+                <CreateAverageTimeChart results={results} />
+              </div>
+            </div>
+          </div>
+        );
     }
   }
 
@@ -287,6 +293,9 @@ const Session = ({ token, setActiveStatus }) => {
       <button onClick={navigate_to_dashboard} className="btn bg-primary hover:!bg-blue-600 text-white absolute top-16 right-6 sm:top-2 sm:right-[8.25rem] sm:btn-lg btn-lg">Dashboard</button>
       {((activeStatus && linkedSession.sessionId === sessionId)) ? (
         <div>
+          <div>
+            {renderGameContent()}
+          </div>
           <div className="flex justify-center mt-2">
             <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
               onClick={() => {
@@ -314,9 +323,7 @@ const Session = ({ token, setActiveStatus }) => {
               </b>
             </p>
           </div>
-          <div>
-            {renderGameContent()}
-          </div>
+          
         </div>
                 
       ) : (
