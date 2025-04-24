@@ -255,6 +255,7 @@ function Dashboard({ token, activeStatus, setActiveStatus}) {
               {
                 activeStatus && (
                   <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900`}
+                    name="End session"
                     onClick={() => {
                       setActiveStatus(false);
                       endGameMutate(token);
@@ -268,6 +269,7 @@ function Dashboard({ token, activeStatus, setActiveStatus}) {
               }
               <ViewResultsModal open={resultsPopUp} onClose={() => setResultsPopUp(false)}>
                 <div className='btn btn-primary'
+                  name="view results"
                   onClick={() => {
                     goToResultPage();
                   }}>

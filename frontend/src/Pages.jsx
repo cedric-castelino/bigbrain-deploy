@@ -75,7 +75,7 @@ function App() {
   return (
     <div data-theme="nord" className="fixed inset-0 bg-blue-200 overflow-y-auto">
       {token && !location.pathname.startsWith('/playerjoin') && !location.pathname.startsWith('/playergame') && (
-        <button onClick={logout} className="btn btn-lg bg-secondary hover:!bg-zinc-700 text-white absolute top-2 right-6">
+        <button name="logoutdashboardbutton" onClick={logout} className="btn btn-lg bg-secondary hover:!bg-zinc-700 text-white absolute top-2 right-6">
           Logout
         </button>
       )}

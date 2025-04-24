@@ -111,6 +111,7 @@ const GameCard = ({
           {!activeStatus && (
             <button 
               className="btn !bg-[#29a742] !text-white hover:!bg-green-700 hover:!bg-green-800"
+              name="start game"
               onClick={() => {
                 startGameMutate(token);
               }}>

@@ -14,6 +14,7 @@ function StartSessionModal ({open, onClose, children}) {
       <Button
         onClick={onClose}
         variant="danger"
+        name="close button"
         className="btn !bg-red-600 text-white mt-2">
           Close
       </Button>

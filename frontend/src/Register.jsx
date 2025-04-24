@@ -81,7 +81,7 @@ function Register({ successJob }) {
           </div>
         )}
 
-        <button onClick={register} className="btn btn-primary md:btn-md flex-1 mt-2">Register</button>
+        <button onClick={register} className="btn btn-primary md:btn-md flex-1 mt-2" name="register-button">Register</button>
         <div className="flex gap-x-1 w-full mt-3"> 
           Already have an account? <Link to="/login">Login</Link>
         </div>

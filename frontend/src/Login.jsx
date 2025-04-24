@@ -65,7 +65,7 @@ function Login ({ successJob, token,}) {
           </div>
         )}
 
-        <button onClick={login} className="btn btn-primary md:btn-md flex-1 mt-2">Login</button>
+        <button onClick={login} className="btn btn-primary md:btn-md flex-1 mt-2" name="login-button">Login</button>
         <div className="flex gap-x-1 w-full mt-3"> 
           Dont have an account? <Link to="/register">Register</Link>
         </div>
