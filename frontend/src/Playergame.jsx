@@ -145,6 +145,7 @@ function PlayerGame ({ token }) {
           <>
             <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
             <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            <p>points: {question.points }</p>
             {question.attachmentType === 'image' && question.attachment && (
               <>
                 <div className="text-sm font-semibold mt-6"></div>
@@ -159,7 +160,7 @@ function PlayerGame ({ token }) {
               <>
                 <div className="text-sm font-semibold mt-6"></div>
                 <iframe
-                  className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[55%] xl:w-[40%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[350px] xl:h-[400px]"
+                  className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[100%] xl:w-[100%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[100%] xl:h-[100%]"
                   src={question.attachment}
                   title="YouTube video player"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -204,6 +205,7 @@ function PlayerGame ({ token }) {
           <>
             <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
             <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            <p>points: {question.points }</p>
             {question.attachmentType === 'image' && question.attachment && (
               <>
                 <div className="text-sm font-semibold mt-6"></div>
@@ -265,6 +267,7 @@ function PlayerGame ({ token }) {
             <>
               <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
               <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+              <p>points: {question.points }</p>
               {question.attachmentType === 'image' && question.attachment && (
                 <>
                   <div className="text-sm font-semibold mt-6"></div>
