@@ -1,11 +1,21 @@
 // Creates a popup for when the user wants to add a new question
-function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, question, setQuestion,optionA, 
-  setOptionA, optionB, setOptionB, optionC, setOptionC, optionD, setOptionD, correctAnswer, setcorrectAnswer, editing, onEdit}) {
+function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, question, setQuestion,options, 
+  setOptions, correctAnswer, setCorrectAnswer, correctAnswers, setCorrectAnswers, questionType, setQuestionType, editing, onEdit, answers, setAnswers}) {
+
+  const addOption = () => {
+    const nextLabel = String.fromCharCode(65 + options.length);
+    if (options.length < 6) {
+      const newOptions = [...options, { label: nextLabel, value: '' }];
+      setOptions(newOptions);
+      setAnswers(newOptions.map(opt => opt.value)); // Sync answers
+    }
+  };
+
 
   return (
   // Displays a transparent grey background for the modal
     <div className={`fixed z-50 inset-0 flex flex-col justify-center items-center transition-colors ${open ? "visible bg-black/60" : "invisible"}`}>
-      <fieldset className="fieldset w-sm bg-base-200 border border-base-300 p-4 rounded-box bg-white">
+      <fieldset className="fieldset w-sm bg-base-200 border border-base-300 p-4 rounded-box bg-white overflow-y-auto max-h-700 overflow-x-hidden">
         {editing ? (<legend className="fieldset-legend text-center text-3xl">Edit Question</legend>):
           <legend className="fieldset-legend text-center text-3xl">Add Question</legend>}
         <label className="fieldset-label text-slate-900">Duration</label>
@@ -25,76 +35,95 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
-        <hr className="m-2"></hr>
-        <div className='join join-horizontal gap-2 h-[20px]'>
-          <label className="fieldset-label text-slate-900">Option A</label>
-          <input type="radio" 
-            name="correctAnswer" 
-            value="Option A" 
-            className="radio radio-xs" 
-            onChange={(e) => setcorrectAnswer(e.target.value)}
-            checked={correctAnswer === 'Option A'}
-          />
-          <p className="!text-zinc-500">- mark option A as correct</p>
+
+        <label className="fieldset-label text-slate-900">Question Type</label>
+        <div className="join join-horizontal gap-2">
+        {['Single Choice', 'Multiple Choice', 'Judgement'].map((type) => (
+          <button
+            key={type}
+            onClick={() => {
+              setQuestionType(type);
+              if (type === 'Judgement') {
+                setAnswers(['True', 'False']);
+              } else {
+                setAnswers(options.map(opt => opt.value));
+              }
+            }}
+            className={`btn !text-xs ${questionType === type ? '!bg-blue-600 text-white' : '!bg-gray-200 text-gray-800'}`}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+      <hr className="m-2"></hr>
+      {questionType === 'Single Choice' && (
+        <div className='w-full'>
+        {options.map((opt, index) => (
+          <div key={opt.label}>
+            <div className='join join-horizontal gap-2 h-[20px]'>
+              <label className="fieldset-label text-slate-900">Option {opt.label}</label>
+              <input
+                type="radio"
+                name="correctAnswer"
+                value={`Option ${opt.label}`}
+                className="radio radio-xs"
+                onChange={(e) => setCorrectAnswer(e.target.value)}
+                checked={correctAnswer === `Option ${opt.label}`}
+              />
+              <p className="!text-zinc-500">- mark option {opt.label} as correct</p>
+            </div>
+            <input
+              className="p-2 bg-gray-200 rounded-md w-full mt-2 mb-2"
+              type="text"
+              placeholder={`Answer Displayed as Option ${opt.label}`}
+              value={opt.value}
+              onChange={(e) => {
+                const newOptions = [...options];
+                newOptions[index].value = e.target.value;
+                setOptions(newOptions);
+                setAnswers(newOptions.map((opt) => opt.value));
+              }}
+            />
+          </div>
+        ))}
+    
+        {options.length < 6 && (
+          <button
+            type="button"
+            className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
+            onClick={addOption}
+          >
+            + Add Answer
+          </button>
+        )}
+      </div>
+      )}
+
+      {questionType === 'Judgement' && (
+        <div className='join join-vertical gap-2'>
+          <label className="fieldset-label text-slate-900">Select the Correct Answer</label>
+          {['True', 'False'].map((answer) => (
+          <button
+            key={answer}
+            onClick={() => setCorrectAnswer(answer === 'True' ? 'Option A' : 'Option B')}
+            className={`btn !text-xs ${
+              correctAnswer === (answer === 'True' ? 'Option A' : 'Option B')
+                ? '!bg-green-200 text-gray-950'
+                : '!bg-gray-200 text-gray-800'
+            }`}
+          >
+            {answer}
+          </button>
+        ))}
         </div>
-        <input
-          className="p-2 bg-gray-200 rounded-md"
-          type="text"
-          placeholder="Answer Displayed as Option A"
-          value={optionA}
-          onChange={(e) => setOptionA(e.target.value)}
-        />
-        <div className='join join-horizontal gap-2 h-[20px]'>
-          <label className="fieldset-label text-slate-900">Option B</label>
-          <input type="radio" 
-            name="correctAnswer" 
-            value="Option B" 
-            className="radio radio-xs" 
-            onChange={(e) => setcorrectAnswer(e.target.value)}
-            checked={correctAnswer === 'Option B'}/>
-          <p className="!text-zinc-500">- mark option B as correct</p>
+      )}
+
+      {!questionType && (
+        <div className="text-sm text-gray-500 italic ml-2">
+          Select a question type.
         </div>
-        <input
-          className="p-2 bg-gray-200 rounded-md"
-          type="text"
-          placeholder="Answer Displayed as Option B"
-          value={optionB}
-          onChange={(e) => setOptionB(e.target.value)}
-        />
-        <div className='join join-horizontal gap-2 h-[20px]'>
-          <label className="fieldset-label text-slate-900">Option C</label>
-          <input type="radio" 
-            name="correctAnswer" 
-            value="Option C" 
-            className="radio radio-xs" 
-            onChange={(e) => setcorrectAnswer(e.target.value)}
-            checked={correctAnswer === 'Option C'}/>
-          <p className="!text-zinc-500">- mark option C as correct</p>
-        </div>
-        <input
-          className="p-2 bg-gray-200 rounded-md"
-          type="text"
-          placeholder="Answer Displayed as Option C"
-          value={optionC}
-          onChange={(e) => setOptionC(e.target.value)}
-        />
-        <div className='join join-horizontal gap-2 h-[20px]'>
-          <label className="fieldset-label text-slate-900">Option D</label>
-          <input type="radio" 
-            name="correctAnswer" 
-            value="Option D" 
-            className="radio radio-xs" 
-            onChange={(e) => setcorrectAnswer(e.target.value)}
-            checked={correctAnswer === 'Option D'}/>
-          <p className="!text-zinc-500">- mark option D as correct</p>
-        </div>
-        <input
-          className="p-2 bg-gray-200 rounded-md"
-          type="text"
-          placeholder="Answer Displayed as Option D"
-          value={optionD}
-          onChange={(e) => setOptionD(e.target.value)}
-        />
+      )}
+      <hr className="m-2"></hr>
 
 
         {/* Only shows when an error has been stored */}

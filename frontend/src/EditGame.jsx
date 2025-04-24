@@ -18,14 +18,17 @@ const EditGame = ({ token }) => {
   const [imageError, setimageError] = useState(false);
   const [duration, setDuration] = useState('');
   const [question, setQuestion] = useState('');
-  const [optionA, setOptionA] = useState('');
-  const [optionB, setOptionB] = useState('');
-  const [optionC, setOptionC] = useState('');
-  const [optionD, setOptionD] = useState('');
-  const [correctAnswer, setcorrectAnswer] = useState('');
+  const [correctAnswer, setCorrectAnswer] = useState('');
   const [questionError, setquestionError] = useState('');
   const [editQuestion, setEditQuestion] = useState(false);
   const [editQuestionID, setEditQuestionID] = useState('');
+  const [options, setOptions] = useState([
+    { label: 'A', value: '' },
+    { label: 'B', value: '' },
+  ]);
+  const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [questionType, setQuestionType] = useState('');
   const fileInputRef = useRef(null);
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
   const navigate = useNavigate();
@@ -117,8 +120,13 @@ const EditGame = ({ token }) => {
   }
 
   const addQuestion = async () => {
-    if (duration === '' || question === '' || optionA === '' || optionB === '' || optionC === '' || optionD === '') {
+    if (duration === '' || question === '') {
       setquestionError("Question Inputs Cannot be Empty");
+      return; 
+    }
+
+    if (questionType === '') {
+      setquestionError("Question Type Must be Selected");
       return; 
     }
 
@@ -127,22 +135,48 @@ const EditGame = ({ token }) => {
       return; 
     }
 
-    if (correctAnswer === '') {
-      setquestionError("Correct Answer must be Selected");
-      return; 
+    if (questionType === 'Single Choice' || questionType === 'Judgement') {
+      for (let i = 0; i < answers.length; i++) {
+        if (!answers[i]) {
+          setquestionError("Question Inputs Cannot be Empty");
+          return;
+        }
+      }
+
+      if (correctAnswer === '') {
+        setquestionError("Correct Answer must be Selected");
+        return; 
+      }
+    }
+
+    let sortedCorrectAnswers = []
+    if (questionType === 'Multiple Choice') {
+      for (let i = 0; i < answers.length; i++) {
+        if (!answers[i]) {
+          setquestionError("Question Inputs Cannot be Empty");
+          return;
+        }
+      }
+
+      if (correctAnswers.length < 2) {
+        setquestionError("Multiple Choice Requires at Least 2 Correct Answers");
+        return; 
+      }
+
+      sortedCorrectAnswers = [...correctAnswers].sort((a, b) => {
+        return a.localeCompare(b);
+      });
     }
 
     const newQuestion = {
       duration: duration,
-      correctAnswers: [correctAnswer],
+      correctAnswers: (questionType === 'Single Choice' || questionType === 'Judgement') 
+        ? [correctAnswer] 
+        : sortedCorrectAnswers,
       question: question,
-      options: {
-        optionA: optionA,
-        optionB: optionB,
-        optionC: optionC,
-        optionD: optionD
-      },
-      id: game.questions.length + 1
+      answers: answers,
+      id: game.questions.length + 1,
+      questionType: questionType
     }
     game.questions.push(newQuestion);
       
@@ -159,12 +193,16 @@ const EditGame = ({ token }) => {
       getGameData(token);
       setDuration('');
       setQuestion('');
-      setOptionA('');
-      setOptionB('');
-      setOptionC('');
-      setOptionD('');
-      setcorrectAnswer('');
+      
       setquestionError('');
+      setQuestionType('');
+      setOptions([
+        { label: 'A', value: '' },
+        { label: 'B', value: '' },
+      ]);
+      setCorrectAnswer('');
+      setCorrectAnswers([]); 
+      setAnswers([]);
       return true;
     } catch (err) {
       setquestionError(err.response.data.error);
@@ -218,11 +256,7 @@ const EditGame = ({ token }) => {
       getGameData(token);
       setDuration('');
       setQuestion('');
-      setOptionA('');
-      setOptionB('');
-      setOptionC('');
-      setOptionD('');
-      setcorrectAnswer('');
+      setCorrectAnswer('');
       setquestionError('');
       return true;
     } catch (err) {
@@ -347,14 +381,16 @@ const EditGame = ({ token }) => {
             open={createQPopuUp}
             onClose={() => {
               setCreateQPopUp(false);
-              setDuration('');
+              setQuestionType('');
+              setOptions([
+                { label: 'A', value: '' },
+                { label: 'B', value: '' },
+              ]);
+              setCorrectAnswer('');
+              setCorrectAnswers([]); 
               setQuestion('');
-              setOptionA('');
-              setOptionB('');
-              setOptionC('');
-              setOptionD('');
-              setcorrectAnswer('');
-              setquestionError('');
+              setDuration('');
+              setAnswers([]);
             }}
             onCreate={async () => {
               const success = await addQuestion();
@@ -367,16 +403,14 @@ const EditGame = ({ token }) => {
             setDuration={setDuration}
             question={question}
             setQuestion={setQuestion}
-            optionA={optionA}
-            setOptionA={setOptionA}
-            optionB={optionB}
-            setOptionB={setOptionB}
-            optionC={optionC}
-            setOptionC={setOptionC}
-            optionD={optionD}
-            setOptionD={setOptionD}
+            options={options}
+            setOptions={setOptions}
             correctAnswer={correctAnswer}
-            setcorrectAnswer={setcorrectAnswer}
+            setCorrectAnswer={setCorrectAnswer}
+            correctAnswers={correctAnswers}
+            setCorrectAnswers={setCorrectAnswers}
+            questionType={questionType}
+            setQuestionType={setQuestionType}
             editing={editQuestion}
             onEdit={async () => {
               const success = await editQuestionContent(editQuestionID);
@@ -384,6 +418,8 @@ const EditGame = ({ token }) => {
                 setCreateQPopUp(false); 
               }
             }}
+            answers={answers}
+            setAnswers={setAnswers}
           />
           {game.questions.length === 0 ? (
             <div role="alert" className="alert alert-error mt-6 !bg-red-200">

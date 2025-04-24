@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState, useEffect, useRef, act } from 'react';
 
 import Gamecard from '../components/GameCard';
-import DeleteModal from '../components/deleteModal';
+import DeleteModal from '../components/DeleteModal';
 import CreateGameModal from '../components/CreateGameModal';
 import ViewResultsModal from '../components/ViewResultsModal';
 
