@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 // Creates a popup for when the user wants to add a new question
 function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, points, setPoints, question, setQuestion, options, 
   setOptions, correctAnswer, setCorrectAnswer, correctAnswers, setCorrectAnswers, questionType, setQuestionType, editing, onEdit, 
-  setAnswers, questionFileInputRef, handleFileChange, youtubeUrl, setYoutubeUrl, setQuestionImageFile, attachmentType, setAttachmentType, editQuestion}) {
+  setAnswers, questionFileInputRef, handleFileChange, youtubeUrl, setYoutubeUrl, attachmentType, setAttachmentType, editQuestion}) {
 
   useEffect(() => {
     if (editing && editQuestion) {
@@ -87,7 +87,6 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
               } else {
                 setAttachmentType('youtube');
                 setYoutubeUrl('');
-                setQuestionImageFile(null);
               }
             }}
           >
@@ -101,7 +100,6 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
                 setAttachmentType('');
               } else {
                 setAttachmentType('image');
-                setQuestionImageFile(null);
                 setYoutubeUrl('');
               }
             }}
