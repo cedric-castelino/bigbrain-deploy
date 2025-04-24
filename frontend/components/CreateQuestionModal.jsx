@@ -1,16 +1,20 @@
+import { useState } from 'react';
 // Creates a popup for when the user wants to add a new question
-function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, question, setQuestion,options, 
-  setOptions, correctAnswer, setCorrectAnswer, correctAnswers, setCorrectAnswers, questionType, setQuestionType, editing, onEdit, answers, setAnswers}) {
+function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, points, setPoints, question, setQuestion,options, 
+  setOptions, correctAnswer, setCorrectAnswer, correctAnswers, setCorrectAnswers, questionType, setQuestionType, editing, onEdit, 
+  setAnswers, questionFileInputRef, handleFileChange, youtubeUrl, setYoutubeUrl, questionImageFile, setQuestionImageFile, attachmentType, setAttachmentType}) {
 
-  const addOption = () => {
+  const [showYoutubeInput, setShowYoutubeInput] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+
+  const addAnswer = () => {
     const nextLabel = String.fromCharCode(65 + options.length);
     if (options.length < 6) {
       const newOptions = [...options, { label: nextLabel, value: '' }];
       setOptions(newOptions);
-      setAnswers(newOptions.map(opt => opt.value)); // Sync answers
+      setAnswers(newOptions.map(opt => opt.value)); 
     }
   };
-
 
   return (
   // Displays a transparent grey background for the modal
@@ -27,6 +31,15 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
           onChange={(e) => setDuration(e.target.value)}
         />
 
+        <label className="fieldset-label text-slate-900">Points</label>
+        <input
+          className="p-2 bg-gray-200 rounded-md"
+          type="number"
+          required placeholder="Amount of Points Allocated to Question"
+          value={points}
+          onChange={(e) => setPoints(e.target.value)}
+        />
+
         <label className="fieldset-label text-slate-900">Question</label>
         <textarea 
           className="textarea w-[335px]"
@@ -35,6 +48,54 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
+
+      <label className="fieldset-label text-slate-900">Question Attachment</label>
+      <div className="flex gap-2 mb-2">
+        <button
+          type="button"
+          className={`btn btn-sm !text-xs ${attachmentType === 'youtube' ? '!btn-primary !bg-blue-600 text-white' : 'btn-outline !bg-gray-200 text-gray-800'}`}
+          onClick={() => {
+            if (attachmentType === 'youtube') {
+              setAttachmentType('');
+            } else {
+              setAttachmentType('youtube');
+              setYoutubeUrl('');
+              setQuestionImageFile(null);
+            }
+          }}
+        >
+          YouTube URL
+        </button>
+        <button
+          type="button"
+          className={`btn btn-sm !text-xs ${attachmentType === 'image' ? '!btn-primary !bg-blue-600 text-white' : 'btn-outline !bg-gray-200 text-gray-800'}`}
+          onClick={() => {
+            if (attachmentType === 'image') {
+              setAttachmentType('');
+            } else {
+              setAttachmentType('image');
+              setQuestionImageFile(null);
+              setYoutubeUrl('');
+            }
+          }}
+        >
+          Upload Image
+        </button>
+      </div>
+
+      {attachmentType === 'youtube' && (
+        <input
+          type="url"
+          placeholder="YouTube Video URL"
+          className="p-2 bg-gray-200 rounded-md w-full mb-2"
+          value={youtubeUrl}
+          onChange={(e) => setYoutubeUrl(e.target.value)}
+        />
+      )}
+
+      {attachmentType === 'image' && (
+        <input ref={questionFileInputRef} type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
+      )}
 
         <label className="fieldset-label text-slate-900">Question Type</label>
         <div className="join join-horizontal gap-2">
@@ -91,7 +152,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
           <button
             type="button"
             className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
-            onClick={addOption}
+            onClick={addAnswer}
           >
             + Add Answer
           </button>
@@ -139,7 +200,7 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
            <button
              type="button"
              className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
-             onClick={addOption}
+             onClick={addAnswer}
            >
              + Add Answer
            </button>

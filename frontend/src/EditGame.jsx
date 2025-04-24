@@ -17,6 +17,7 @@ const EditGame = ({ token }) => {
   const [editGameError, seteditGameError] = useState('');
   const [imageError, setimageError] = useState(false);
   const [duration, setDuration] = useState('');
+  const [points, setPoints] = useState('');
   const [question, setQuestion] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [questionError, setquestionError] = useState('');
@@ -29,7 +30,12 @@ const EditGame = ({ token }) => {
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [questionType, setQuestionType] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [questionImageFile, setQuestionImageFile] = useState(null);
+  const [attachmentType, setAttachmentType] = useState('');
+  const [questionThumbnail, setQuestionThumbnail] = useState('');
   const fileInputRef = useRef(null);
+  const questionFileInputRef = useRef(null);
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
   const navigate = useNavigate();
 
@@ -120,7 +126,7 @@ const EditGame = ({ token }) => {
   }
 
   const addQuestion = async () => {
-    if (duration === '' || question === '') {
+    if (duration === '' || question === '' || points === '') {
       setquestionError("Question Inputs Cannot be Empty");
       return; 
     }
@@ -130,8 +136,13 @@ const EditGame = ({ token }) => {
       return; 
     }
 
-    if (Number(duration) < 0 || Number(duration) > 60) {
+    if (Number(duration) < 1 || Number(duration) > 60) {
       setquestionError("Duration must be between 1 and 60");
+      return; 
+    }
+
+    if (Number(points) < 1 || Number(points) > 10) {
+      setquestionError("Points must be between 1 and 10");
       return; 
     }
 
@@ -168,6 +179,32 @@ const EditGame = ({ token }) => {
       });
     }
 
+    if (attachmentType === 'image') {
+      if (imageError) {
+        setquestionError("Invalid file type");
+        resetFileInput();
+        setimageError(false);
+        return;
+      }
+      if (thumbnail === '') {
+        setquestionError("Image Input is Empty");
+        return; 
+      } 
+    }
+
+    if (attachmentType === 'youtube') {
+      const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11}(&.*)?$/;
+      if (youtubeUrl === '') {
+        setquestionError("Youtube URL is Empty");
+        return; 
+      }
+
+      if (!youtubeRegex.test(youtubeUrl.trim())) {
+        setquestionError("Invalid YouTube URL");
+        return;
+      }
+    }
+
     const newQuestion = {
       duration: duration,
       correctAnswers: (questionType === 'Single Choice' || questionType === 'Judgement') 
@@ -176,7 +213,12 @@ const EditGame = ({ token }) => {
       question: question,
       answers: answers,
       id: game.questions.length + 1,
-      questionType: questionType
+      questionType: questionType,
+      points: points,
+      ...(attachmentType !== '' && {
+        attachmentType: attachmentType,
+        attachment: attachmentType === 'youtube' ? youtubeUrl : thumbnail,
+      })
     }
     game.questions.push(newQuestion);
       
@@ -192,6 +234,7 @@ const EditGame = ({ token }) => {
     
       getGameData(token);
       setDuration('');
+      setPoints('');
       setQuestion('');
       
       setquestionError('');
@@ -203,6 +246,11 @@ const EditGame = ({ token }) => {
       setCorrectAnswer('');
       setCorrectAnswers([]); 
       setAnswers([]);
+      setThumbnail('');
+      setAttachmentType('');
+      resetFileInput();
+      setYoutubeUrl('');
+      setQuestionImageFile('');
       return true;
     } catch (err) {
       setquestionError(err.response.data.error);
@@ -255,6 +303,7 @@ const EditGame = ({ token }) => {
     
       getGameData(token);
       setDuration('');
+      setPoints('');
       setQuestion('');
       setCorrectAnswer('');
       setquestionError('');
@@ -270,6 +319,10 @@ const EditGame = ({ token }) => {
     if (fileInputRef.current) {
       fileInputRef.current.value = null; 
     }
+    if (questionFileInputRef.current) {
+      questionFileInputRef.current.value = null; 
+    }
+    setThumbnail('');
   }
 
   const getTotalDuration = (questions) => {
@@ -390,7 +443,14 @@ const EditGame = ({ token }) => {
               setCorrectAnswers([]); 
               setQuestion('');
               setDuration('');
+              setPoints('');
               setAnswers([]);
+              setquestionError('');
+              setThumbnail('');
+              setAttachmentType('');
+              resetFileInput();
+              setYoutubeUrl('');
+              setQuestionImageFile('');
             }}
             onCreate={async () => {
               const success = await addQuestion();
@@ -401,6 +461,8 @@ const EditGame = ({ token }) => {
             error={questionError}
             duration={duration}
             setDuration={setDuration}
+            points={points}
+            setPoints={setPoints}
             question={question}
             setQuestion={setQuestion}
             options={options}
@@ -418,8 +480,15 @@ const EditGame = ({ token }) => {
                 setCreateQPopUp(false); 
               }
             }}
-            answers={answers}
             setAnswers={setAnswers}
+            questionFileInputRef={questionFileInputRef}
+            handleFileChange={handleFileChange}
+            youtubeUrl={youtubeUrl}
+            setYoutubeUrl={setYoutubeUrl}
+            questionImageFile={questionImageFile}
+            setQuestionImageFile={setQuestionImageFile}
+            attachmentType={attachmentType}
+            setAttachmentType={setAttachmentType}
           />
           {game.questions.length === 0 ? (
             <div role="alert" className="alert alert-error mt-6 !bg-red-200">
