@@ -15,7 +15,7 @@ describe('user happy path', () => {
     it('should register successfully and go to dashboard', () => {
       cy.visit('http://localhost:3000/register');
       cy.get('input[placeholder="Name"]').type('John');
-      cy.get('input[placeholder="Email"]').type('22222@example.com');
+      cy.get('input[placeholder="Email"]').type('3@example.com');
       cy.get('input[placeholder="Password"]').type('123');
       cy.get('input[placeholder="Confirm Password"]').type('123');
       cy.get('button[name="register-button"]').click();
@@ -28,7 +28,7 @@ describe('user happy path', () => {
     beforeEach(() => {
       cy.session('admin-session', () => {
         cy.visit('http://localhost:3000/login');
-        cy.get('input[placeholder="Email"]').type('22222@example.com');
+        cy.get('input[placeholder="Email"]').type('3@example.com');
         cy.get('input[placeholder="Password"]').type('123');
         cy.get('button[name="login-button"]').click();
         cy.url().should('include', '/dashboard');
@@ -49,7 +49,7 @@ describe('user happy path', () => {
     beforeEach(() => {
       cy.session('admin-session-gameoption', () => {
         cy.visit('http://localhost:3000/login');
-        cy.get('input[placeholder="Email"]').type('22222@example.com');
+        cy.get('input[placeholder="Email"]').type('3@example.com');
         cy.get('input[placeholder="Password"]').type('123');
         cy.get('button[name="login-button"]').click();
         cy.contains('Create New Game').should('exist').click();
@@ -94,7 +94,7 @@ describe('user happy path', () => {
       cy.visit('http://localhost:3000/dashboard');
       cy.get('button[name="logoutdashboardbutton"]').click();
       cy.visit('http://localhost:3000/login');
-      cy.get('input[placeholder="Email"]').type('22222@example.com');
+      cy.get('input[placeholder="Email"]').type('3@example.com');
       cy.get('input[placeholder="Password"]').type('123');
       cy.get('button[name="login-button"]').click();
       cy.url().should('include', '/dashboard');
