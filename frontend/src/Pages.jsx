@@ -7,6 +7,7 @@ import Dashboard from './Dashboard';
 import EditGame from './EditGame';
 import Session from './Session';
 import PlayerJoin from './PlayerJoin';
+import PlayerGame from './PlayerGame';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -83,7 +84,7 @@ function App() {
         <Route path="/session/:sessionId" element={<Session token={token} setActiveStatus={setActiveStatus}/>} />
         <Route path="/playerjoin" element={<PlayerJoin token={token} />} />
         <Route path="/playerjoin/:sessionId" element={<PlayerJoin token={token} />} />
-        <Route path="/playergame/:playerId" element={<PlayerJoin token={token} />} />
+        <Route path="/playergame/:playerId" element={<PlayerGame token={token} />} />
       </Routes>
     </div>
   )
