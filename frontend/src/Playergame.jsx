@@ -58,7 +58,7 @@ function PlayerGame ({ token }) {
     }
   }, [questionTimer]);
 
-  // Check for game status every second
+  // Check for game status every 0.5 seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (localStorage.getItem('activeStatus') === 'true') {
@@ -71,10 +71,6 @@ function PlayerGame ({ token }) {
           if (success === true) {
             setGameState("results")
           }
-        } else {
-          const success = await findActiveGame(token);
-          if (success === true) {
-          }
         }
       };
       checkResults();
@@ -85,7 +81,7 @@ function PlayerGame ({ token }) {
     
   }, [playerId]);
 
-
+  // Checks if the game has started and if so, starts displaying the questions
   const checkIfGameStarted = async () => {
     try {
       const response = await axios.get(`http://localhost:5005/play/${playerId}/status`);
@@ -107,28 +103,14 @@ function PlayerGame ({ token }) {
           setButtonsDisabled(false); // Reset button state for new question
           setSelectedIndices([]); // Clear selections for new question
           setCorrectAnswer([])
-
         }
       } 
     } catch (err) {
       console.log(err);
     }
   };
-
-  const findActiveGame = async (token) => {
-    const response = await axios.get('http://localhost:5005/admin/games', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      }
-    })
-    for (const game of response.data.games) {
-      if (game.active) {
-        setCurrentGame(game);
-      }
-    }
-  }
-
   
+  // Moves to the results page if the results have been uploaded to database
   const moveToResults = async () => {
     try {
       const response = await axios.get(`http://localhost:5005/play/${playerId}/results`, {
@@ -141,6 +123,7 @@ function PlayerGame ({ token }) {
     }
   }
 
+  // Records the players and uploads answer for each question
   const putPlayerAnswer = async () => {
     try {
 
@@ -158,12 +141,14 @@ function PlayerGame ({ token }) {
     }
   }
 
+  // Shows each question for the user to answer within the game
   const renderQuestion = () => {
     switch (questionType) {
     case "Judgement":
       return (
         <>
-          <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
+          {/* Shows the game data and countdown */}
+          <h1 className="text-xl font-bold mb-2 max-w-md">{question.question}</h1>
           <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
           <p>points: {question.points }</p>
           {question.attachmentType === 'image' && question.attachment && (
@@ -176,6 +161,7 @@ function PlayerGame ({ token }) {
               />
             </>
           )}
+          {/* Shows the question attachment if it has one */}
           {question.attachmentType === 'youtube' && question.attachment && (
             <>
               <div className="text-sm font-semibold mt-6"></div>
@@ -189,6 +175,7 @@ function PlayerGame ({ token }) {
             </>
           )}
 
+          {/* Displays the correct answer after the question has ended */}
           {correctAnswer && correctAnswer.length > 0 && (
             <p>The correct answer is: {correctAnswer}</p>
           )}
@@ -220,6 +207,7 @@ function PlayerGame ({ token }) {
           </div>
         </>
       );
+    {/* Displays questions differently based on their type */}
     case "Single Choice":
       return (
         <>
@@ -324,7 +312,7 @@ function PlayerGame ({ token }) {
                   setSelectedIndices(prev =>
                     isSelected
                       ? prev.filter(i => i !== index)  // Deselect
-                      : [...prev, index]              // Select
+                      : [...prev, index]               // Select
                   );
                 };
         
@@ -355,6 +343,7 @@ function PlayerGame ({ token }) {
     case "waitForPlayersJoin":
       return (
         <div className="flex flex-col justify-center items-center">
+          {/* Shows the loading screen for players waiting for the game to start */}
           <label className="fieldset-label text-slate-900 mb-4">Waiting for game to start</label>
           <span className="ml-3 loading loading-spinner loading-sm mb-4"></span>
           <iframe
@@ -379,6 +368,7 @@ function PlayerGame ({ token }) {
         <div>
           <label className="fieldset-label text-slate-900">Your Results</label>
           <hr />
+          {/* Shows each question, if it was correct, the time taken and the points allocated */}
           <table className="table w-full">
             <thead>
               <tr>
@@ -412,6 +402,7 @@ function PlayerGame ({ token }) {
             </div>
             <div className="input-group justify-center mt-2 mb-2">
               <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Total Points</span>
+              {/* calculates the points won using the previously stored points array */}
               <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">{playerResults.reduce((total, result, index) => {
                 return result.correct ? total + (Number(gamePoints[index]) || 0) : total;
               }, 0)}/{gamePoints.reduce((sum, val) => sum + (Number(val) || 0), 0)}</span>
@@ -427,6 +418,7 @@ function PlayerGame ({ token }) {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
+      {/* white background for all elements */}
       <div className="bg-white p-8 rounded-lg shadow-md flex flex-col w-[80%] md:w-[40%]">
         {renderGameContent()}
       </div>
