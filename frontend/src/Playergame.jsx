@@ -11,13 +11,16 @@ function PlayerGame ({ token }) {
   const [question, setQuestion] = useState('');
   const [questionType, setQuestionType] = useState('');
   const [questionTimer, setQuestionTimer] = useState(-1);
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
 
   // Countdown timer
   useEffect(() => {
-    if (questionTimer <= 0) return;
-
+    if (questionTimer <= 0) {
+      setButtonsDisabled(true);
+      return;
+    }
     const intervalId = setInterval(() => {
       setQuestionTimer((prev) => prev - 1);
     }, 1000);
@@ -31,23 +34,23 @@ function PlayerGame ({ token }) {
       if (localStorage.getItem('activeStatus') === 'true') {
         checkIfGameStarted();
       }
+      const checkResults = async () => {
+        // Only check for results if no active session is running
+        if (!localStorage.getItem('activeStatus')) {
+          const success = await getResults(token);
+          if (success === true) {
+            setGameState("results")
+          }
+        }
+      };
+      checkResults();
+
     }, 10);
   
     return () => clearInterval(intervalId);
+    
   }, [playerId]);
 
-  useEffect(() => {
-    const checkResults = async () => {
-      // Only check for results if no active session is running
-      if (!localStorage.getItem('activeStatus')) {
-        const success = await getResults(token);
-        if (success === true) {
-          setGameState("results")
-        }
-      }
-    };
-    checkResults();
-  }, [token, localStorage.getItem('activeStatus')]);  // Re-check when the activeStatus changes
 
   const checkIfGameStarted = async () => {
     try {
@@ -66,6 +69,7 @@ function PlayerGame ({ token }) {
           setQuestion(newQuestion);
           setQuestionType(newQuestion.questionType);
           setQuestionTimer(newQuestion.duration);
+          setButtonsDisabled(false); // Reset button state for new question
         }
       } 
     } catch (err) {
@@ -96,12 +100,14 @@ function PlayerGame ({ token }) {
             <button 
               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
               onClick={() => {}}
+              disabled={buttonsDisabled}
             >
               True
             </button>
             <button 
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
               onClick={() => {}}
+              disabled={buttonsDisabled}
             >
               False
             </button>
@@ -110,17 +116,48 @@ function PlayerGame ({ token }) {
       );
       case "Single Choice":
         return(
-        <>
-          <button>Option A</button>
-          <button>Option B</button>
-        </>
+          <>
+            <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
+            <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
+              {
+                question.answers.map((answer, index) => {
+                  return (<button 
+                    className={`bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded w-full sm:w-auto ${buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => {}}
+                    key={index}
+                    disabled={buttonsDisabled}
+                  >
+                    {answer}
+                  </button>
+                  )
+                })
+              }
+            </div>
+          </>
       )
       case "Multiple Choice":
         return(
-        <>
-          
-        </>
-      )
+          <>
+            <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
+            <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
+              {
+                question.answers.map((answer, index) => {
+                  return (<button 
+                    className={`bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded w-full sm:w-auto ${buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => {}}
+                    key={index}
+                    disabled={buttonsDisabled}
+                  >
+                    {answer}
+                  </button>
+                  )
+                })
+              }
+            </div>
+          </>
+        )
     }
   }
   
