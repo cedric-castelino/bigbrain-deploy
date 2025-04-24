@@ -16,7 +16,6 @@ function PlayerJoin () {
     if (sessionId === '') {
       setJoinGameError("Session name cannot be empty");
       return; 
-      {/* no name */}
     } else if (name === '') {
       setJoinGameError("Game Name cannot be empty");
     } else {
