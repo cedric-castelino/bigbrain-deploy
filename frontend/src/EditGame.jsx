@@ -240,7 +240,7 @@ const EditGame = ({ token }) => {
         ...(attachmentType !== '' && {
           attachmentType: attachmentType,
           attachment: attachmentType === 'youtube' ? youtubeUrl.replace(/watch\?v=|youtu\.be\//, 'embed/').split('&')[0] 
-          : thumbnail,
+            : thumbnail,
         })
       }
       game.questions.push(newQuestion);
