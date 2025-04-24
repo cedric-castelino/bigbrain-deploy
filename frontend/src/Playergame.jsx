@@ -378,7 +378,7 @@ function PlayerGame ({ token }) {
         <div>
           <label className="fieldset-label text-slate-900">Your Results</label>
           <hr />
-          <table className="table">
+          <table className="table w-full">
             <thead>
               <tr>
                 <th>Question</th>
@@ -424,7 +424,7 @@ function PlayerGame ({ token }) {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
-      <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
+      <div className="bg-white p-8 rounded-lg shadow-md flex flex-col w-[80%] md:w-[40%]">
         {renderGameContent()}
       </div>
     </div>
