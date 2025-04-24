@@ -131,7 +131,7 @@ const Session = ({ token, setActiveStatus }) => {
       })
       let games = getGameIdResponse.data.games
       
-      activeGameId = games.find(game => game.active !== 0);
+      activeGameId = games.find(game => game.active !== null);
 
       const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
         mutationType: "END"
@@ -157,7 +157,7 @@ const Session = ({ token, setActiveStatus }) => {
       })
       let games = getGameIdResponse.data.games
       
-      activeGameId = games.find(game => game.active !== 0);
+      activeGameId = games.find(game => game.active !== null);
 
     try {
       const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
