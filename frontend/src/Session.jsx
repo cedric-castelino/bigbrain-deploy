@@ -101,6 +101,8 @@ const Session = ({ token, setActiveStatus }) => {
                   <div>
                     <h1 className="bg-white rounded-[20px] p-4 mt-3">Question: {questions[currentQuestionPosition].question}</h1>
                     <ul className="flex flex-col justify-center items-center">
+
+
                       <li className="bg-white m-2 p-3 rounded-md">
                                               Option A: {questions[currentQuestionPosition].options.optionA}
                       </li>
@@ -130,11 +132,11 @@ const Session = ({ token, setActiveStatus }) => {
     case "results":
       localStorage.setItem('gameState', 'results');
       return (
-        <div>
-          <p>Results screen</p>
-          <h1>data</h1>
-          <h1>data</h1>
-          <h1>data</h1>
+        <div className="flex flex-col justify-center items-center">
+          <h1>Results for session: {linkedSession.sessionId}</h1>
+          <h1>table of up to top 5 users and their scores</h1>
+          <h1>a bar/line chart showing breakdown of what percentage of people (yaxis) got questions (xaxis) correct</h1>
+          <h1>a chart showing the average response/answer time for each questions</h1>
         </div>
                 
       )
@@ -248,7 +250,6 @@ const Session = ({ token, setActiveStatus }) => {
           sessionid: linkedSession.sessionId
         }
       })
-      console.log(response);
       return true;
     } catch (err) {
       alert(err.response.data.error);

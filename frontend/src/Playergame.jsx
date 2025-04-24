@@ -9,6 +9,7 @@ function PlayerGame ({ token }) {
   const navigate = useNavigate();
   const [playerId, setPlayerId] = useState(prePopulatedPlayerId || '');
   const [gameState, setGameState] = useState('waitForPlayersJoin');
+  const [question, setQuestion] = useState('');
 
   useEffect(() => {
     // Check immediately on component mount
@@ -16,6 +17,7 @@ function PlayerGame ({ token }) {
     
     // Then set up interval to check regularly (every 5 seconds)
     const intervalId = setInterval(checkIfGameStarted, 5000);
+    
     
     // Clean up the interval when component unmounts
     return () => clearInterval(intervalId);
@@ -30,8 +32,23 @@ function PlayerGame ({ token }) {
         }
       })
       if (response.data.started === true) {
-        setGameState('displayQuestions')
+        setGameState('displayQuestions');
+        getQuestion();
       }
+    } catch (err) {
+        console.log(err);
+    }
+  }
+
+  const getQuestion = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5005/play/${playerId}/question`, {
+        params: { 
+          playerid: playerId
+        }
+      })
+      setQuestion(response.data.question);
+      console.log(response.data)
     } catch (err) {
         console.log(err);
     }
@@ -51,7 +68,16 @@ function PlayerGame ({ token }) {
       return (
         <div className="flex flex-col items-center justify-center">
           <p>
-            Game is in progress
+
+          The question text
+          A video or image depending on whether it exists.
+          A countdown with how many seconds remain until you can't answer anymore.
+          A selection of single, multiple or judgement answers, that are clickable.
+
+
+          The answer shall be sent to the server immediately after each user interaction. If further selections are modified, more requests are sent
+          When the timer hits 0, the answer/results of that particular question are displayed
+          The answer screen remains visible until the admin advances the game question onto the next question.
           </p>
         </div>
       )
