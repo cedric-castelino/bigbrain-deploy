@@ -94,39 +94,6 @@ const Session = ({ token, setActiveStatus }) => {
                 : <h1 className="">Question is finished</h1>}
                 <h1 className="">Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </h1>
           </div>
-
-          <div className="flex flex-col items-center justify-center">            
-            {questions.length > 0 && currentQuestionPosition >= 0 && currentQuestionPosition < questions.length ? (
-                <div className="flex flex-row gap-5">
-                  <div>
-                    <h1 className="bg-white rounded-[20px] p-4 mt-3">Question: {questions[currentQuestionPosition].question}</h1>
-                    <ul className="flex flex-col justify-center items-center">
-
-
-                      <li className="bg-white m-2 p-3 rounded-md">
-                                              Option A: {questions[currentQuestionPosition].options.optionA}
-                      </li>
-                      <li className="bg-white m-2 p-3 rounded-md">
-                                              Option B: {questions[currentQuestionPosition].options.optionB || ""}
-                      </li>
-                      <li className="bg-white m-2 p-3 rounded-md">
-                                              Option C: {questions[currentQuestionPosition].options.optionC || ""}
-                      </li>
-                      <li className="bg-white m-2 p-3 rounded-md">
-                                              Option D: {questions[currentQuestionPosition].options.optionD || ""}
-                      </li>
-                    </ul>
-                  </div>
-                
-              </div>
-
-              
-            ) : (
-              <p>Loading questions...</p>
-            )}
-
-                                
-          </div>
         </div>
       )
     case "results":
