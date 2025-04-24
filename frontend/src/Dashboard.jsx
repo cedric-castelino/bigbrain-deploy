@@ -69,11 +69,9 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   useEffect(() => {
     // Check for active game in localStorage
     const storedActiveStatus = localStorage.getItem('activeStatus') === 'true';
-    const storedActiveGameId = localStorage.getItem('activeGameId');
     
-    if (storedActiveStatus && storedActiveGameId) {
+    if (storedActiveStatus) {
       setActiveStatus(true);
-      setSelectedGameId(Number(storedActiveGameId));
     }
   }, []);
 
@@ -163,7 +161,6 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
         }
       })
       localStorage.removeItem('activeStatus');
-      localStorage.removeItem('activeGameId');
       setResultsPopUp(true);
     } catch (err) {
       alert(err.response.data.error);

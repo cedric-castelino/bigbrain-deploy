@@ -20,13 +20,11 @@ const GameCard = ({
 
   useEffect(() => {
     const storedActiveStatus = localStorage.getItem('activeStatus') === 'true';
-    const storedActiveGameId = localStorage.getItem('activeGameId');
     const storedSessionId = localStorage.getItem('sessionId');
         
     // Update state if there's an active game in localStorage
     if (storedActiveStatus) {
       setActiveStatus(true);
-      setSelectedGameId(Number(storedActiveGameId));
       setSessionId(storedSessionId)
     }
   }, [setActiveStatus, setSelectedGameId]);
@@ -50,7 +48,6 @@ const GameCard = ({
 
       const newSessionId = response.data.data.sessionId;
       localStorage.setItem('activeStatus', 'true');
-      localStorage.setItem('activeGameId', game.id.toString());
       localStorage.setItem('sessionId', newSessionId);
       localStorage.setItem('gameState', 'waitForPlayersJoin');
       localStorage.setItem('currentQuestionPosition', -1);

@@ -56,8 +56,9 @@ function App() {
       localStorage.removeItem('gameState');
       localStorage.removeItem('localNumberOfQuestions');
       localStorage.removeItem('activeStatus');
-      localStorage.removeItem('activeGameId');
+      localStorage.removeItem('questionTimer')
       localStorage.removeItem('sessionId');
+      localStorage.removeItem('activeGameId')
 
       setToken(null);
       navigate('/login');

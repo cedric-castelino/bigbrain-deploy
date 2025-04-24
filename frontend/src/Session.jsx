@@ -8,7 +8,6 @@ const Session = ({ token, setActiveStatus }) => {
   const navigate = useNavigate();
 
   const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
-  const [localActiveGameId, setLocalActiveGameId] = useState(localStorage.getItem('activeGameId'));
   const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
   const [numberOfQuestions, setNumberOfQuestions] = useState(parseInt(localStorage.getItem('NumberOfQuestions')));
   const [currentQuestionPosition, setCurrentQuestionPosition] = useState(parseInt(localStorage.getItem('currentQuestionPosition')));
@@ -18,7 +17,6 @@ const Session = ({ token, setActiveStatus }) => {
   const [questionTimer, setQuestionTimer] = useState(localStorage.getItem("questionTimer"));
 
   const activeStatus = localStorage.getItem('activeStatus');
-  const activeGameId = localStorage.getItem('activeGameId');
   const sessionId = localStorage.getItem('sessionId');
   const localToken = localStorage.getItem('token');
   const localGameState = localStorage.getItem('gameState');
@@ -49,7 +47,6 @@ const Session = ({ token, setActiveStatus }) => {
 
   useEffect(() => {
     setLocalActiveStatus(localStorage.getItem('activeStatus'));
-    setLocalActiveGameId(localStorage.getItem('activeGameId'));
     setLocalSessionId(localStorage.getItem('sessionId'));
     setCurrentQuestionPosition(localCurrentQuestionPosition)
     setNumberOfQuestions(localNumberOfQuestions)
@@ -65,7 +62,6 @@ const Session = ({ token, setActiveStatus }) => {
       setGameState("displayQuestions");
     } else if (currentQuestionPosition + 1 > numberOfQuestions) {
       localStorage.removeItem('activeStatus');
-      localStorage.removeItem('activeGameId');
       localStorage.removeItem('sessionId');
       localStorage.removeItem('gameState');
       localStorage.removeItem('currentQuestionPosition');
@@ -88,7 +84,7 @@ const Session = ({ token, setActiveStatus }) => {
       return (
         <div>
           <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
-          <div>
+          <div className="flex flex-col items-center justify">
             {questionTimer > 0
               ? `Duration: ${questionTimer}s`
               : "Question is finished"}
@@ -135,19 +131,28 @@ const Session = ({ token, setActiveStatus }) => {
 
   const endGameFunctionality = async () => {
     localStorage.removeItem('activeStatus');
-    localStorage.removeItem('activeGameId');
     localStorage.removeItem('sessionId');
     localStorage.removeItem('gameState');
     localStorage.removeItem('currentQuestionPosition');
     setLocalActiveStatus(null);
-    setLocalActiveGameId(null);
     setLocalSessionId(null);
     setActiveStatus(false);
   }
 
   const endGameMutate = async (token) => {
     try {
-      const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId}/mutate`, {
+      let activeGameId = false;
+
+      const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      let games = getGameIdResponse.data.games
+      
+      activeGameId = games.find(game => game.active !== 0);
+
+      const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
         mutationType: "END"
       }, {
         headers: {
@@ -162,8 +167,19 @@ const Session = ({ token, setActiveStatus }) => {
 
   const advanceGame = async (token) => {
 
+    let activeGameId = false;
+
+      const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      let games = getGameIdResponse.data.games
+      
+      activeGameId = games.find(game => game.active !== 0);
+
     try {
-      const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId}/mutate`, {
+      const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
         mutationType: "ADVANCE"
       }, {
         headers: {
