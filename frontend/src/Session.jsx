@@ -114,57 +114,57 @@ const Session = ({ token, setActiveStatus }) => {
           <h1>Waiting for players to connect</h1>
         </div>
       
-    )
+      )
     case "displayQuestions":
       localStorage.setItem('gameState', 'displayQuestions');
       return (
         <div className="flex flex-col items-center justify-center mt-40">
           <div className="flex flex-row gap-4 bg-white rounded-[20px] p-4 border-solid border-2 border-blue-300" >
-          {questionTimer > 0
-                ? <h1>{`Duration: ${questionTimer}s`}</h1>
-                : <h1 className="">Question is finished</h1>}
-                <h1 className="">Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </h1>
+            {questionTimer > 0
+              ? <h1>{`Duration: ${questionTimer}s`}</h1>
+              : <h1 className="">Question is finished</h1>}
+            <h1 className="">Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </h1>
           </div>
         </div>
       )
-      case "results":
-        localStorage.setItem('gameState', 'results');
-        let playerRanking = getPointRanking();
-        return (
-          <div className="flex flex-col gap-6 mt-10 px-4 mt-30">
-            {/* Make table scrollable on smaller screens */}
-            <div className="overflow-x-auto">
-              <table className="table w-full min-w-[300px]">
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Points</th>
+    case "results":
+      localStorage.setItem('gameState', 'results');
+      let playerRanking = getPointRanking();
+      return (
+        <div className="flex flex-col gap-6 mt-10 px-4 mt-30">
+          {/* Make table scrollable on smaller screens */}
+          <div className="overflow-x-auto">
+            <table className="table w-full min-w-[300px]">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {playerRanking.map((player, index) => (
+                  <tr key={index}>
+                    <th>{index + 1}</th>
+                    <td>{player.name}</td>
+                    <td>{player.points}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {playerRanking.map((player, index) => (
-                    <tr key={index}>
-                      <th>{index + 1}</th>
-                      <td>{player.name}</td>
-                      <td>{player.points}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
       
-            {/* Wrap charts in a responsive flex container */}
-            <div className="flex flex-col lg:flex-row justify-center items-center gap-4 w-full">
-              <div className="relative w-full lg:w-1/2">
-                <CreatePercentageChart results={results} />
-              </div>
-              <div className="relative w-full lg:w-1/2">
-                <CreateAverageTimeChart results={results} />
-              </div>
+          {/* Wrap charts in a responsive flex container */}
+          <div className="flex flex-col lg:flex-row justify-center items-center gap-4 w-full">
+            <div className="relative w-full lg:w-1/2">
+              <CreatePercentageChart results={results} />
+            </div>
+            <div className="relative w-full lg:w-1/2">
+              <CreateAverageTimeChart results={results} />
             </div>
           </div>
-        );
+        </div>
+      );
     }
   }
 
@@ -208,14 +208,14 @@ const Session = ({ token, setActiveStatus }) => {
 
     let activeGameId = false;
 
-      const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      })
-      let games = getGameIdResponse.data.games
+    const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    })
+    let games = getGameIdResponse.data.games
       
-      activeGameId = games.find(game => game.active !== null);
+    activeGameId = games.find(game => game.active !== null);
 
     try {
       const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
