@@ -60,7 +60,7 @@ function CreatePercentageChart({ results }) {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Optional: allows full responsive flexibility
+        maintainAspectRatio: false, 
         plugins: {
           title: {
             display: true,

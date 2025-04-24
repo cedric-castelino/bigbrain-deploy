@@ -25,6 +25,7 @@ const Session = ({ token, setActiveStatus }) => {
   const localCurrentQuestionPosition = parseInt(localStorage.getItem('currentQuestionPosition'));
   const localNumberOfQuestions = parseInt(localStorage.getItem('NumberOfQuestions'));
 
+  {/* Question timer, decrementing by 1 */}
   useEffect(() => {
     if (questionTimer <= 0) return;
     
@@ -36,9 +37,9 @@ const Session = ({ token, setActiveStatus }) => {
     return () => clearInterval(intervalId);
   }, [questionTimer]);
 
+  {/* Only check for results if no active session is running */}
   useEffect(() => {
     const checkResults = async () => {
-      // Only check for results if no active session is running
       if (!activeStatus) {
         const success = await getResults(localToken);
         setHasResults(success);
@@ -54,7 +55,7 @@ const Session = ({ token, setActiveStatus }) => {
 
   }, []);
 
-  // Update gameState based on currentQuestionPosition
+  {/* Update gameState based on currentQuestionPosition */}
   useEffect(() => {
     if (currentQuestionPosition === -1) {
       setGameState("waitForPlayersJoin");
@@ -70,6 +71,7 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }, [currentQuestionPosition]);
 
+  {/* Get player ranking by points */}
   const getPointRanking = () => {  
     let rankings = [];
   
@@ -97,6 +99,7 @@ const Session = ({ token, setActiveStatus }) => {
     return rankings;
   };
 
+  {/* render the content for the lobby, displaying questions and the results */}
   const renderGameContent = () => {
     if (gameState === "waitForPlayersJoin" && hasResults) {
       setGameState("results");
@@ -165,7 +168,7 @@ const Session = ({ token, setActiveStatus }) => {
       
     }
   }
-
+  {/* when a game is finished, remove some localstorage items */}
   const endGameFunctionality = async () => {
     localStorage.removeItem('activeStatus');
     localStorage.removeItem('sessionId');
@@ -174,8 +177,11 @@ const Session = ({ token, setActiveStatus }) => {
     setActiveStatus(false);
   }
 
+  {/* when the game is closed */}
   const endGameMutate = async (token) => {
     try {
+
+      {/* find gameId from active property */}
       let activeGameId = false;
 
       const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
@@ -200,8 +206,9 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }
 
+  {/* advance in the game, continuining on to the next question */}
   const advanceGame = async (token) => {
-
+    {/* finding gameid based on active game */}
     let activeGameId = false;
 
     const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
@@ -235,6 +242,7 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }
 
+  {/* gets the current status of the session */}
   const getStatus = async (token) => {
     try {
       const response = await axios.get(`http://localhost:5005/admin/session/${sessionId}/status`, {
@@ -249,6 +257,7 @@ const Session = ({ token, setActiveStatus }) => {
       setQuestions(response.data.results.questions)
       setNumberOfQuestions(lngth);
       localStorage.setItem('NumberOfQuestions', lngth.toString());
+      {/* if response is good and some math to determine that the currentposition wont be out of bounds */}
       if (response && 
                 localCurrentQuestionPosition + 1 < lngth && 
                 localCurrentQuestionPosition >= -1) {
@@ -261,13 +270,14 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }
 
+  {/* gets the results of the current session */}
   const getResults = async (token) => {
     try {
       const response = await axios.get(`http://localhost:5005/admin/session/${linkedSession.sessionId}/results`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-        params: {  // If you need to send the sessionId as a query parameter
+        params: {
           sessionid: linkedSession.sessionId
         }
       })
@@ -290,9 +300,11 @@ const Session = ({ token, setActiveStatus }) => {
       {((activeStatus && linkedSession.sessionId === sessionId)) ? (
         <div>
           <div>
+            {/* show game content */}
             {renderGameContent()}
           </div>
           <div className="flex justify-center mt-2">
+            {/* if the user wants to end teh sesssion */}
             <p className={`p-2 rounded-md text-white !bg-red-600 mr-2 hover:cursor-pointer hover:!bg-red-900 w-auto`}
               onClick={() => {
                 endGameMutate(token);
@@ -301,7 +313,7 @@ const Session = ({ token, setActiveStatus }) => {
             >
               <b>End Session</b>
             </p>
-
+            {/* if the gamestate is results, show button for results. if not, advance the game state with next question */}
             <p className={`${gameState === "results" ? "" : "p-2 rounded-md text-white !bg-green-600 mr-2 hover:cursor-pointer hover:!bg-green-900 w-auto"}`}
               onClick={() => {
                 advanceGame(token);

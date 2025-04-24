@@ -33,6 +33,7 @@ function App() {
     }
   }, [navigate]);
 
+  {/* successful login or register */}
   const successJob = (token, email, password) => {
     localStorage.setItem('token', token)
     localStorage.setItem('email', email)

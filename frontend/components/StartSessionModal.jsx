@@ -7,6 +7,7 @@ function StartSessionModal ({open, onClose, children}) {
             
       <div className={`max-h-[45vh] overflow-auto bg-white roudned-lg shadow p-6 transition all max-w-md overflow-auto ${open ? "scale-100 opacity-100" : "scale-110 opacity-0"}`}>
         <div className="flex flex-col">
+          {/* display the children of the parent component */}
           {children}
         </div>
       </div>

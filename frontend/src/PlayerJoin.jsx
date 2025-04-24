@@ -12,13 +12,16 @@ function PlayerJoin () {
   const [joinGameError, setJoinGameError] = useState('');
 
   const errorCheck = async (name) => {
+    {/* no session ID */}
     if (sessionId === '') {
       setJoinGameError("Session name cannot be empty");
       return; 
+      {/* no name */}
     } else if (name === '') {
       setJoinGameError("Game Name cannot be empty");
     } else {
       try {
+        {/* let the player join if all checks are good */}
         setJoinGameError("");
         const response = await axios.post(`http://localhost:5005/play/join/${sessionId}`, {
           name: name
@@ -44,7 +47,7 @@ function PlayerJoin () {
         <button className=' btn btn-primary' onClick={() => errorCheck}>
                 Join
         </button>
-            
+        {/* only show error if there was an error filling out the forms */}
         {joinGameError && (
           <div role="alert" className="alert alert-warning mt-2 mb-0">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">

@@ -22,6 +22,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   
+  {/* gets the dashboard games from the backend */}
   const getDashboardGames = async (token) => {
     try {
       const response = await axios.get('http://localhost:5005/admin/games', {
@@ -35,10 +36,12 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }
 
+  {/* navigates to the sessionId after it has ended */}
   const navigateSession = () => {
     navigate(`/session/${localStorage.getItem("sessionId")}`)
   }
 
+  {/* handles uploading a file */}
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -57,6 +60,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     } 
   };
 
+  {/* if the user refreshes and there isn't a token, go back to login page */}
   useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -66,8 +70,8 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     getDashboardGames(token);
   }, [token, navigate]);
 
+  {/* Check for active game in localStorage */}
   useEffect(() => {
-    // Check for active game in localStorage
     const storedActiveStatus = localStorage.getItem('activeStatus') === 'true';
     
     if (storedActiveStatus) {
@@ -75,6 +79,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }, []);
 
+  {/* creates a new game */}
   const createNewGame = async () => {
     if (name === '') {
       setCreateGameError("Game Name cannot be empty");
@@ -94,7 +99,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
       return;
     }
     
-
+    {/* new game data */}
     const newGame = {
       id: Math.floor(Math.random() * 1001),
       name: name,
@@ -126,6 +131,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }
 
+  {/* Deletes a game by removing it from the array */}
   const deleteGame = async (id) => {
     let newGamesArray = []
 
@@ -151,8 +157,10 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }
 
+  {/* end the active session */}
   const endGameMutate = async (token) => {
     try {
+      {/* find an active game by iterating through to check game.active */}
       let activeGameId = false;
 
       const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
@@ -178,6 +186,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
     }
   }
 
+  {/* go to results page */}
   const goToResultPage = () => {
     navigate(`/session/${localStorage.getItem('sessionId')}`)
     localStorage.setItem("gameState", "results")
@@ -202,6 +211,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
         <tbody>
           <tr className='flex justify-between items-center'>
             <td className='flex gap-2 flex-col'>
+              {/* create a new game, opening up the CreateGameModal */}
               <button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>
                 Create New Game
               </button>
@@ -228,7 +238,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                 editing={true}
                 fileInputRef={fileInputRef}
               />
-
+              {/* delete game button, opening up the DeleteModal */}
               <button type="button" className="btn btn-danger !bg-red-600 hover:!bg-red-900" onClick={() => setDeletePopUp(true)}>Delete Game</button>
               <DeleteModal open={deletePopUp} onClose={() => setDeletePopUp(false)}>
                 {games.map(game => (
@@ -244,6 +254,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
               </DeleteModal>
             </td>
             <td className="ml-auto flex flex-col md:flex-row justify-between items-center gap-2">
+              {/* Includes two buttons and one informative block. Buttons only appear after a session is started */}
               <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "!bg-red-700"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
               {
                 activeStatus && (
@@ -287,7 +298,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
       </table>
         
         
-
+      {/* if game length is 0, show no games found. otherwise, show game card */}
       {games.length === 0 ? (
         <div role="alert" className="alert alert-error mt-6 !bg-red-200">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="h-6 w-6 shrink-0 stroke-current">
