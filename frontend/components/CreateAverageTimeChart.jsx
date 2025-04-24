@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import React from 'react';
 
 function CreateAverageTimeChart({ results }) {
   const chartRef = useRef(null);

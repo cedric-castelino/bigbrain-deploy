@@ -5,6 +5,7 @@ import { useNavigate} from "react-router-dom"
 import CreateGameModal from '../components/CreateGameModal';
 import CreateQuestionModal from '../components/CreateQuestionModal';
 import DisplayQuestions from '../components/DisplayQuestions';
+import React from 'react';
 
 const EditGame = ({ token }) => {
   const { gameId } = useParams(); 

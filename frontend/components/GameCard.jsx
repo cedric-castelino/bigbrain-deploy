@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import StartSessionModal from './StartSessionModal';
 import { useEffect, useState } from 'react';
+import React from 'react';
 
 const GameCard = ({
   token,

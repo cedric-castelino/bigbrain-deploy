@@ -1,4 +1,5 @@
 import Button from "react-bootstrap/esm/Button";
+import React from 'react';
 
 function ViewResultsModal ({open, onClose, children}) {
 

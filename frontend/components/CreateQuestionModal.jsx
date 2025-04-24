@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import React from 'react';
 // Creates a popup for when the user wants to add a new question
 function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, points, setPoints, question, setQuestion, options, 
   setOptions, correctAnswer, setCorrectAnswer, correctAnswers, setCorrectAnswers, questionType, setQuestionType, editing, onEdit, 

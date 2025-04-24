@@ -1,3 +1,5 @@
+import React from 'react';
+
 const DisplayQuestions = ({question, onEdit, onDelete, onRemoveAttachment}) => {
 
   const getOptionLabel = (index) => `Option ${String.fromCharCode(65 + index)}`;
