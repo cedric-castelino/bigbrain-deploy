@@ -14,16 +14,19 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {
   Routes,
   Route,
-  useNavigate
+  useNavigate,
+  useLocation 
 } from "react-router-dom"
 
 function App() {
   const [token, setToken] = useState(null);
   const [activeStatus, setActiveStatus] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
  
   useEffect(() => {
-    setToken(localStorage.getItem('token'))
+    setToken(localStorage.getItem('token'));
+
   }, []);
 
   useEffect(() => {
@@ -71,16 +74,15 @@ function App() {
 
   return (
     <div data-theme="nord" className="fixed inset-0 bg-blue-200 overflow-y-auto">
-      {token ? (
-        <>
-          <button onClick={logout} className="btn btn-lg bg-secondary hover:!bg-zinc-700 text-white absolute top-2 right-6">Logout</button>
-        </>
-      ) : null
-      }
+      {token && !location.pathname.startsWith('/playerjoin') && !location.pathname.startsWith('/playergame') && (
+        <button onClick={logout} className="btn btn-lg bg-secondary hover:!bg-zinc-700 text-white absolute top-2 right-6">
+          Logout
+        </button>
+      )}
       <Routes>
         <Route path="/register" element={<Register successJob={successJob} token={token}/>} />
         <Route path="/login" element={<Login successJob={successJob} token={token}/>} />
-        <Route path="/dashboard" element={<Dashboard token={token} activeStatus={activeStatus} setActiveStatus={setActiveStatus} logout={logout}/>} />
+        <Route path="/dashboard" element={<Dashboard token={token} activeStatus={activeStatus} setActiveStatus={setActiveStatus}/>} />
         <Route path="/game/:gameId" element={<EditGame token={token} />} />
         <Route path="/session/:sessionId" element={<Session token={token} setActiveStatus={setActiveStatus}/>} />
         <Route path="/playerjoin" element={<PlayerJoin token={token} />} />

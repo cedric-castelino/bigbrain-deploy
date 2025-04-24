@@ -37,12 +37,26 @@ function PlayerJoin () {
   
 
   return (
+    // bg-white p-8 rounded-lg shadow-md flex flex-col w-[80%] md:w-[40%]
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
+      <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
       <form className='flex flex-col gap-3 w-[30vh]' onSubmit={(e) => {e.preventDefault(); errorCheck(name)}}>
-        <label type="text" className='mr-4'><b>Session ID</b></label>
-        <input value={sessionId} onChange={e => setSessionId(e.target.value)} type='number' className='bg-white rounded-md'></input>
-        <label type="text" className='mr-4'><b>Name</b></label>
-        <input value={name} onChange={e => setName(e.target.value)} type='text' className='bg-white rounded-md'></input>
+        <label type="text"><b>Session ID</b></label>
+        <input
+          className="p-2 bg-gray-200 rounded-md"
+          type="number"
+          required placeholder="Session ID"
+          value={sessionId}
+          onChange={e => setSessionId(e.target.value)}
+        />
+        <label type="text"><b>Name</b></label>
+        <input
+                  className="p-2 bg-gray-200 rounded-md w-full"
+                  type="text"
+                  placeholder="Player Name"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                />
         <button className=' btn btn-primary' onClick={() => errorCheck}>
                 Join
         </button>
@@ -57,7 +71,7 @@ function PlayerJoin () {
         )}
       </form>
 
-
+      </div>
     </div>
   )
 }

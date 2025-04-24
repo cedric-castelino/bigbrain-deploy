@@ -72,10 +72,8 @@ function PlayerGame ({ token }) {
             setGameState("results")
           }
         } else {
-          console.log("hahahahahahha");
           const success = await findActiveGame(token);
           if (success === true) {
-            console.log("curr games", currentGame);
           }
         }
       };
@@ -128,7 +126,6 @@ function PlayerGame ({ token }) {
         setCurrentGame(game);
       }
     }
-    console.log("games", response.data.games);
   }
 
   
@@ -156,7 +153,6 @@ function PlayerGame ({ token }) {
       const response = await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
         answers: newAnswersArary
       });
-      console.log(response)
     } catch (err) {
       console.log(err)
     }
