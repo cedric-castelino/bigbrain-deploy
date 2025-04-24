@@ -18,7 +18,17 @@ function PlayerJoin ({ token }) {
     } else if (name === '') {
         setJoinGameError("Game Name cannot be empty");
     } else {
-        setJoinGameError("");
+        try {
+          setJoinGameError("");
+          const response = await axios.post(`http://localhost:5005/play/join/${sessionId}`, {
+            name: name
+          })
+          const playerId = response.data.playerId
+          navigate(`/playergame/${playerId}`)
+        } catch (err) {
+            console.log(err)
+        }
+        
     }
   }
 
@@ -31,7 +41,7 @@ function PlayerJoin ({ token }) {
             <input value={sessionId} onChange={e => setSessionId(e.target.value)} type='number' className='bg-white rounded-md'></input>
             <label type="text" className='mr-4'><b>Name</b></label>
             <input value={name} onChange={e => setName(e.target.value)} type='text' className='bg-white rounded-md'></input>
-            <button className=' btn btn-primary'>
+            <button className=' btn btn-primary' onClick={() => errorCheck}>
                 Join
             </button>
             
