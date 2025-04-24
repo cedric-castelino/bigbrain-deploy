@@ -16,6 +16,10 @@ function PlayerGame ({ token }) {
 
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
 
+  const indexToOption = (index) => {
+    return `Option ${String.fromCharCode(65 + index)}`; // 65 is ASCII for 'A'
+  };
+
   // Countdown timer
   useEffect(() => {
     if (questionTimer <= 0) {
@@ -62,6 +66,7 @@ function PlayerGame ({ token }) {
         const questionRes = await axios.get(`http://localhost:5005/play/${playerId}/question`);
         const newQuestion = questionRes.data.question;
         const newId = newQuestion.id;
+        
 
         if (newId !== currentQuestionIdRef.current) {
           currentQuestionIdRef.current = newId;
@@ -71,6 +76,7 @@ function PlayerGame ({ token }) {
           setQuestionType(newQuestion.questionType);
           setQuestionTimer(newQuestion.duration);
           setButtonsDisabled(false); // Reset button state for new question
+          setSelectedIndices([]); // Clear selections for new question
         }
       } 
     } catch (err) {
@@ -90,32 +96,59 @@ function PlayerGame ({ token }) {
     }
   }
 
+  const putPlayerAnswer = async () => {
+    try {
+
+      let newAnswersArary = [];
+
+      selectedIndices.forEach(index => {
+        newAnswersArary.push(indexToOption(index))
+      });
+
+      await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
+        answers: newAnswersArary
+      });
+  } catch (err) {
+      console.log(err)
+  }
+  }
+
   const renderQuestion = () => {
-    console.log(selectedIndices)
     switch (questionType) {
       case "Judgement":
-        return(
-        <>
-          <h1>Question: {question.question}</h1>
-          <p>Time remaining: {questionTimer} seconds</p>
-          <div className="flex gap-4 mt-4">
-            <button 
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-              onClick={() => {}}
-              disabled={buttonsDisabled}
-            >
-              True
-            </button>
-            <button 
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-              onClick={() => {}}
-              disabled={buttonsDisabled}
-            >
-              False
-            </button>
-          </div>
-        </>
-      );
+        return (
+          <>
+            <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
+            <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            <div className="flex gap-4 mt-4 max-w-md justify-center">
+              {["True", "False"].map((answer, index) => {
+                const isSelected = selectedIndices.length === 1 && selectedIndices[0] === index;
+
+                const handleSelect = () => {
+                  if (!buttonsDisabled) {
+                    setSelectedIndices([index]);
+                  }
+                };
+
+                return (
+                  <button
+                    key={index}
+                    className={`px-4 py-2 rounded text-white transition-colors duration-200 w-24 ${
+                      buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                    } ${isSelected ? (index === 0 ? 'bg-green-600' : 'bg-red-600') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
+                    onClick={() => {
+                      handleSelect(); 
+                      putPlayerAnswer();
+                    }}
+                    disabled={buttonsDisabled}
+                  >
+                    {answer}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        );
       case "Single Choice":
         return (
           <>
@@ -138,7 +171,10 @@ function PlayerGame ({ token }) {
                       className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
                         buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
                       } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
-                      onClick={handleSelect}
+                      onClick={() => {
+                        handleSelect(); 
+                        putPlayerAnswer();
+                      }}
                       disabled={buttonsDisabled}
                     >
                       {answer}
@@ -175,7 +211,10 @@ function PlayerGame ({ token }) {
                         className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
                           buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
                         } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
-                        onClick={toggleSelection}
+                        onClick={() => {
+                          toggleSelection(); 
+                          putPlayerAnswer();
+                        }}
                         disabled={buttonsDisabled}
                       >
                         {answer}
