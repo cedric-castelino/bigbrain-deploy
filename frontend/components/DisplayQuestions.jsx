@@ -40,10 +40,32 @@ const DisplayQuestions = ({question, onEdit, onDelete}) => {
               </div>
             );
           })}
+          {question.attachmentType === 'image' && question.attachment && (
+            <>
+              <div className="text-sm font-semibold mt-6">Question Attachment</div>
+              <img
+                src={question.attachment}
+                alt="Question attachment"
+                className="shadow-2xl rounded-lg w-full sm:w-[20%] mt-2"
+              />
+            </>
+          )}
+          {question.attachmentType === 'youtube' && question.attachment && (
+            <>
+              <div className="text-sm font-semibold mt-6">Question Attachment</div>
+              <iframe
+                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[55%] xl:w-[40%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[350px] xl:h-[400px]"
+                src={question.attachment}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </>
+          )}
         </div>
-        <div className='join join-vertical gap-2 border-l border-gray-300 pl-4'>
-          <button onClick={onEdit} className="btn btn-primary">Edit Question</button>
-          <button type="button" onClick={onDelete} className="btn btn-danger !bg-red-600 hover:!bg-red-900">Delete Question</button>
+        <div className='join join-vertical gap-2 border-l border-gray-300 pl-4 w-[100px] sm:!w-[150px] sm:!w-[250px]'>
+          <button onClick={onEdit} className="btn btn-primary w-full !text-xs sm:!text-md lg:!text-lg">Edit Question</button>
+          <button type="button" onClick={onDelete} className="btn btn-danger !bg-red-600 hover:!bg-red-900 w-full !text-xs sm:!text-md lg:!text-lg">Delete Question</button>
         </div>
       </li>
             

@@ -1,11 +1,31 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 // Creates a popup for when the user wants to add a new question
-function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, points, setPoints, question, setQuestion,options, 
+function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDuration, points, setPoints, question, setQuestion, options, 
   setOptions, correctAnswer, setCorrectAnswer, correctAnswers, setCorrectAnswers, questionType, setQuestionType, editing, onEdit, 
-  setAnswers, questionFileInputRef, handleFileChange, youtubeUrl, setYoutubeUrl, questionImageFile, setQuestionImageFile, attachmentType, setAttachmentType}) {
+  setAnswers, questionFileInputRef, handleFileChange, youtubeUrl, setYoutubeUrl, setQuestionImageFile, attachmentType, setAttachmentType, editQuestion}) {
 
-  const [showYoutubeInput, setShowYoutubeInput] = useState(false);
-  const [showImageUpload, setShowImageUpload] = useState(false);
+  useEffect(() => {
+    if (editing && editQuestion) {
+      setDuration(editQuestion.duration);
+      setPoints(editQuestion.points);
+      setQuestion(editQuestion.question);
+      setQuestionType(editQuestion.questionType);
+    
+      const formattedOptions = editQuestion.answers.map((value, index) => ({
+        label: String.fromCharCode(65 + index),
+        value,
+      }));
+      setOptions(formattedOptions);
+      setAnswers(editQuestion.answers);
+    
+      if (editQuestion.questionType === 'Single Choice') {
+        setCorrectAnswer(editQuestion.correctAnswers[0]); 
+      } else if (editQuestion.questionType === 'Multiple Choice') {
+        setCorrectAnswers(editQuestion.correctAnswers); 
+      }
+
+    }
+  }, [editing, editQuestion]);
 
   const addAnswer = () => {
     const nextLabel = String.fromCharCode(65 + options.length);
@@ -15,6 +35,10 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
       setAnswers(newOptions.map(opt => opt.value)); 
     }
   };
+
+  if (editing) {
+    setQuestionType(editQuestion.questionType);
+  }
 
   return (
   // Displays a transparent grey background for the modal
