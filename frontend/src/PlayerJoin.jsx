@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function PlayerJoin ({ token }) {
+function PlayerJoin () {
 
   // Collects user input for the login form
   const prePopulatedSessionId = useParams().sessionId;

@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function PlayerGame ({ token }) {
 
   const prePopulatedPlayerId = useParams().playerId;
-  const navigate = useNavigate();
   const [playerId, setPlayerId] = useState(prePopulatedPlayerId || '');
   const [gameState, setGameState] = useState('waitForPlayersJoin');
   const [playerResults, setPlayerResults] = useState('');

@@ -10,8 +10,6 @@ const Session = ({ token, setActiveStatus }) => {
   const linkedSession = useParams();
   const navigate = useNavigate();
 
-  const [localActiveStatus, setLocalActiveStatus] = useState(localStorage.getItem('activeStatus'));
-  const [localSessionId, setLocalSessionId] = useState(localStorage.getItem('sessionId'));
   const [numberOfQuestions, setNumberOfQuestions] = useState(parseInt(localStorage.getItem('NumberOfQuestions')));
   const [currentQuestionPosition, setCurrentQuestionPosition] = useState(parseInt(localStorage.getItem('currentQuestionPosition')));
   const [gameState, setGameState] = useState(localStorage.getItem("gameState"));
@@ -50,8 +48,6 @@ const Session = ({ token, setActiveStatus }) => {
   }, [localToken, activeStatus]);  // Re-check when the activeStatus changes
 
   useEffect(() => {
-    setLocalActiveStatus(localStorage.getItem('activeStatus'));
-    setLocalSessionId(localStorage.getItem('sessionId'));
     setCurrentQuestionPosition(localCurrentQuestionPosition)
     setNumberOfQuestions(localNumberOfQuestions)
     setGameState(localGameState)
@@ -127,7 +123,7 @@ const Session = ({ token, setActiveStatus }) => {
           </div>
         </div>
       )
-    case "results":
+    case "results": {
       localStorage.setItem('gameState', 'results');
       let playerRanking = getPointRanking();
       return (
@@ -166,6 +162,8 @@ const Session = ({ token, setActiveStatus }) => {
         </div>
       );
     }
+      
+    }
   }
 
   const endGameFunctionality = async () => {
@@ -173,8 +171,6 @@ const Session = ({ token, setActiveStatus }) => {
     localStorage.removeItem('sessionId');
     localStorage.removeItem('gameState');
     localStorage.removeItem('currentQuestionPosition');
-    setLocalActiveStatus(null);
-    setLocalSessionId(null);
     setActiveStatus(false);
   }
 
@@ -191,7 +187,7 @@ const Session = ({ token, setActiveStatus }) => {
       
       activeGameId = games.find(game => game.active !== null);
 
-      const response = await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
+      await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
         mutationType: "END"
       }, {
         headers: {
