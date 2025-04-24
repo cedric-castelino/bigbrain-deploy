@@ -20,7 +20,7 @@ vi.mock('axios', () => ({
   }
 }));
 
-describe('Dashboard Component', () => {
+describe('Dashboard Testing', () => {
   const mockToken = 'test-token';
   const mockSetActiveStatus = vi.fn();
   const mockGames = [
@@ -129,7 +129,6 @@ describe('Dashboard Component', () => {
       expect(screen.getByText('Test Game')).toBeInTheDocument();
     });
     
-    // Mock the API response after deletion
     axios.get.mockResolvedValueOnce({ data: { games: [] } });
     axios.put.mockResolvedValueOnce({ data: { success: true } });
     
