@@ -232,7 +232,7 @@ function Dashboard({ token, activeStatus, setActiveStatus}) {
                   }
                 }}
                 error={createGameError}
-                editing={true}
+                editing={false}
                 fileInputRef={fileInputRef}
               />
             </td>
