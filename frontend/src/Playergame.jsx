@@ -13,6 +13,7 @@ function PlayerGame ({ token }) {
   const [questionTimer, setQuestionTimer] = useState(-1);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [selectedIndices, setSelectedIndices] = useState([]);
+  const [correctAnswer, setCorrectAnswer] = useState([]);
 
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
 
@@ -20,17 +21,40 @@ function PlayerGame ({ token }) {
     return `Option ${String.fromCharCode(65 + index)}`; // 65 is ASCII for 'A'
   };
 
+  useEffect(() => {
+    if (selectedIndices.length > 0 && !buttonsDisabled) {
+      putPlayerAnswer();
+    }
+  }, [selectedIndices]);
+
   // Countdown timer
   useEffect(() => {
-    if (questionTimer <= 0) {
-      setButtonsDisabled(true);
-      return;
-    }
+    if (questionTimer <= 0) return;
+
     const intervalId = setInterval(() => {
       setQuestionTimer((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(intervalId);
+  }, [questionTimer]);
+
+  // Handle when timer reaches zero
+  useEffect(() => {
+    if (questionTimer === 0) {
+      setButtonsDisabled(true);
+
+      const getAnswers = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5005/play/${playerId}/answer`);
+          const answerString = response.data.answers.join(', ');
+          setCorrectAnswer(answerString);
+        } catch (err) {
+          console.error("Failed to fetch answers:", err);
+        }
+      };
+
+      getAnswers();
+    }
   }, [questionTimer]);
 
   // Check for game status every second
@@ -76,6 +100,8 @@ function PlayerGame ({ token }) {
           setQuestionTimer(newQuestion.duration);
           setButtonsDisabled(false); // Reset button state for new question
           setSelectedIndices([]); // Clear selections for new question
+          setCorrectAnswer([])
+
         }
       } 
     } catch (err) {
@@ -119,6 +145,9 @@ function PlayerGame ({ token }) {
           <>
             <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
             <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            {correctAnswer && correctAnswer.length > 0 && (
+              <p>The correct answer is: {correctAnswer}</p>
+            )}
             <div className="flex gap-4 mt-4 max-w-md justify-center">
               {["True", "False"].map((answer, index) => {
                 const isSelected = selectedIndices.length === 1 && selectedIndices[0] === index;
@@ -134,9 +163,9 @@ function PlayerGame ({ token }) {
                     key={index}
                     className={`px-4 py-2 rounded text-white transition-colors duration-200 w-24 ${
                       buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
-                    } ${isSelected ? (index === 0 ? 'bg-green-600' : 'bg-red-600') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
+                    } ${isSelected ? (index === 0 ? 'bg-green-800' : 'bg-red-800') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
                     onClick={() => {
-                      handleSelect(); 
+                      handleSelect();
                     }}
                     disabled={buttonsDisabled}
                   >
@@ -152,7 +181,11 @@ function PlayerGame ({ token }) {
           <>
             <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
             <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+            {correctAnswer && correctAnswer.length > 0 && (
+              <p>The correct answer is: {correctAnswer}</p>
+            )}
             <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
+  
               {
                 question.answers.map((answer, index) => {
                   const isSelected = selectedIndices.length === 1 && selectedIndices[0] === index;
@@ -187,6 +220,9 @@ function PlayerGame ({ token }) {
             <>
               <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
               <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+              {correctAnswer && correctAnswer.length > 0 && (
+                <p>The correct answer is: {correctAnswer}</p>
+              )}
               <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
                 {
                   question.answers.map((answer, index) => {
@@ -253,11 +289,6 @@ function PlayerGame ({ token }) {
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
       <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
         {renderGameContent()}
-        {gameState !== "results" ? (
-          <button className='mt-4 btn btn-primary' onClick={putPlayerAnswer} disabled={buttonsDisabled}>
-            Submit
-          </button>
-        ) : null}
       </div>
     </div>
   );
