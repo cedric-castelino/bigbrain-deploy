@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
-import React from 'react';
 
 function PlayerGame ({ token }) {
 

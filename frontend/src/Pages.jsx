@@ -8,7 +8,6 @@ import EditGame from './EditGame';
 import Session from './Session';
 import PlayerJoin from './PlayerJoin';
 import PlayerGame from './PlayerGame';
-import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 

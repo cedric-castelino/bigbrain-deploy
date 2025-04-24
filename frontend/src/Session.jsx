@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import React from 'react';
 
 import CreatePercentageChart from "../components/createPercentageChart";
 import CreateAverageTimeChart from "../components/CreateAverageTimeChart";

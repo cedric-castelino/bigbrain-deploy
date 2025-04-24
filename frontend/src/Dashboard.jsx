@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect, useRef, act } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/DeleteModal';
 import CreateGameModal from '../components/CreateGameModal';
 import ViewResultsModal from '../components/ViewResultsModal';
-import React from 'react';
 
 function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
   const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";

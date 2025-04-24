@@ -1,5 +1,4 @@
 // Creates a popup for when the user wants to create a new game
-import React from 'react';
 
 function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileChange, error, editing, fileInputRef}) {
 
