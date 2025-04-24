@@ -78,23 +78,28 @@ const Session = ({ token, setActiveStatus }) => {
     switch(gameState) {
     case "waitForPlayersJoin":
       localStorage.setItem('gameState', 'waitForPlayersJoin');
-      return (<p>Waiting for players to connect</p>)
+      return (
+        <div className="flex flex-col justify-center items-center">
+          <h1>Waiting for players to connect</h1>
+        </div>
+      
+    )
     case "displayQuestions":
       localStorage.setItem('gameState', 'displayQuestions');
       return (
         <div className="flex flex-col items-center justify-center">
-          <div className="flex flex-row gap-4" >
+          <div className="flex flex-row gap-4 bg-white rounded-[20px] p-4 border-solid border-2 border-blue-300" >
           {questionTimer > 0
                 ? <h1>{`Duration: ${questionTimer}s`}</h1>
                 : <h1 className="">Question is finished</h1>}
-                <h1 className="mb-5">Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </h1>
+                <h1 className="">Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </h1>
           </div>
 
           <div className="flex flex-col items-center justify-center">            
             {questions.length > 0 && currentQuestionPosition >= 0 && currentQuestionPosition < questions.length ? (
                 <div className="flex flex-row gap-5">
                   <div>
-                    <h1>Question: {questions[currentQuestionPosition].question}</h1>
+                    <h1 className="bg-white rounded-[20px] p-4 mt-3">Question: {questions[currentQuestionPosition].question}</h1>
                     <ul className="flex flex-col justify-center items-center">
                       <li className="bg-white m-2 p-3 rounded-md">
                                               Option A: {questions[currentQuestionPosition].options.optionA}
