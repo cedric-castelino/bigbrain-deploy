@@ -74,23 +74,32 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }, [currentQuestionPosition]);
 
-  function getCorrectPercentages(results) {
-    if (!results || results.length === 0) return [];
+  const getPointRanking = () => {  
+    let rankings = [];
   
-    const numQuestions = results[0].answers.length;
-    const correctCounts = Array(numQuestions).fill(0);
+    results.forEach(player => {
+      let totalPoints = 0;
   
-    results.forEach(user => {
-      user.answers.forEach((ans, index) => {
-        if (ans.correct) correctCounts[index]++;
+      player.answers.forEach((answerObj, index) => {
+        const question = questions[index];
+        const isCorrect = answerObj.correct;
+  
+        if (isCorrect && question) {
+          totalPoints += parseInt(question.points);
+        }
+      });
+  
+      rankings.push({
+        name: player.name,
+        points: totalPoints
       });
     });
   
-    return correctCounts.map((count, i) => ({
-      questionIndex: i + 1,
-      correctPercentage: (count / results.length) * 100
-    }));
-  }
+    // Sort descending by points
+    rankings.sort((a, b) => b.points - a.points);
+  
+    return rankings;
+  };
 
   const renderGameContent = () => {
     if (gameState === "waitForPlayersJoin" && hasResults) {
@@ -120,17 +129,32 @@ const Session = ({ token, setActiveStatus }) => {
       )
     case "results":
       localStorage.setItem('gameState', 'results');
-      
-      const percentages = getCorrectPercentages(results);
-
+      let playerRanking = getPointRanking();
       return (
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-20">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody>
+            {playerRanking.map((player, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{player.name}</td>
+                <td>{player.points}</td>
+              </tr>
+            ))}
+            </tbody>
+          </table>
           <CreatePercentageChart
           results={results}
           />
           <CreateAverageTimeChart
-          results={results}
-          />
+          results={results}/>
         </div>
       )
     }

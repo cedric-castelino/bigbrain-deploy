@@ -95,7 +95,7 @@ function CreateAverageTimeChart({ results }) {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center bg-white rounded-md">
       <canvas ref={chartRef} className="w-full h-64"></canvas>
     </div>
   );
