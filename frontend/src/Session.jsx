@@ -132,7 +132,7 @@ const Session = ({ token, setActiveStatus }) => {
       let playerRanking = getPointRanking();
       return (
         <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-20">
-          <table>
+          <table className="table">
             <thead>
               <tr>
                 <th>Rank</th>
@@ -141,13 +141,15 @@ const Session = ({ token, setActiveStatus }) => {
               </tr>
             </thead>
             <tbody>
-            {playerRanking.map((player, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{player.name}</td>
-                <td>{player.points}</td>
-              </tr>
-            ))}
+            {playerRanking.map((player, index) => {
+                return (
+                  <tr key={index}>
+                    <th>{index + 1}</th>
+                    <td>{player.name}</td>
+                    <td>{[player.points]}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <CreatePercentageChart
