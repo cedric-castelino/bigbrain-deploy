@@ -1,59 +1,128 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 
 function PlayerGame ({ token }) {
 
-  // Collects user input for the login form
   const prePopulatedPlayerId = useParams().playerId;
   const navigate = useNavigate();
   const [playerId, setPlayerId] = useState(prePopulatedPlayerId || '');
   const [gameState, setGameState] = useState('waitForPlayersJoin');
   const [question, setQuestion] = useState('');
+  const [questionType, setQuestionType] = useState('');
+  const [questionTimer, setQuestionTimer] = useState(-1);
+
+  const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
+
+  // Countdown timer
+  useEffect(() => {
+    if (questionTimer <= 0) return;
+
+    const intervalId = setInterval(() => {
+      setQuestionTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [questionTimer]);
+
+  // Check for game status every second
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (localStorage.getItem('activeStatus') === 'true') {
+        checkIfGameStarted();
+      }
+    }, 10);
+  
+    return () => clearInterval(intervalId);
+  }, [playerId]);
 
   useEffect(() => {
-    // Check immediately on component mount
-    checkIfGameStarted();
-    
-    // Then set up interval to check regularly (every 5 seconds)
-    const intervalId = setInterval(checkIfGameStarted, 5000);
-    
-    
-    // Clean up the interval when component unmounts
-    return () => clearInterval(intervalId);
-  }, [playerId]); // Re-run effect if playerId changes
-
+    const checkResults = async () => {
+      // Only check for results if no active session is running
+      if (!localStorage.getItem('activeStatus')) {
+        const success = await getResults(token);
+        if (success === true) {
+          setGameState("results")
+        }
+      }
+    };
+    checkResults();
+  }, [token, localStorage.getItem('activeStatus')]);  // Re-check when the activeStatus changes
 
   const checkIfGameStarted = async () => {
     try {
-      const response = await axios.get(`http://localhost:5005/play/${playerId}/status`, {
-        params: { 
-          playerid: playerId
-        }
-      })
+      const response = await axios.get(`http://localhost:5005/play/${playerId}/status`);
       if (response.data.started === true) {
         setGameState('displayQuestions');
-        getQuestion();
-      }
-    } catch (err) {
-        console.log(err);
-    }
-  }
 
-  const getQuestion = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5005/play/${playerId}/question`, {
-        params: { 
-          playerid: playerId
+        const questionRes = await axios.get(`http://localhost:5005/play/${playerId}/question`);
+        const newQuestion = questionRes.data.question;
+        const newId = newQuestion.id;
+
+        if (newId !== currentQuestionIdRef.current) {
+          currentQuestionIdRef.current = newId;
+          localStorage.setItem('currentQuestionId', newId);
+
+          setQuestion(newQuestion);
+          setQuestionType(newQuestion.questionType);
+          setQuestionTimer(newQuestion.duration);
         }
-      })
-      setQuestion(response.data.question);
-      console.log(response.data)
+      } 
     } catch (err) {
-        console.log(err);
+      console.log(err);
+    }
+  };
+
+  
+  const getResults = async (token) => {
+    try {
+      const response = await axios.get(`http://localhost:5005/play/${playerId}/results`, {
+      })
+      return true;
+    } catch (err) {
+      alert(err.response.data.error);
+      return false;
     }
   }
 
+  const renderQuestion = () => {
+    switch (questionType) {
+      case "Judgement":
+        return(
+        <>
+          <h1>Question: {question.question}</h1>
+          <p>Time remaining: {questionTimer} seconds</p>
+          <div className="flex gap-4 mt-4">
+            <button 
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+              onClick={() => {}}
+            >
+              True
+            </button>
+            <button 
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+              onClick={() => {}}
+            >
+              False
+            </button>
+          </div>
+        </>
+      );
+      case "Single Choice":
+        return(
+        <>
+          <button>Option A</button>
+          <button>Option B</button>
+        </>
+      )
+      case "Multiple Choice":
+        return(
+        <>
+          
+        </>
+      )
+    }
+  }
   
   const renderGameContent = () => {
     switch(gameState) {
@@ -67,18 +136,7 @@ function PlayerGame ({ token }) {
     case "displayQuestions":
       return (
         <div className="flex flex-col items-center justify-center">
-          <p>
-
-          The question text
-          A video or image depending on whether it exists.
-          A countdown with how many seconds remain until you can't answer anymore.
-          A selection of single, multiple or judgement answers, that are clickable.
-
-
-          The answer shall be sent to the server immediately after each user interaction. If further selections are modified, more requests are sent
-          When the timer hits 0, the answer/results of that particular question are displayed
-          The answer screen remains visible until the admin advances the game question onto the next question.
-          </p>
+          {renderQuestion()}
         </div>
       )
     case "results":
@@ -93,9 +151,11 @@ function PlayerGame ({ token }) {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
-       {renderGameContent()}
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        {renderGameContent()}
+      </div>
     </div>
-  )
+  );
 }
 
 export default PlayerGame;
