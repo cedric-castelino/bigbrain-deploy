@@ -21,6 +21,12 @@ function PlayerGame ({ token }) {
     return `Option ${String.fromCharCode(65 + index)}`; // 65 is ASCII for 'A'
   };
 
+  useEffect(() => {
+    if (selectedIndices.length > 0 && !buttonsDisabled) {
+      putPlayerAnswer();
+    }
+  }, [selectedIndices]);
+
   // Countdown timer
   useEffect(() => {
     if (questionTimer <= 0) return;
@@ -36,7 +42,18 @@ function PlayerGame ({ token }) {
   useEffect(() => {
     if (questionTimer === 0) {
       setButtonsDisabled(true);
-      return;
+
+      const getAnswers = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5005/play/${playerId}/answer`);
+          const answerString = response.data.answers.join(', ');
+          setCorrectAnswer(answerString);
+        } catch (err) {
+          console.error("Failed to fetch answers:", err);
+        }
+      };
+
+      getAnswers();
     }
   }, [questionTimer]);
 
@@ -116,7 +133,6 @@ function PlayerGame ({ token }) {
       const response = await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
         answers: newAnswersArary
       });
-      console.log(response)
   } catch (err) {
       console.log(err)
   }
@@ -343,12 +359,6 @@ function PlayerGame ({ token }) {
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
       <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
         {renderGameContent()}
-        {gameState !== "results" && gameState !== "waitForPlayersJoin"? (
-          <button className='mt-4 btn btn-primary' onClick={putPlayerAnswer} disabled={buttonsDisabled}>
-            Submit
-          </button>
-        ) : null}
-
       </div>
     </div>
   );
