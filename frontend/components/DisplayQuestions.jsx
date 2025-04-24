@@ -11,20 +11,20 @@ const DisplayQuestions = ({question, onEdit, onDelete, onRemoveAttachment}) => {
   return (
     <ul className="list bg-base-100 rounded-box shadow-md mt-4 mb-0 !pl-0"> 
       <li className="list-row">
-      <div className="flex flex-col justify-between h-full text-center border-r border-gray-300 pr-4">
-        <div>
-          <div className="text-3xl font-thin tabular-nums">{question.duration}</div>
-          <div className="text-sm font-thin tabular-nums">
-            {Number(question.duration) === 1 ? 'second' : 'seconds'}
+        <div className="flex flex-col justify-between h-full text-center border-r border-gray-300 pr-4">
+          <div>
+            <div className="text-3xl font-thin tabular-nums">{question.duration}</div>
+            <div className="text-sm font-thin tabular-nums">
+              {Number(question.duration) === 1 ? 'second' : 'seconds'}
+            </div>
+          </div>
+          <div>
+            <div className="text-3xl font-thin tabular-nums">{question.points}</div>
+            <div className="text-sm font-thin tabular-nums">
+              {Number(question.points) === 1 ? 'point' : 'points'}
+            </div>
           </div>
         </div>
-        <div>
-          <div className="text-3xl font-thin tabular-nums">{question.points}</div>
-          <div className="text-sm font-thin tabular-nums">
-            {Number(question.points) === 1 ? 'point' : 'points'}
-          </div>
-        </div>
-      </div>
         <div className="list-col-grow">
           <div className="text-lg">{question.question}</div>
 
