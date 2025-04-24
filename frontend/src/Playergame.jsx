@@ -12,6 +12,7 @@ function PlayerGame ({ token }) {
   const [questionType, setQuestionType] = useState('');
   const [questionTimer, setQuestionTimer] = useState(-1);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [selectedIndices, setSelectedIndices] = useState([]);
 
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
 
@@ -90,6 +91,7 @@ function PlayerGame ({ token }) {
   }
 
   const renderQuestion = () => {
+    console.log(selectedIndices)
     switch (questionType) {
       case "Judgement":
         return(
@@ -115,49 +117,75 @@ function PlayerGame ({ token }) {
         </>
       );
       case "Single Choice":
-        return(
+        return (
           <>
             <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
             <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
             <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
               {
                 question.answers.map((answer, index) => {
-                  return (<button 
-                    className={`bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded w-full sm:w-auto ${buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={() => {}}
-                    key={index}
-                    disabled={buttonsDisabled}
-                  >
-                    {answer}
-                  </button>
-                  )
+                  const isSelected = selectedIndices.length === 1 && selectedIndices[0] === index;
+
+                  const handleSelect = () => {
+                    if (!buttonsDisabled) {
+                      setSelectedIndices([index]); // Only one selected at a time
+                    }
+                  };
+
+                  return (
+                    <button 
+                      key={index}
+                      className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
+                        buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                      } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
+                      onClick={handleSelect}
+                      disabled={buttonsDisabled}
+                    >
+                      {answer}
+                    </button>
+                  );
                 })
               }
             </div>
           </>
-      )
-      case "Multiple Choice":
-        return(
-          <>
-            <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
-            <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
-            <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
-              {
-                question.answers.map((answer, index) => {
-                  return (<button 
-                    className={`bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded w-full sm:w-auto ${buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={() => {}}
-                    key={index}
-                    disabled={buttonsDisabled}
-                  >
-                    {answer}
-                  </button>
-                  )
-                })
-              }
-            </div>
-          </>
-        )
+        );
+        case "Multiple Choice":
+          return (
+            <>
+              <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
+              <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
+              <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
+                {
+                  question.answers.map((answer, index) => {
+                    const isSelected = selectedIndices.includes(index);
+        
+                    const toggleSelection = () => {
+                      if (buttonsDisabled) return;
+        
+                      setSelectedIndices(prev =>
+                        isSelected
+                          ? prev.filter(i => i !== index)  // Deselect
+                          : [...prev, index]              // Select
+                      );
+                    };
+        
+                    return (
+                      <button
+                        key={index}
+                        className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
+                          buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                        } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
+                        onClick={toggleSelection}
+                        disabled={buttonsDisabled}
+                      >
+                        {answer}
+                      </button>
+                    );
+                  })
+                }
+              </div>
+            </>
+          );
     }
   }
   
