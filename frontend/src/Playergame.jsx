@@ -66,7 +66,6 @@ function PlayerGame ({ token }) {
         const questionRes = await axios.get(`http://localhost:5005/play/${playerId}/question`);
         const newQuestion = questionRes.data.question;
         const newId = newQuestion.id;
-        
 
         if (newId !== currentQuestionIdRef.current) {
           currentQuestionIdRef.current = newId;
@@ -105,7 +104,7 @@ function PlayerGame ({ token }) {
         newAnswersArary.push(indexToOption(index))
       });
 
-      await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
+      const response = await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
         answers: newAnswersArary
       });
   } catch (err) {
@@ -138,7 +137,6 @@ function PlayerGame ({ token }) {
                     } ${isSelected ? (index === 0 ? 'bg-green-600' : 'bg-red-600') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
                     onClick={() => {
                       handleSelect(); 
-                      putPlayerAnswer();
                     }}
                     disabled={buttonsDisabled}
                   >
@@ -173,7 +171,6 @@ function PlayerGame ({ token }) {
                       } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
                       onClick={() => {
                         handleSelect(); 
-                        putPlayerAnswer();
                       }}
                       disabled={buttonsDisabled}
                     >
@@ -213,7 +210,6 @@ function PlayerGame ({ token }) {
                         } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
                         onClick={() => {
                           toggleSelection(); 
-                          putPlayerAnswer();
                         }}
                         disabled={buttonsDisabled}
                       >
@@ -255,8 +251,13 @@ function PlayerGame ({ token }) {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
-      <div className="bg-white p-8 rounded-lg shadow-md">
+      <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
         {renderGameContent()}
+        {gameState !== "results" ? (
+          <button className='mt-4 btn btn-primary' onClick={putPlayerAnswer} disabled={buttonsDisabled}>
+            Submit
+          </button>
+        ) : null}
       </div>
     </div>
   );
