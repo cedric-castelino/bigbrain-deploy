@@ -8,13 +8,15 @@ function PlayerGame ({ token }) {
   const navigate = useNavigate();
   const [playerId, setPlayerId] = useState(prePopulatedPlayerId || '');
   const [gameState, setGameState] = useState('waitForPlayersJoin');
-  const [playerResults, setPlayerResults] = useState('waitForPlayersJoin');
+  const [playerResults, setPlayerResults] = useState('');
   const [question, setQuestion] = useState('');
   const [questionType, setQuestionType] = useState('');
   const [questionTimer, setQuestionTimer] = useState(-1);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState([]);
+  const [currentGame, setCurrentGame] = useState('');
+  const [gamePoints, setgamePoints] = useState([]);
 
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
 
@@ -67,9 +69,15 @@ function PlayerGame ({ token }) {
       const checkResults = async () => {
         // Only check for results if no active session is running
         if (!localStorage.getItem('activeStatus')) {
-          const success = await moveToResults(token);
+          const success = await moveToResults();
           if (success === true) {
             setGameState("results")
+          }
+        } else {
+          console.log("hahahahahahha");
+          const success = await findActiveGame(token);
+          if (success === true) {
+            console.log("curr games", currentGame);
           }
         }
       };
@@ -96,6 +104,7 @@ function PlayerGame ({ token }) {
           currentQuestionIdRef.current = newId;
           localStorage.setItem('currentQuestionId', newId);
 
+          setgamePoints(prev => [...prev, newQuestion.points]);
           setQuestion(newQuestion);
           setQuestionType(newQuestion.questionType);
           setQuestionTimer(newQuestion.duration);
@@ -110,8 +119,22 @@ function PlayerGame ({ token }) {
     }
   };
 
+  const findActiveGame = async (token) => {
+    const response = await axios.get('http://localhost:5005/admin/games', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    })
+    for (const game of response.data.games) {
+      if (game.active) {
+        setCurrentGame(game);
+      }
+    }
+    console.log("games", response.data.games);
+  }
+
   
-  const moveToResults = async (token) => {
+  const moveToResults = async () => {
     try {
       const response = await axios.get(`http://localhost:5005/play/${playerId}/results`, {
       })
@@ -350,7 +373,6 @@ function PlayerGame ({ token }) {
       )
     case "results":
       const correctCount = playerResults.filter(r => r.correct).length;
-      const totalQuestions = playerResults.length;
 
       return (
         <div>
@@ -361,6 +383,7 @@ function PlayerGame ({ token }) {
               <tr>
                 <th>Question</th>
                 <th>Time to Complete</th>
+                <th>Points</th>
               </tr>
             </thead>
             <tbody>
@@ -374,6 +397,7 @@ function PlayerGame ({ token }) {
                   <tr key={index}>
                     <th className={rowClass}>{index + 1}</th>
                     <td className={rowClass}>{timeToComplete} Second{timeToComplete !== 1 ? 's' : ''}</td>
+                    <td className={rowClass}>{gamePoints[index]}</td>
                   </tr>
                 );
               })}
@@ -383,11 +407,13 @@ function PlayerGame ({ token }) {
           <div className='w-full'>
               <div className="input-group justify-center mt-2 mb-2">
                 <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Amount Correct</span>
-                <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">{correctCount}/{totalQuestions}</span>
+                <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">{correctCount}/{gamePoints.length}</span>
               </div>
               <div className="input-group justify-center mt-2 mb-2">
-                <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Total Score</span>
-                <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">?</span>
+                <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Total Points</span>
+                <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">{playerResults.reduce((total, result, index) => {
+                    return result.correct ? total + (Number(gamePoints[index]) || 0) : total;
+                  }, 0)}/{gamePoints.reduce((sum, val) => sum + (Number(val) || 0), 0)}</span>
               </div>
           </div>
         </div>
