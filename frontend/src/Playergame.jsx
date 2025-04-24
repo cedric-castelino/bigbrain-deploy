@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 
 function PlayerGame ({ token }) {
 
-  const prePopulatedPlayerId = useParams().playerId;
-  const [playerId, setPlayerId] = useState(prePopulatedPlayerId || '');
+  const playerId = useParams().playerId;
   const [gameState, setGameState] = useState('waitForPlayersJoin');
   const [playerResults, setPlayerResults] = useState('');
   const [question, setQuestion] = useState('');
