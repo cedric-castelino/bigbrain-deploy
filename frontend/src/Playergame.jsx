@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 function PlayerGame ({ token }) {
 
@@ -377,7 +377,7 @@ function PlayerGame ({ token }) {
           {renderQuestion()}
         </div>
       )
-    case "results":
+    case "results": {
       const correctCount = playerResults.filter(r => r.correct).length;
 
       return (
@@ -426,6 +426,8 @@ function PlayerGame ({ token }) {
                 
       )
     }
+    }
+      
   }
 
   return (
