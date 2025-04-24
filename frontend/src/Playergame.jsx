@@ -190,6 +190,7 @@ function PlayerGame ({ token }) {
                     } ${isSelected ? (index === 0 ? 'bg-green-800' : 'bg-red-800') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
                     onClick={() => {
                       handleSelect();
+                      putPlayerAnswer();
                     }}
                     disabled={buttonsDisabled}
                   >
@@ -251,6 +252,7 @@ function PlayerGame ({ token }) {
                       } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
                       onClick={() => {
                         handleSelect(); 
+                        putPlayerAnswer();
                       }}
                       disabled={buttonsDisabled}
                     >
@@ -316,6 +318,7 @@ function PlayerGame ({ token }) {
                         } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
                         onClick={() => {
                           toggleSelection(); 
+                          putPlayerAnswer();
                         }}
                         disabled={buttonsDisabled}
                       >
