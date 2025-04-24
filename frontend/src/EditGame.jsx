@@ -32,7 +32,6 @@ const EditGame = ({ token }) => {
   const [answers, setAnswers] = useState([]);
   const [questionType, setQuestionType] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
-  const [questionImageFile, setQuestionImageFile] = useState(null);
   const [attachmentType, setAttachmentType] = useState('');
   const fileInputRef = useRef(null);
   const questionFileInputRef = useRef(null);
@@ -274,7 +273,6 @@ const EditGame = ({ token }) => {
       setAttachmentType('');
       resetFileInput();
       setYoutubeUrl('');
-      setQuestionImageFile('');
       return true;
     } catch (err) {
       setquestionError(err.response.data.error);
@@ -284,8 +282,10 @@ const EditGame = ({ token }) => {
  
   const removeQuestionAttachment = async (id) => {
     for (const current_question of game.questions) {
-      delete current_question.attachment;
-      delete current_question.attachmentType;
+      if (current_question.id === id) {
+        delete current_question.attachment;
+        delete current_question.attachmentType;
+      }
     }
 
     games[games.findIndex(g => g.id === game.id)] = game;
@@ -440,7 +440,6 @@ const EditGame = ({ token }) => {
               setAttachmentType('');
               resetFileInput();
               setYoutubeUrl('');
-              setQuestionImageFile('');
               setEditQuestion(false);
             }}
             onCreate={async () => {
@@ -476,7 +475,6 @@ const EditGame = ({ token }) => {
             handleFileChange={handleFileChange}
             youtubeUrl={youtubeUrl}
             setYoutubeUrl={setYoutubeUrl}
-            setQuestionImageFile={setQuestionImageFile}
             attachmentType={attachmentType}
             setAttachmentType={setAttachmentType}
             editQuestion={editQuestionData}
