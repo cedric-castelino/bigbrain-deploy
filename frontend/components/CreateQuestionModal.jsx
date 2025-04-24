@@ -76,190 +76,190 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
           onChange={(e) => setQuestion(e.target.value)}
         />
 
-      <label className="fieldset-label text-slate-900">Question Attachment</label>
-      <div className="flex gap-2 mb-2">
-        <button
-          type="button"
-          className={`btn btn-sm !text-xs ${attachmentType === 'youtube' ? '!btn-primary !bg-blue-600 text-white' : 'btn-outline !bg-gray-200 text-gray-800'}`}
-          onClick={() => {
-            if (attachmentType === 'youtube') {
-              setAttachmentType('');
-            } else {
-              setAttachmentType('youtube');
-              setYoutubeUrl('');
-              setQuestionImageFile(null);
-            }
-          }}
-        >
+        <label className="fieldset-label text-slate-900">Question Attachment</label>
+        <div className="flex gap-2 mb-2">
+          <button
+            type="button"
+            className={`btn btn-sm !text-xs ${attachmentType === 'youtube' ? '!btn-primary !bg-blue-600 text-white' : 'btn-outline !bg-gray-200 text-gray-800'}`}
+            onClick={() => {
+              if (attachmentType === 'youtube') {
+                setAttachmentType('');
+              } else {
+                setAttachmentType('youtube');
+                setYoutubeUrl('');
+                setQuestionImageFile(null);
+              }
+            }}
+          >
           YouTube URL
-        </button>
-        <button
-          type="button"
-          className={`btn btn-sm !text-xs ${attachmentType === 'image' ? '!btn-primary !bg-blue-600 text-white' : 'btn-outline !bg-gray-200 text-gray-800'}`}
-          onClick={() => {
-            if (attachmentType === 'image') {
-              setAttachmentType('');
-            } else {
-              setAttachmentType('image');
-              setQuestionImageFile(null);
-              setYoutubeUrl('');
-            }
-          }}
-        >
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm !text-xs ${attachmentType === 'image' ? '!btn-primary !bg-blue-600 text-white' : 'btn-outline !bg-gray-200 text-gray-800'}`}
+            onClick={() => {
+              if (attachmentType === 'image') {
+                setAttachmentType('');
+              } else {
+                setAttachmentType('image');
+                setQuestionImageFile(null);
+                setYoutubeUrl('');
+              }
+            }}
+          >
           Upload Image
-        </button>
-      </div>
+          </button>
+        </div>
 
-      {attachmentType === 'youtube' && (
-        <input
-          type="url"
-          placeholder="YouTube Video URL"
-          className="p-2 bg-gray-200 rounded-md w-full mb-2"
-          value={youtubeUrl}
-          onChange={(e) => setYoutubeUrl(e.target.value)}
-        />
-      )}
+        {attachmentType === 'youtube' && (
+          <input
+            type="url"
+            placeholder="YouTube Video URL"
+            className="p-2 bg-gray-200 rounded-md w-full mb-2"
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
+          />
+        )}
 
-      {attachmentType === 'image' && (
-        <input ref={questionFileInputRef} type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
-      )}
+        {attachmentType === 'image' && (
+          <input ref={questionFileInputRef} type="file" className="file-input" accept="image/*" onChange={handleFileChange}/>
+        )}
 
         <label className="fieldset-label text-slate-900">Question Type</label>
         <div className="join join-horizontal gap-2">
-        {['Single Choice', 'Multiple Choice', 'Judgement'].map((type) => (
-          <button
-            key={type}
-            onClick={() => {
-              setQuestionType(type);
-              if (type === 'Judgement') {
-                setAnswers(['True', 'False']);
-              } else {
-                setAnswers(options.map(opt => opt.value));
-              }
-            }}
-            className={`btn !text-xs ${questionType === type ? '!bg-blue-600 text-white' : '!bg-gray-200 text-gray-800'}`}
-          >
-            {type}
-          </button>
-        ))}
-      </div>
-      <hr className="m-2"></hr>
-      {questionType === 'Single Choice' && (
-        <div className='w-full'>
-        {options.map((opt, index) => (
-          <div key={opt.label}>
-            <div className='join join-horizontal gap-2 h-[20px]'>
-              <label className="fieldset-label text-slate-900">Option {opt.label}</label>
-              <input
-                type="radio"
-                name="correctAnswer"
-                value={`Option ${opt.label}`}
-                className="radio radio-xs"
-                onChange={(e) => setCorrectAnswer(e.target.value)}
-                checked={correctAnswer === `Option ${opt.label}`}
-              />
-              <p className="!text-zinc-500">- mark option {opt.label} as correct</p>
-            </div>
-            <input
-              className="p-2 bg-gray-200 rounded-md w-full mt-2 mb-2"
-              type="text"
-              placeholder={`Answer Displayed as Option ${opt.label}`}
-              value={opt.value}
-              onChange={(e) => {
-                const newOptions = [...options];
-                newOptions[index].value = e.target.value;
-                setOptions(newOptions);
-                setAnswers(newOptions.map((opt) => opt.value));
+          {['Single Choice', 'Multiple Choice', 'Judgement'].map((type) => (
+            <button
+              key={type}
+              onClick={() => {
+                setQuestionType(type);
+                if (type === 'Judgement') {
+                  setAnswers(['True', 'False']);
+                } else {
+                  setAnswers(options.map(opt => opt.value));
+                }
               }}
-            />
-          </div>
-        ))}
+              className={`btn !text-xs ${questionType === type ? '!bg-blue-600 text-white' : '!bg-gray-200 text-gray-800'}`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+        <hr className="m-2"></hr>
+        {questionType === 'Single Choice' && (
+          <div className='w-full'>
+            {options.map((opt, index) => (
+              <div key={opt.label}>
+                <div className='join join-horizontal gap-2 h-[20px]'>
+                  <label className="fieldset-label text-slate-900">Option {opt.label}</label>
+                  <input
+                    type="radio"
+                    name="correctAnswer"
+                    value={`Option ${opt.label}`}
+                    className="radio radio-xs"
+                    onChange={(e) => setCorrectAnswer(e.target.value)}
+                    checked={correctAnswer === `Option ${opt.label}`}
+                  />
+                  <p className="!text-zinc-500">- mark option {opt.label} as correct</p>
+                </div>
+                <input
+                  className="p-2 bg-gray-200 rounded-md w-full mt-2 mb-2"
+                  type="text"
+                  placeholder={`Answer Displayed as Option ${opt.label}`}
+                  value={opt.value}
+                  onChange={(e) => {
+                    const newOptions = [...options];
+                    newOptions[index].value = e.target.value;
+                    setOptions(newOptions);
+                    setAnswers(newOptions.map((opt) => opt.value));
+                  }}
+                />
+              </div>
+            ))}
     
-        {options.length < 6 && (
-          <button
-            type="button"
-            className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
-            onClick={addAnswer}
-          >
+            {options.length < 6 && (
+              <button
+                type="button"
+                className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
+                onClick={addAnswer}
+              >
             + Add Answer
-          </button>
+              </button>
+            )}
+          </div>
         )}
-      </div>
-      )}
 
-{questionType === 'Multiple Choice' && (
-         <div className='w-full'>
-         {options.map((opt, index) => (
-           <div key={opt.label}>
-             <div className='join join-horizontal gap-2 h-[20px]'>
-               <label className="fieldset-label text-slate-900">Option {opt.label}</label>
-               <input
-                type="checkbox"
-                className="checkbox checkbox-xs"
-                checked={correctAnswers.includes(`Option ${opt.label}`)}
-                onChange={(e) => {
-                  const optionValue = `Option ${opt.label}`;
-                  if (e.target.checked) {
-                    setCorrectAnswers([...correctAnswers, optionValue]);
-                  } else {
-                    setCorrectAnswers(correctAnswers.filter((val) => val !== optionValue));
-                  }
-                }}
-              />
-               <p className="!text-zinc-500">- mark option {opt.label} as correct</p>
-             </div>
-             <input
-               className="p-2 bg-gray-200 rounded-md w-full mt-2 mb-2"
-               type="text"
-               placeholder={`Answer Displayed as Option ${opt.label}`}
-               value={opt.value}
-               onChange={(e) => {
-                 const newOptions = [...options];
-                 newOptions[index].value = e.target.value;
-                 setOptions(newOptions);
-                 setAnswers(newOptions.map((opt) => opt.value));
-               }}
-             />
-           </div>
-         ))}
+        {questionType === 'Multiple Choice' && (
+          <div className='w-full'>
+            {options.map((opt, index) => (
+              <div key={opt.label}>
+                <div className='join join-horizontal gap-2 h-[20px]'>
+                  <label className="fieldset-label text-slate-900">Option {opt.label}</label>
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-xs"
+                    checked={correctAnswers.includes(`Option ${opt.label}`)}
+                    onChange={(e) => {
+                      const optionValue = `Option ${opt.label}`;
+                      if (e.target.checked) {
+                        setCorrectAnswers([...correctAnswers, optionValue]);
+                      } else {
+                        setCorrectAnswers(correctAnswers.filter((val) => val !== optionValue));
+                      }
+                    }}
+                  />
+                  <p className="!text-zinc-500">- mark option {opt.label} as correct</p>
+                </div>
+                <input
+                  className="p-2 bg-gray-200 rounded-md w-full mt-2 mb-2"
+                  type="text"
+                  placeholder={`Answer Displayed as Option ${opt.label}`}
+                  value={opt.value}
+                  onChange={(e) => {
+                    const newOptions = [...options];
+                    newOptions[index].value = e.target.value;
+                    setOptions(newOptions);
+                    setAnswers(newOptions.map((opt) => opt.value));
+                  }}
+                />
+              </div>
+            ))}
      
-         {options.length < 6 && (
-           <button
-             type="button"
-             className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
-             onClick={addAnswer}
-           >
+            {options.length < 6 && (
+              <button
+                type="button"
+                className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
+                onClick={addAnswer}
+              >
              + Add Answer
-           </button>
-         )}
-       </div>
-      )}
+              </button>
+            )}
+          </div>
+        )}
 
-      {questionType === 'Judgement' && (
-        <div className='join join-vertical gap-2'>
-          <label className="fieldset-label text-slate-900">Select the Correct Answer</label>
-          {['True', 'False'].map((answer) => (
-          <button
-            key={answer}
-            onClick={() => setCorrectAnswer(answer === 'True' ? 'Option A' : 'Option B')}
-            className={`btn !text-xs ${
-              correctAnswer === (answer === 'True' ? 'Option A' : 'Option B')
-                ? '!bg-green-200 text-gray-950'
-                : '!bg-gray-200 text-gray-800'
-            }`}
-          >
-            {answer}
-          </button>
-        ))}
-        </div>
-      )}
+        {questionType === 'Judgement' && (
+          <div className='join join-vertical gap-2'>
+            <label className="fieldset-label text-slate-900">Select the Correct Answer</label>
+            {['True', 'False'].map((answer) => (
+              <button
+                key={answer}
+                onClick={() => setCorrectAnswer(answer === 'True' ? 'Option A' : 'Option B')}
+                className={`btn !text-xs ${
+                  correctAnswer === (answer === 'True' ? 'Option A' : 'Option B')
+                    ? '!bg-green-200 text-gray-950'
+                    : '!bg-gray-200 text-gray-800'
+                }`}
+              >
+                {answer}
+              </button>
+            ))}
+          </div>
+        )}
 
-      {!questionType && (
-        <div className="text-sm text-gray-500 italic ml-2">
+        {!questionType && (
+          <div className="text-sm text-gray-500 italic ml-2">
           Select a question type.
-        </div>
-      )}
-      <hr className="m-2"></hr>
+          </div>
+        )}
+        <hr className="m-2"></hr>
 
 
         {/* Only shows when an error has been stored */}
