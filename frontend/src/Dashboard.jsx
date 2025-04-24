@@ -172,7 +172,6 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
         }
       })
       localStorage.removeItem('activeStatus');
-      localStorage.removeItem('sessionId');
       setResultsPopUp(true);
     } catch (err) {
       alert(err.response.data.error);
@@ -181,6 +180,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
   const goToResultPage = () => {
     navigate(`/session/${localStorage.getItem('sessionId')}`)
+    localStorage.setItem("gameState", "results")
   }
 
   const resetFileInput = () => {
@@ -201,7 +201,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
       <table className='w-full'>
         <tbody>
           <tr className='flex justify-between items-center'>
-            <td className='flex gap-2'>
+            <td className='flex gap-2 flex-col'>
               <button className="btn btn-primary" onClick={() => setCreatePopUp(true)}>
                 Create New Game
               </button>
@@ -243,7 +243,7 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
                 ))}
               </DeleteModal>
             </td>
-            <td className="ml-auto flex justify-between items-center gap-2">
+            <td className="ml-auto flex flex-col md:flex-row justify-between items-center gap-2">
               <p className={`p-2 rounded-md text-white ${activeStatus ? "bg-[#29a742]" : "!bg-red-700"}`}><b>{activeStatus ? "Session: Active" : "Session: Inactive"}</b></p>
               {
                 activeStatus && (
