@@ -3,18 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import {
-  Chart,
-  BarController,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+import CreatePercentageChart from "../components/createPercentageChart";
 
 const Session = ({ token, setActiveStatus }) => {
   const linkedSession = useParams();
@@ -132,58 +121,13 @@ const Session = ({ token, setActiveStatus }) => {
       localStorage.setItem('gameState', 'results');
       
       const percentages = getCorrectPercentages(results);
-      
-      useEffect(() => {
-        if (!percentages.length) return;
-    
-        const ctx = document.getElementById('correctChart');
-        if (ctx && Chart.getChart('correctChart')) {
-          Chart.getChart('correctChart').destroy(); // Clean up existing chart
-        }
-    
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: percentages.map(p => `Q${p.questionIndex}`),
-            datasets: [{
-              label: '% Correct',
-              data: percentages.map(p => p.correctPercentage),
-              backgroundColor: 'rgba(54, 162, 235, 0.7)',
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Correct Answers by Question'
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 100,
-                title: {
-                  display: true,
-                  text: '% Correct'
-                }
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: 'Question'
-                }
-              }
-            }
-          }
-        });
-      }, [results]);
 
       return (
         <div className="flex flex-col justify-center items-center">
-          <canvas id="correctChart" className="w-[500px] h-[500px]"></canvas>
+          <CreatePercentageChart
+          results={results}
+          />
         </div>
-                
       )
     }
   }

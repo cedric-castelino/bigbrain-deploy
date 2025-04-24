@@ -19,7 +19,8 @@
     "react-bootstrap": "^2.10.9",
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
-    "react-router-dom": "^6.30.0"
+    "react-router-dom": "^6.30.0",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
