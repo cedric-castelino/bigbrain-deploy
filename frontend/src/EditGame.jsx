@@ -125,7 +125,7 @@ const EditGame = ({ token }) => {
     }
   }
 
-  const addQuestion = async () => {
+  const addQuestion = async (editing, id) => {
     if (duration === '' || question === '' || points === '') {
       setquestionError("Question Inputs Cannot be Empty");
       return; 
@@ -205,23 +205,46 @@ const EditGame = ({ token }) => {
       }
     }
 
-    const newQuestion = {
-      duration: duration,
-      correctAnswers: (questionType === 'Single Choice' || questionType === 'Judgement') 
-        ? [correctAnswer] 
-        : sortedCorrectAnswers,
-      question: question,
-      answers: answers,
-      id: game.questions.length + 1,
-      questionType: questionType,
-      points: points,
-      ...(attachmentType !== '' && {
-        attachmentType: attachmentType,
-        attachment: attachmentType === 'youtube' ? youtubeUrl.replace(/watch\?v=|youtu\.be\//, 'embed/').split('&')[0] 
-        : thumbnail,
-      })
+    if (editing) {
+      for (const current_question of game.questions) {
+        if (current_question.id === id) {
+          current_question.duration = duration;
+          current_question.points = points;
+          current_question.question = question;
+          if (attachmentType !== '') {
+            current_question.attachmentType = attachmentType;
+            current_question.attachment = attachmentType === 'youtube' ? youtubeUrl.replace(/watch\?v=|youtu\.be\//, 'embed/').split('&')[0] : thumbnail;
+          }
+          if ((questionType === 'Single Choice' || questionType === 'Judgement')) {
+            current_question.correctAnswers = [correctAnswer];
+          }
+          if (questionType === 'Multiple Choice') {
+            current_question.correctAnswers = sortedCorrectAnswers;
+          }
+          current_question.answers = answers;
+        }
+      }
+  
+      
+    } else {
+      const newQuestion = {
+        duration: duration,
+        correctAnswers: (questionType === 'Single Choice' || questionType === 'Judgement') 
+          ? [correctAnswer] 
+          : sortedCorrectAnswers,
+        question: question,
+        answers: answers,
+        id: game.questions.length + 1,
+        questionType: questionType,
+        points: points,
+        ...(attachmentType !== '' && {
+          attachmentType: attachmentType,
+          attachment: attachmentType === 'youtube' ? youtubeUrl.replace(/watch\?v=|youtu\.be\//, 'embed/').split('&')[0] 
+          : thumbnail,
+        })
+      }
+      game.questions.push(newQuestion);
     }
-    game.questions.push(newQuestion);
       
     games[games.findIndex(g => g.id === game.id)] = game;
     try {
@@ -258,75 +281,15 @@ const EditGame = ({ token }) => {
       return false;
     }
   }
-
-  const editQuestionContent = async (id) => {
-
+ 
+  const removeQuestionAttachment = async (id) => {
     for (const current_question of game.questions) {
-      if (current_question.id === id) {
-        if (duration !== '') {
-          if (Number(duration) < 1 || Number(duration) > 60) {
-            setquestionError("Duration must be between 1 and 60");
-            return; 
-          }
-          current_question.duration = duration;
-        }
-        if (points !== '') {
-          if (Number(points) < 1 || Number(points) > 10) {
-            setquestionError("Points must be between 1 and 10");
-            return; 
-          }
-          current_question.points = points;
-        }
-        if (question !== '') {
-          current_question.question = question;
-        }
-        if (attachmentType !== '') {
-          if (attachmentType === 'image') {
-            if (imageError) {
-              setquestionError("Invalid file type");
-              resetFileInput();
-              setimageError(false);
-              return;
-            }
-            if (thumbnail === '') {
-              setquestionError("Image Input is Empty");
-              return; 
-            } 
-            
-            if (thumbnail === '') {
-              setquestionError("Image Input is Empty");
-              return; 
-            }
-          }
-      
-          if (attachmentType === 'youtube') {
-            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11}(&.*)?$/;
-            if (youtubeUrl === '') {
-              setquestionError("Youtube URL is Empty");
-              return; 
-            }
-      
-            if (!youtubeRegex.test(youtubeUrl.trim())) {
-              setquestionError("Invalid YouTube URL");
-              return;
-            }
-          }
-          current_question.attachmentType = attachmentType;
-          current_question.attachment = attachmentType === 'youtube' ? youtubeUrl.replace(/watch\?v=|youtu\.be\//, 'embed/').split('&')[0] : thumbnail;
-        }
-
-        if ((questionType === 'Single Choice' || questionType === 'Judgement') && correctAnswer !== '') {
-          current_question.correctAnswers = [correctAnswer];
-        }
-      }
-    }
-
-    const currentAnswers = current_question.answers;
-    if (answers.length > currentAnswers.length) {
-
+      delete current_question.attachment;
+      delete current_question.attachmentType;
     }
 
     games[games.findIndex(g => g.id === game.id)] = game;
+
     try {
       await axios.put('http://localhost:5005/admin/games', {
         games: games
@@ -335,18 +298,10 @@ const EditGame = ({ token }) => {
           'Authorization': `Bearer ${token}`
         }
       });
-    
+
       getGameData(token);
-      setDuration('');
-      setPoints('');
-      setQuestion('');
-      setCorrectAnswer('');
-      setquestionError('');
-      return true;
     } catch (err) {
-      console.log(err);
-      setquestionError(err.response.data.error);
-      return false;
+      alert(err);
     }
   }
 
@@ -489,7 +444,7 @@ const EditGame = ({ token }) => {
               setEditQuestion(false);
             }}
             onCreate={async () => {
-              const success = await addQuestion();
+              const success = await addQuestion(false);
               if (success) {
                 setCreateQPopUp(false); 
               }
@@ -511,7 +466,7 @@ const EditGame = ({ token }) => {
             setQuestionType={setQuestionType}
             editing={editQuestion}
             onEdit={async () => {
-              const success = await editQuestionContent(editQuestionID);
+              const success = await addQuestion(true, editQuestionID);
               if (success) {
                 setCreateQPopUp(false); 
               }
@@ -544,6 +499,7 @@ const EditGame = ({ token }) => {
                     setEditQuestionData(question);
                     setCreateQPopUp(true)}}
                   onDelete={() => {deleteQuestion(question.id)}}
+                  onRemoveAttachment={() => {removeQuestionAttachment(question.id)}}
                 />
               ))}
             </div>

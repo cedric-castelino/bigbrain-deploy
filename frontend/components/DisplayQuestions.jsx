@@ -1,4 +1,4 @@
-const DisplayQuestions = ({question, onEdit, onDelete}) => {
+const DisplayQuestions = ({question, onEdit, onDelete, onRemoveAttachment}) => {
 
   const getOptionLabel = (index) => `Option ${String.fromCharCode(65 + index)}`;
   const getOptionClass = (label) => {
@@ -66,6 +66,9 @@ const DisplayQuestions = ({question, onEdit, onDelete}) => {
         <div className='join join-vertical gap-2 border-l border-gray-300 pl-4 w-[100px] sm:!w-[150px] sm:!w-[250px]'>
           <button onClick={onEdit} className="btn btn-primary w-full !text-xs sm:!text-md lg:!text-lg">Edit Question</button>
           <button type="button" onClick={onDelete} className="btn btn-danger !bg-red-600 hover:!bg-red-900 w-full !text-xs sm:!text-md lg:!text-lg">Delete Question</button>
+          {question.attachment && (
+            <button onClick={onRemoveAttachment} className="btn text-white !bg-zinc-500 hover:!bg-zinc-600 w-full !text-xs sm:!text-md lg:!text-lg">Remove Attachment</button>
+          )}
         </div>
       </li>
             

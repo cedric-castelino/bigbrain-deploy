@@ -22,6 +22,9 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
         setCorrectAnswer(editQuestion.correctAnswers[0]); 
       } else if (editQuestion.questionType === 'Multiple Choice') {
         setCorrectAnswers(editQuestion.correctAnswers); 
+      } else if (editQuestion.questionType === 'Judgement') {
+        setAnswers(['True', 'False']);
+        setCorrectAnswer(editQuestion.correctAnswers[0]);
       }
 
     }
