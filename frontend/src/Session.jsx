@@ -82,31 +82,38 @@ const Session = ({ token, setActiveStatus }) => {
     case "displayQuestions":
       localStorage.setItem('gameState', 'displayQuestions');
       return (
-        <div>
-          <p>Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </p>
-          <div className="flex flex-col items-center justify">
-            {questionTimer > 0
-              ? `Duration: ${questionTimer}s`
-              : "Question is finished"}
+        <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-row gap-4" >
+          {questionTimer > 0
+                ? <h1>{`Duration: ${questionTimer}s`}</h1>
+                : <h1 className="">Question is finished</h1>}
+                <h1 className="mb-5">Question position: {currentQuestionPosition + 1} / {numberOfQuestions} </h1>
+          </div>
 
+          <div className="flex flex-col items-center justify-center">            
             {questions.length > 0 && currentQuestionPosition >= 0 && currentQuestionPosition < questions.length ? (
-              <ul>
-                <li>
-                                        Question: {questions[currentQuestionPosition].question}
-                </li>
-                <li>
-                                        Option A: {questions[currentQuestionPosition].options.optionA}
-                </li>
-                <li>
-                                        Option B: {questions[currentQuestionPosition].options.optionB || ""}
-                </li>
-                <li>
-                                        Option C: {questions[currentQuestionPosition].options.optionC || ""}
-                </li>
-                <li>
-                                        Option D: {questions[currentQuestionPosition].options.optionD || ""}
-                </li>
-              </ul>
+                <div className="flex flex-row gap-5">
+                  <div>
+                    <h1>Question: {questions[currentQuestionPosition].question}</h1>
+                    <ul className="flex flex-col justify-center items-center">
+                      <li className="bg-white m-2 p-3 rounded-md">
+                                              Option A: {questions[currentQuestionPosition].options.optionA}
+                      </li>
+                      <li className="bg-white m-2 p-3 rounded-md">
+                                              Option B: {questions[currentQuestionPosition].options.optionB || ""}
+                      </li>
+                      <li className="bg-white m-2 p-3 rounded-md">
+                                              Option C: {questions[currentQuestionPosition].options.optionC || ""}
+                      </li>
+                      <li className="bg-white m-2 p-3 rounded-md">
+                                              Option D: {questions[currentQuestionPosition].options.optionD || ""}
+                      </li>
+                    </ul>
+                  </div>
+                
+              </div>
+
+              
             ) : (
               <p>Loading questions...</p>
             )}
