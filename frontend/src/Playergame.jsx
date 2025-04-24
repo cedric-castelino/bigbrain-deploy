@@ -133,6 +133,7 @@ function PlayerGame ({ token }) {
       const response = await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
         answers: newAnswersArary
       });
+      console.log(response)
   } catch (err) {
       console.log(err)
   }
@@ -190,7 +191,6 @@ function PlayerGame ({ token }) {
                     } ${isSelected ? (index === 0 ? 'bg-green-800' : 'bg-red-800') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
                     onClick={() => {
                       handleSelect();
-                      putPlayerAnswer();
                     }}
                     disabled={buttonsDisabled}
                   >
@@ -252,7 +252,6 @@ function PlayerGame ({ token }) {
                       } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
                       onClick={() => {
                         handleSelect(); 
-                        putPlayerAnswer();
                       }}
                       disabled={buttonsDisabled}
                     >
@@ -318,7 +317,6 @@ function PlayerGame ({ token }) {
                         } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
                         onClick={() => {
                           toggleSelection(); 
-                          putPlayerAnswer();
                         }}
                         disabled={buttonsDisabled}
                       >
