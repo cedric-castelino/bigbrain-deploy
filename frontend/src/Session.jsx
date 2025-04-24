@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import CreatePercentageChart from "../components/createPercentageChart";
+import CreateAverageTimeChart from "../components/CreateAverageTimeChart";
 
 const Session = ({ token, setActiveStatus }) => {
   const linkedSession = useParams();
@@ -125,6 +126,9 @@ const Session = ({ token, setActiveStatus }) => {
       return (
         <div className="flex flex-col justify-center items-center">
           <CreatePercentageChart
+          results={results}
+          />
+          <CreateAverageTimeChart
           results={results}
           />
         </div>

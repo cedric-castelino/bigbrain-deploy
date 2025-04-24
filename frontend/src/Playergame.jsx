@@ -8,6 +8,7 @@ function PlayerGame ({ token }) {
   const navigate = useNavigate();
   const [playerId, setPlayerId] = useState(prePopulatedPlayerId || '');
   const [gameState, setGameState] = useState('waitForPlayersJoin');
+  const [playerResults, setPlayerResults] = useState('waitForPlayersJoin');
   const [question, setQuestion] = useState('');
   const [questionType, setQuestionType] = useState('');
   const [questionTimer, setQuestionTimer] = useState(-1);
@@ -66,7 +67,7 @@ function PlayerGame ({ token }) {
       const checkResults = async () => {
         // Only check for results if no active session is running
         if (!localStorage.getItem('activeStatus')) {
-          const success = await getResults(token);
+          const success = await moveToResults(token);
           if (success === true) {
             setGameState("results")
           }
@@ -74,7 +75,7 @@ function PlayerGame ({ token }) {
       };
       checkResults();
 
-    }, 10);
+    }, 500);
   
     return () => clearInterval(intervalId);
     
@@ -110,10 +111,11 @@ function PlayerGame ({ token }) {
   };
 
   
-  const getResults = async (token) => {
+  const moveToResults = async (token) => {
     try {
       const response = await axios.get(`http://localhost:5005/play/${playerId}/results`, {
       })
+      setPlayerResults(response.data);
       return true;
     } catch (err) {
       alert(err.response.data.error);
@@ -347,9 +349,47 @@ function PlayerGame ({ token }) {
         </div>
       )
     case "results":
+      const correctCount = playerResults.filter(r => r.correct).length;
+      const totalQuestions = playerResults.length;
+
       return (
         <div>
-          <p>Results screen</p>
+          <label className="fieldset-label text-slate-900">Your Results</label>
+          <hr />
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Time to Complete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {playerResults.map((result, index) => {
+                const startTime = new Date(result.questionStartedAt);
+                const endTime = new Date(result.answeredAt);
+                const timeToComplete = Math.round((endTime - startTime) / 1000); 
+                const rowClass = result.correct ? '!bg-green-200' : '!bg-red-200';
+
+                return (
+                  <tr key={index}>
+                    <th className={rowClass}>{index + 1}</th>
+                    <td className={rowClass}>{timeToComplete} Second{timeToComplete !== 1 ? 's' : ''}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <hr />
+          <div className='w-full'>
+              <div className="input-group justify-center mt-2 mb-2">
+                <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Amount Correct</span>
+                <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">{correctCount}/{totalQuestions}</span>
+              </div>
+              <div className="input-group justify-center mt-2 mb-2">
+                <span className="bg-base-200 text-gray-600 rounded-l-md px-4 py-2">Total Score</span>
+                <span className="bg-base-100 text-black rounded-r-md px-4 py-2 border border-l-0">?</span>
+              </div>
+          </div>
         </div>
                 
       )
