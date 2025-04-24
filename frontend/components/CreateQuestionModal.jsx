@@ -99,6 +99,54 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
       </div>
       )}
 
+{questionType === 'Multiple Choice' && (
+         <div className='w-full'>
+         {options.map((opt, index) => (
+           <div key={opt.label}>
+             <div className='join join-horizontal gap-2 h-[20px]'>
+               <label className="fieldset-label text-slate-900">Option {opt.label}</label>
+               <input
+                type="checkbox"
+                className="checkbox checkbox-xs"
+                checked={correctAnswers.includes(`Option ${opt.label}`)}
+                onChange={(e) => {
+                  const optionValue = `Option ${opt.label}`;
+                  if (e.target.checked) {
+                    setCorrectAnswers([...correctAnswers, optionValue]);
+                  } else {
+                    setCorrectAnswers(correctAnswers.filter((val) => val !== optionValue));
+                  }
+                }}
+              />
+               <p className="!text-zinc-500">- mark option {opt.label} as correct</p>
+             </div>
+             <input
+               className="p-2 bg-gray-200 rounded-md w-full mt-2 mb-2"
+               type="text"
+               placeholder={`Answer Displayed as Option ${opt.label}`}
+               value={opt.value}
+               onChange={(e) => {
+                 const newOptions = [...options];
+                 newOptions[index].value = e.target.value;
+                 setOptions(newOptions);
+                 setAnswers(newOptions.map((opt) => opt.value));
+               }}
+             />
+           </div>
+         ))}
+     
+         {options.length < 6 && (
+           <button
+             type="button"
+             className="btn btn-outline btn-sm mt-2 !bg-zinc-200"
+             onClick={addOption}
+           >
+             + Add Answer
+           </button>
+         )}
+       </div>
+      )}
+
       {questionType === 'Judgement' && (
         <div className='join join-vertical gap-2'>
           <label className="fieldset-label text-slate-900">Select the Correct Answer</label>
