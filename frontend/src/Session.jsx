@@ -3,6 +3,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import {
+  Chart,
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+
 const Session = ({ token, setActiveStatus }) => {
   const linkedSession = useParams();
   const navigate = useNavigate();
@@ -15,6 +28,7 @@ const Session = ({ token, setActiveStatus }) => {
   const [hasResults, setHasResults] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [questionTimer, setQuestionTimer] = useState(localStorage.getItem("questionTimer"));
+  const [results, setResults] = useState([])
 
   const activeStatus = localStorage.getItem('activeStatus');
   const sessionId = localStorage.getItem('sessionId');
@@ -70,6 +84,24 @@ const Session = ({ token, setActiveStatus }) => {
     }
   }, [currentQuestionPosition]);
 
+  function getCorrectPercentages(results) {
+    if (!results || results.length === 0) return [];
+  
+    const numQuestions = results[0].answers.length;
+    const correctCounts = Array(numQuestions).fill(0);
+  
+    results.forEach(user => {
+      user.answers.forEach((ans, index) => {
+        if (ans.correct) correctCounts[index]++;
+      });
+    });
+  
+    return correctCounts.map((count, i) => ({
+      questionIndex: i + 1,
+      correctPercentage: (count / results.length) * 100
+    }));
+  }
+
   const renderGameContent = () => {
     if (gameState === "waitForPlayersJoin" && hasResults) {
       setGameState("results");
@@ -98,12 +130,58 @@ const Session = ({ token, setActiveStatus }) => {
       )
     case "results":
       localStorage.setItem('gameState', 'results');
+      
+      const percentages = getCorrectPercentages(results);
+      
+      useEffect(() => {
+        if (!percentages.length) return;
+    
+        const ctx = document.getElementById('correctChart');
+        if (ctx && Chart.getChart('correctChart')) {
+          Chart.getChart('correctChart').destroy(); // Clean up existing chart
+        }
+    
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: percentages.map(p => `Q${p.questionIndex}`),
+            datasets: [{
+              label: '% Correct',
+              data: percentages.map(p => p.correctPercentage),
+              backgroundColor: 'rgba(54, 162, 235, 0.7)',
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'Correct Answers by Question'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                title: {
+                  display: true,
+                  text: '% Correct'
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Question'
+                }
+              }
+            }
+          }
+        });
+      }, [results]);
+
       return (
         <div className="flex flex-col justify-center items-center">
-          <h1>Results for session: {linkedSession.sessionId}</h1>
-          <h1>table of up to top 5 users and their scores</h1>
-          <h1>a bar/line chart showing breakdown of what percentage of people (yaxis) got questions (xaxis) correct</h1>
-          <h1>a chart showing the average response/answer time for each questions</h1>
+          <canvas id="correctChart" className="w-[500px] h-[500px]"></canvas>
         </div>
                 
       )
@@ -217,6 +295,7 @@ const Session = ({ token, setActiveStatus }) => {
           sessionid: linkedSession.sessionId
         }
       })
+      setResults(response.data.results)
       return true;
     } catch (err) {
       alert(err.response.data.error);
