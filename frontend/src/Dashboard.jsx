@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, act } from 'react';
 
 import Gamecard from '../components/GameCard';
 import DeleteModal from '../components/deleteModal';
@@ -153,7 +153,18 @@ function Dashboard({ token, activeStatus, setActiveStatus, logout}) {
 
   const endGameMutate = async (token) => {
     try {
-      await axios.post(`http://localhost:5005/admin/game/${selectedGameId}/mutate`, {
+      let activeGameId = false;
+
+      const getGameIdResponse = await axios.get('http://localhost:5005/admin/games', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      let games = getGameIdResponse.data.games
+      
+      activeGameId = games.find(game => game.active !== 0);
+
+      await axios.post(`http://localhost:5005/admin/game/${activeGameId.id}/mutate`, {
         mutationType: "END"
       }, {
         headers: {
