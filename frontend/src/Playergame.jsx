@@ -361,7 +361,7 @@ function PlayerGame ({ token }) {
     case "waitForPlayersJoin":
       return (
         <div className="flex flex-col justify-center items-center">
-          <label className="fieldset-label text-slate-900 mb-4">Waiting for players to connect</label>
+          <label className="fieldset-label text-slate-900 mb-4">Waiting for game to start</label>
           <span className="ml-3 loading loading-spinner loading-sm mb-4"></span>
           <iframe
             className="mt-2 mb-6 !w-full h-[150px] sm:h-[250px] md:h-[200px] lg:h-[220px] xl:h-[300px]"
