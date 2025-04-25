@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import CreatePercentageChart from "../components/createPercentageChart";
+import CreatePercentageChart from "../components/CreatePercentageChart";
 import CreateAverageTimeChart from "../components/CreateAverageTimeChart";
 
 const Session = ({ token, setActiveStatus }) => {
