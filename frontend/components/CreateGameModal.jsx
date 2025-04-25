@@ -31,7 +31,7 @@ function CreateGameModal ({open, onClose, onCreate, name, setName, handleFileCha
         )}
 
         {/* Submits the form to create a new game */}
-        {editing ? (<button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Edit Game</button>):
+        {editing ? (<button onClick={onCreate} data-testid="edit-game-main" className="btn btn-primary md:btn-md flex-1 mt-2">Edit Game</button>):
           <button name="create game" onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Create Game</button>}
 
       </fieldset>

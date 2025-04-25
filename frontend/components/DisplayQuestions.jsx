@@ -43,7 +43,7 @@ const DisplayQuestions = ({question, onEdit, onDelete, onRemoveAttachment}) => {
           })}
           {question.attachmentType === 'image' && question.attachment && (
             <>
-              <div className="text-sm font-semibold mt-6">Question Attachment</div>
+              <div data-testid="question-attachment-title" className="text-sm font-semibold mt-6">Question Attachment</div>
               <img
                 src={question.attachment}
                 alt="Question attachment"
@@ -53,7 +53,7 @@ const DisplayQuestions = ({question, onEdit, onDelete, onRemoveAttachment}) => {
           )}
           {question.attachmentType === 'youtube' && question.attachment && (
             <>
-              <div className="text-sm font-semibold mt-6">Question Attachment</div>
+              <div data-testid="question-attachment-title" className="text-sm font-semibold mt-6">Question Attachment</div>
               <iframe
                 className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[55%] xl:w-[40%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[350px] xl:h-[400px]"
                 src={question.attachment}

@@ -271,8 +271,8 @@ function CreateQuestionModal ({open, onClose, onCreate, error, duration, setDura
         )}
 
         {/* Submits the form to create a new game */}
-        {editing ? (<button onClick={onEdit} className="btn btn-primary md:btn-md flex-1 mt-2">Edit Question</button>):
-          <button onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Add Question</button>}
+        {editing ? (<button data-testid="edit-question-main" onClick={onEdit} className="btn btn-primary md:btn-md flex-1 mt-2">Edit Question</button>):
+          <button data-testid="add-question-main" onClick={onCreate} className="btn btn-primary md:btn-md flex-1 mt-2">Add Question</button>}
 
       </fieldset>
       {/* Exits the modal without creating a new game */}
