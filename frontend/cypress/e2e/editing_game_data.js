@@ -1,21 +1,20 @@
-describe('other path', () => {
+describe('editing game data', () => {
     context('use registers an account', () => {
       it('should go to the register page successfully', () => {
         cy.visit('http://localhost:3000/login');
-        cy.get('input[placeholder="Email"]').type('3@example.com'); // delete
-        cy.get('input[placeholder="Password"]').type('123');        // delete
-        // cy.url().should('include', '/register');
+        cy.contains('Register').should('exist').click();
+        cy.url().should('include', '/register');
       });
   
-    //   it('should register successfully and go to dashboard', () => {
-    //     cy.visit('http://localhost:3000/register');
-    //     cy.get('input[placeholder="Name"]').type('John');
-    //     cy.get('input[placeholder="Email"]').type('98@example.com');
-    //     cy.get('input[placeholder="Password"]').type('123');
-    //     cy.get('input[placeholder="Confirm Password"]').type('123');
-    //     cy.get('button[name="register-button"]').click();
-    //     cy.url().should('include', '/dashboard');
-    //   });
+      it('should register successfully and go to dashboard', () => {
+        cy.visit('http://localhost:3000/register');
+        cy.get('input[placeholder="Name"]').type('John');
+        cy.get('input[placeholder="Email"]').type('newperson@example.com');
+        cy.get('input[placeholder="Password"]').type('123');
+        cy.get('input[placeholder="Confirm Password"]').type('123');
+        cy.get('button[name="register-button"]').click();
+        cy.url().should('include', '/dashboard');
+      });
     });
   
     
@@ -23,7 +22,7 @@ describe('other path', () => {
       beforeEach(() => {
         cy.session('admin-session', () => {
           cy.visit('http://localhost:3000/login');
-          cy.get('input[placeholder="Email"]').type('3@example.com');
+          cy.get('input[placeholder="Email"]').type('newperson@example.com');
           cy.get('input[placeholder="Password"]').type('123');
           cy.get('button[name="login-button"]').click();
           cy.url().should('include', '/dashboard');
@@ -44,7 +43,7 @@ describe('other path', () => {
       beforeEach(() => {
         cy.session('admin-session-gameoption', () => {
           cy.visit('http://localhost:3000/login');
-          cy.get('input[placeholder="Email"]').type('3@example.com');
+          cy.get('input[placeholder="Email"]').type('newperson@example.com');
           cy.get('input[placeholder="Password"]').type('123');
           cy.get('button[name="login-button"]').click();
           cy.contains('Create New Game').should('exist').click();
