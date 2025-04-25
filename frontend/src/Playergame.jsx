@@ -150,34 +150,33 @@ function PlayerGame ({ token }) {
           {/* Shows the game data and countdown */}
           <h1 className="text-xl font-bold mb-2 max-w-md">{question.question}</h1>
           <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
-          <p>points: {question.points }</p>
+          <p>Points: {question.points }</p>
           {question.attachmentType === 'image' && question.attachment && (
             <>
-              <div className="text-sm font-semibold mt-6"></div>
+              <div className="text-sm font-semibold !mt-2"></div>
               <img
                 src={question.attachment}
                 alt="Question attachment"
-                className="shadow-2xl rounded-lg w-full sm:w-[20%] mt-2"
+                className="shadow-2xl rounded-lg w-full sm:w-[40%] mt-2"
               />
             </>
           )}
           {/* Shows the question attachment if it has one */}
           {question.attachmentType === 'youtube' && question.attachment && (
             <>
-              <div className="text-sm font-semibold mt-6"></div>
+              <div className="text-sm font-semibold"></div>
               <iframe
-                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[100%] xl:w-[100%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[100%] xl:h-[100%]"
+                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[65%] xl:w-[55%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[100%] xl:h-[100%]"
                 src={question.attachment}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
               ></iframe>
             </>
           )}
 
           {/* Displays the correct answer after the question has ended */}
           {correctAnswer && correctAnswer.length > 0 && (
-            <p>The correct answer is: {correctAnswer}</p>
+            <p className='mt-3'>The correct answer is: {correctAnswer}</p>
           )}
           <div className="flex gap-4 mt-4 max-w-md justify-center">
             {["True", "False"].map((answer, index) => {
@@ -190,6 +189,7 @@ function PlayerGame ({ token }) {
               };
 
               return (
+                <div className='flex flex-col items-center justify-center'>
                 <button
                   key={index}
                   className={`px-4 py-2 rounded text-white transition-colors duration-200 w-24 ${
@@ -202,6 +202,8 @@ function PlayerGame ({ token }) {
                 >
                   {answer}
                 </button>
+                <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
+                </div>
               );
             })}
           </div>
@@ -213,7 +215,7 @@ function PlayerGame ({ token }) {
         <>
           <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
           <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
-          <p>points: {question.points }</p>
+          <p>Points: {question.points }</p>
           {question.attachmentType === 'image' && question.attachment && (
             <>
               <div className="text-sm font-semibold mt-6"></div>
@@ -275,7 +277,7 @@ function PlayerGame ({ token }) {
         <>
           <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
           <p className="mb-4">Time remaining: {questionTimer <= 0 ? "Time's up!" : `${questionTimer} seconds`}</p>
-          <p>points: {question.points }</p>
+          <p>Points: {question.points }</p>
           {question.attachmentType === 'image' && question.attachment && (
             <>
               <div className="text-sm font-semibold mt-6"></div>
@@ -381,13 +383,18 @@ function PlayerGame ({ token }) {
               {playerResults.map((result, index) => {
                 const startTime = new Date(result.questionStartedAt);
                 const endTime = new Date(result.answeredAt);
-                const timeToComplete = Math.round((endTime - startTime) / 1000); 
+                const timeToComplete = result.answeredAt? Math.round((endTime - startTime) / 1000): 'N/A';
+
                 const rowClass = result.correct ? '!bg-green-200' : '!bg-red-200';
 
                 return (
                   <tr key={index}>
                     <th className={rowClass}>{index + 1}</th>
-                    <td className={rowClass}>{timeToComplete} Second{timeToComplete !== 1 ? 's' : ''}</td>
+                    <td className={rowClass}>
+                      {timeToComplete === 'N/A'
+                        ? 'N/A'
+                        : `${timeToComplete} Second${timeToComplete !== 1 ? 's' : ''}`}
+                    </td>
                     <td className={rowClass}>{gamePoints[index]}</td>
                   </tr>
                 );

@@ -9,7 +9,7 @@ Our website utilises a range of UI/UX principles to ensure a smooth user experie
 
  - Feedback: The user is given a range of feedback during usage. Errors during form input are all shown on the page itself and with a clear error message for the specific encountered error. This allows for ease of use within these elements. Buttons and other clickable elements also give feedback to the user when hovered.
 
- - Navigation: The site utilises intuitive navigation, with clear button in the top right of the screen when logged in. This allows the users to quickly and easily navigate between the sites main pages and there is a visual distinction given for different forms, such as 'dashboard' and 'logout'.
+ - Navigation: The site utilises intuitive navigation, with a clear button in the top right of the screen when logged in. This allows the users to quickly and easily navigate between the site's main pages and there is a visual distinction given for different forms, such as 'dashboard' and 'logout'.
 
- - Usability: We have implemented various features to improve the user experience and make it easier for new users. One such example is the "Remove Profile Photo" button, which only appears when a custom profile photo is uploaded. This allows the user to easily understand the use of this function, and ensures that users who have the default photo currently are not confused. A similar feature is also implemented in the Questions section, when removing image attachment. 
+ - Usability: We have implemented various features to improve the user experience and make it easier for new users. One such example is the "Remove Profile Photo" button, which only appears when a custom profile photo is uploaded. This allows the user to easily understand the use of this function and ensures that users who have the default photo currently are not confused. A similar feature is also implemented in the Questions section, when removing image attachments. 
 
