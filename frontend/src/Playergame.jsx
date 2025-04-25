@@ -222,7 +222,7 @@ function PlayerGame ({ token }) {
               <img
                 src={question.attachment}
                 alt="Question attachment"
-                className="shadow-2xl rounded-lg w-full sm:w-[20%] mt-2"
+                className="shadow-2xl rounded-lg w-full sm:w-[40%] mt-2"
               />
             </>
           )}
@@ -230,7 +230,7 @@ function PlayerGame ({ token }) {
             <>
               <div className="text-sm font-semibold mt-6"></div>
               <iframe
-                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[55%] xl:w-[40%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[350px] xl:h-[400px]"
+                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[65%] xl:w-[55%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[100%] xl:h-[100%]"
                 src={question.attachment}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -239,7 +239,7 @@ function PlayerGame ({ token }) {
             </>
           )}
           {correctAnswer && correctAnswer.length > 0 && (
-            <p>The correct answer is: {correctAnswer}</p>
+            <p className='mt-3'>The correct answer is: {correctAnswer}</p>
           )}
           <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
   
@@ -254,6 +254,7 @@ function PlayerGame ({ token }) {
                 };
 
                 return (
+                  <div className="flex flex-col items-center justify-center">
                   <button 
                     key={index}
                     className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
@@ -266,6 +267,8 @@ function PlayerGame ({ token }) {
                   >
                     {answer}
                   </button>
+                  <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
+                  </div>
                 );
               })
             }
@@ -284,7 +287,7 @@ function PlayerGame ({ token }) {
               <img
                 src={question.attachment}
                 alt="Question attachment"
-                className="shadow-2xl rounded-lg w-full sm:w-[20%] mt-2"
+                className="shadow-2xl rounded-lg w-full sm:w-[40%] mt-2"
               />
             </>
           )}
@@ -292,7 +295,7 @@ function PlayerGame ({ token }) {
             <>
               <div className="text-sm font-semibold mt-6"></div>
               <iframe
-                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[55%] xl:w-[40%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[350px] xl:h-[400px]"
+                className="mt-2 mb-6 w-full sm:w-[85%] md:w-[70%] lg:w-[65%] xl:w-[55%] h-[125px] sm:h-[150px] md:h-[200px] lg:h-[100%] xl:h-[100%]"
                 src={question.attachment}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -301,7 +304,7 @@ function PlayerGame ({ token }) {
             </>
           )}
           {correctAnswer && correctAnswer.length > 0 && (
-            <p>The correct answer is: {correctAnswer}</p>
+            <p className='mt-3'>The correct answer is: {correctAnswer}</p>
           )}
           <div className="flex flex-wrap gap-4 mt-4 max-w-md justify-center">
             {
@@ -319,6 +322,7 @@ function PlayerGame ({ token }) {
                 };
         
                 return (
+                  <div className="flex flex-col items-center justify-center">
                   <button
                     key={index}
                     className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
@@ -331,6 +335,8 @@ function PlayerGame ({ token }) {
                   >
                     {answer}
                   </button>
+                  <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
+                  </div>
                 );
               })
             }
