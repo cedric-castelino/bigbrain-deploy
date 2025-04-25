@@ -1,3 +1,5 @@
+/* global cy, describe, it, context, beforeEach */
+
 describe('user happy path', () => {
   context('before login', () => {
     it('should navigate to the home screen successfully', () => {

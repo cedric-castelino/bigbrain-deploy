@@ -1,3 +1,5 @@
+/* global cy, describe, it, context, beforeEach */
+
 describe('editing game data', () => {
   context('use registers an account', () => {
     it('should go to the register page successfully', () => {

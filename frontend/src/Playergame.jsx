@@ -2,7 +2,7 @@ import { useState, useEffect, useRef  } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-function PlayerGame ({ token }) {
+function PlayerGame () {
 
   const playerId = useParams().playerId;
   const [gameState, setGameState] = useState('waitForPlayersJoin');
@@ -13,7 +13,6 @@ function PlayerGame ({ token }) {
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState([]);
-  const [currentGame, setCurrentGame] = useState('');
   const [gamePoints, setgamePoints] = useState([]);
 
   const currentQuestionIdRef = useRef(localStorage.getItem('currentQuestionId') || null);
@@ -133,7 +132,7 @@ function PlayerGame ({ token }) {
         newAnswersArary.push(indexToOption(index))
       });
 
-      const response = await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
+      await axios.put(`http://localhost:5005/play/${playerId}/answer`, {
         answers: newAnswersArary
       });
     } catch (err) {
@@ -189,9 +188,8 @@ function PlayerGame ({ token }) {
               };
 
               return (
-                <div className='flex flex-col items-center justify-center'>
+                <div key={index} className='flex flex-col items-center justify-center'>
                   <button
-                    key={index}
                     className={`px-4 py-2 rounded text-white transition-colors duration-200 w-24 ${
                       buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
                     } ${isSelected ? (index === 0 ? 'bg-green-800' : 'bg-red-800') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
@@ -209,8 +207,8 @@ function PlayerGame ({ token }) {
           </div>
         </>
       );
-      {/* Displays questions differently based on their type */}
     case "Single Choice":
+      {/* Displays questions differently based on their type */}
       return (
         <>
           <h1 className="text-xl font-bold mb-2 max-w-md">Question: {question.question}</h1>
@@ -254,9 +252,8 @@ function PlayerGame ({ token }) {
                 };
 
                 return (
-                  <div className="flex flex-col items-center justify-center">
+                  <div key={index} className="flex flex-col items-center justify-center">
                     <button 
-                      key={index}
                       className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
                         buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
                       } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
@@ -322,9 +319,8 @@ function PlayerGame ({ token }) {
                 };
         
                 return (
-                  <div className="flex flex-col items-center justify-center">
+                  <div key={index} className="flex flex-col items-center justify-center">
                     <button
-                      key={index}
                       className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
                         buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
                       } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
