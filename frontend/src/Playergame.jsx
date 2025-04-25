@@ -190,26 +190,26 @@ function PlayerGame ({ token }) {
 
               return (
                 <div className='flex flex-col items-center justify-center'>
-                <button
-                  key={index}
-                  className={`px-4 py-2 rounded text-white transition-colors duration-200 w-24 ${
-                    buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
-                  } ${isSelected ? (index === 0 ? 'bg-green-800' : 'bg-red-800') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
-                  onClick={() => {
-                    handleSelect();
-                  }}
-                  disabled={buttonsDisabled}
-                >
-                  {answer}
-                </button>
-                <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
+                  <button
+                    key={index}
+                    className={`px-4 py-2 rounded text-white transition-colors duration-200 w-24 ${
+                      buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                    } ${isSelected ? (index === 0 ? 'bg-green-800' : 'bg-red-800') : (index === 0 ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600')}`}
+                    onClick={() => {
+                      handleSelect();
+                    }}
+                    disabled={buttonsDisabled}
+                  >
+                    {answer}
+                  </button>
+                  <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
                 </div>
               );
             })}
           </div>
         </>
       );
-    {/* Displays questions differently based on their type */}
+      {/* Displays questions differently based on their type */}
     case "Single Choice":
       return (
         <>
@@ -255,19 +255,19 @@ function PlayerGame ({ token }) {
 
                 return (
                   <div className="flex flex-col items-center justify-center">
-                  <button 
-                    key={index}
-                    className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
-                      buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
-                    } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
-                    onClick={() => {
-                      handleSelect(); 
-                    }}
-                    disabled={buttonsDisabled}
-                  >
-                    {answer}
-                  </button>
-                  <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
+                    <button 
+                      key={index}
+                      className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
+                        buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                      } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
+                      onClick={() => {
+                        handleSelect(); 
+                      }}
+                      disabled={buttonsDisabled}
+                    >
+                      {answer}
+                    </button>
+                    <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
                   </div>
                 );
               })
@@ -323,19 +323,19 @@ function PlayerGame ({ token }) {
         
                 return (
                   <div className="flex flex-col items-center justify-center">
-                  <button
-                    key={index}
-                    className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
-                      buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
-                    } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
-                    onClick={() => {
-                      toggleSelection(); 
-                    }}
-                    disabled={buttonsDisabled}
-                  >
-                    {answer}
-                  </button>
-                  <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
+                    <button
+                      key={index}
+                      className={`px-4 py-2 rounded w-full sm:w-auto text-white transition-colors duration-200 ${
+                        buttonsDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                      } ${isSelected ? 'bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'}`}
+                      onClick={() => {
+                        toggleSelection(); 
+                      }}
+                      disabled={buttonsDisabled}
+                    >
+                      {answer}
+                    </button>
+                    <label className="fieldset-label text-sm text-slate-900 mt-2">{indexToOption(index)}</label>
                   </div>
                 );
               })
